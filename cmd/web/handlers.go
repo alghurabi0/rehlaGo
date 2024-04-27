@@ -1,0 +1,16 @@
+package main
+
+import "net/http"
+
+func (app *application) ping(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
+
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		app.notFound(w)
+		return
+	}
+	data := app.newTemplateData(r)
+	app.render(w, http.StatusOK, "home.tmpl.html", data)
+}

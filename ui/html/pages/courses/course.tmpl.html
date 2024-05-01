@@ -1,0 +1,47 @@
+{{ define "title" }}Course{{ end }}
+{{ define "main" }}
+<div class="view">
+    <div class="flex flex-row justify-end">
+        <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">تفاصيل الدورة</h1>
+        <img src="https://placehold.co/20x20" />
+    </div>
+
+    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
+        <div
+            class="flex max-h-[302px] w-full flex-col items-center justify-between rounded-lg bg-[#E5E5E5E5] shadow-lg md:w-5/6">
+            <div class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white">
+                <h1 class="text-3xl">فيزياء</h1>
+                <div class="mt-2 flex flex-row">
+                    <h2 class="mr-2 text-xl">الاستاذ كريم الدهلكي</h2>
+                    <img src="https://placehold.co/25x25" />
+                </div>
+                <p class="text-md self mt-2">اين باسيب سيبتسايبسيتب يباسيبتيبي يبتي بيبايت باي تيبايبيبتي</p>
+            </div>
+
+            <div class="flex w-full flex-col items-end px-4 py-2">
+                <div class="flex flex-row">
+                    <div class="flex flex-row">
+                        <p class="mr-1">محاضرة</p>
+                        <p class="mr-2">20</p>
+                    </div>
+                    <img src="https://placehold.co/25x25" />
+                </div>
+                <div class="mt-1 flex flex-row">
+                    <div class="flex flex-row">
+                        <p class="mr-1">دينار عراقي</p>
+                        <p class="mr-2">200000</p>
+                    </div>
+                    <img src="https://placehold.co/25x25" />
+                </div>
+                <button
+                    class="mt-3 flex h-[48px] w-5/6 flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]">
+                    <p class="mr-2 text-lg text-white">اشترك في الدورة</p>
+                    <img src="https://placehold.co/25x25" />
+                </button>
+            </div>
+        </div>
+
+        <h1 class="mt-2 place-self-end text-lg">قائمة المحاضرات</h1>
+    </div>
+</div>
+{{ end }}

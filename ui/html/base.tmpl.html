@@ -1,2 +1,27 @@
-{{ template "base" }}
-<html>
+{{ define "base" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+        integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+        crossorigin="anonymous"></script>
+    <title>{{template "title" .}} - Rehla</title>
+</head>
+
+<body class="bg-white h-screen min-h-screen font-sans leading-normal tracking-normal">
+    <main class="mx-auto max-w-md overflow-hidden rounded-lg shadow-lg md:max-w-xl">
+        <div class="w-full p-4">
+            {{ template "username" . }}
+            {{ template "main" . }}
+        </div>
+        {{ template "tabNav" . }}
+        {{ template "nav" . }}
+    </main>
+</body>
+
+</html>
+{{ end }}

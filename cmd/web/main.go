@@ -14,6 +14,7 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	"github.com/alghurabi0/rehla/internal/models"
+	"google.golang.org/api/option"
 )
 
 type application struct {
@@ -25,20 +26,22 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	projectId := flag.String("project-id", "xxxx", "Google Cloud Project ID")
+	projectId := flag.String("project-id", "rehla-74745", "Google Cloud Project ID")
+	credFile := flag.String("cred-file", "./internal/rehla-74745-firebase-adminsdk-m9ksq-dc2a61849d.json", "Path to the credentials file")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	ctx := context.Background()
-	db, auth, err := initDB_AUTH(ctx, *projectId)
+	db, auth, err := initDB_AUTH(ctx, *projectId, *credFile)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 	defer db.Close()
 
-	tempateCache, err := newTemplateCache()
+    infoLog.Println(auth)
+	templateCache, err := newTemplateCache()
 	if err != nil {
 		errorLog.Fatal(err)
 	}
@@ -46,7 +49,7 @@ func main() {
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
-		templateCache: tempateCache,
+		templateCache: templateCache,
 		course:        &models.CourseModel{DB: db},
 	}
 	tlsConfig := &tls.Config{
@@ -61,14 +64,14 @@ func main() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	infoLog.Printf("starting the srv and listening on &s", *addr)
+	infoLog.Printf("starting the srv and listening on %s", *addr)
 	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
 
-func initDB_AUTH(ctx context.Context, projectId string) (*firestore.Client, *firebase.App, error) {
-	conf := &firebase.Config{ProjectID: projectId}
-	app, err := firebase.NewApp(ctx, conf)
+func initDB_AUTH(ctx context.Context, projectId, credFile string) (*firestore.Client, *firebase.App, error) {
+    opt := option.WithCredentialsFile(credFile)
+	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
 )
 
 type Course struct {
@@ -33,4 +34,25 @@ func (c *CourseModel) Get(ctx context.Context, courseId string) (Course, error) 
 	courseDoc.DataTo(&course)
 	course.ID = courseDoc.Ref.ID
 	return course, nil
+}
+
+func (c *CourseModel) GetAll(ctx context.Context) (*[]Course, error) {
+    coursesIter := c.DB.Collection("courses").Documents(ctx)
+    var courses []Course
+    for {
+        doc, err := coursesIter.Next()
+        if err == iterator.Done {
+            break
+        }
+        if err != nil {
+            return nil, err
+        }
+        var course Course
+        if err := doc.DataTo(&course); err != nil {
+            return nil, err
+        }
+        course.ID = doc.Ref.ID
+        courses = append(courses, course)
+    }
+    return &courses, nil
 }

@@ -9,12 +9,13 @@ import (
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-	mux.HandleFunc("/ping", app.ping)
+	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	mux.HandleFunc("GET /ping", app.ping)
 
 	// is logged in middleware
 	isLoggedIn := alice.New(app.isLoggedIn)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
+    mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 
 	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 

@@ -1,0 +1,25 @@
+{
+  "name": "rehla",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tailwindcss -i ./ui/static/css/main.css -o ./ui/static/css/tailwind.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alghurabi0/rehlaGo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alghurabi0/rehlaGo/issues"
+  },
+  "homepage": "https://github.com/alghurabi0/rehlaGo#readme",
+  "devDependencies": {
+    "daisyui": "^4.10.3",
+    "tailwindcss": "^3.4.3"
+  }
+}

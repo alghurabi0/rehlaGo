@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .activeTab {
+        border-color: #8a4baf;
+        border-bottom-width: 2px;
+        padding-bottom: 5px;
+    }
+}

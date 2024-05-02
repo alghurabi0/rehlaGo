@@ -16,6 +16,7 @@ func (app *application) routes() http.Handler {
 	isLoggedIn := alice.New(app.isLoggedIn)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
     mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
+    mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))
 
 	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 

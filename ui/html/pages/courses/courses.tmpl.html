@@ -1,7 +1,6 @@
 {{ define "title" }}Courses{{ end }}
 {{ define "main" }}
 <div class="view">
-    <button class="btn">hello</button>
     <h1 class="text-end font-bold text-xl my-2 text-black">courses</h1>
     <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
         {{ range .Courses }}
@@ -33,7 +32,7 @@
         </div>
 
         <button class="mt-2 w-3/4 p-1 rounded-full border-black border-2 cursor-pointer bg-[#E5E5E5E5]"
-            hx-get="/courses/{{ .ID }}" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+            hx-get="/courses/{{ .ID }}" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
             >التفاصيل</button>
     </div>
 

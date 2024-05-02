@@ -29,3 +29,9 @@ func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 	data.Courses = courses
 	app.renderFull(w, http.StatusOK, "courses.tmpl.html", data)
 }
+
+func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
+    data := app.newTemplateData(r)
+    data.IsSubscribed = true
+    app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
+}

@@ -11,14 +11,14 @@
             class="flex max-h-[302px] w-full flex-col items-center justify-between rounded-lg bg-[#E5E5E5E5] shadow-lg md:w-5/6">
             <div class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white">
                 <h1 class="text-3xl">فيزياء</h1>
-                <div class="mt-2 flex flex-row">
+                <div class="mt-2 flex flex-row w-full justify-end">
                     <h2 class="mr-2 text-xl">الاستاذ كريم الدهلكي</h2>
                     <img src="https://placehold.co/25x25" />
                 </div>
                 <p class="text-md self mt-2">اين باسيب سيبتسايبسيتب يباسيبتيبي يبتي بيبايت باي تيبايبيبتي</p>
             </div>
 
-            <div class="flex w-full flex-col items-end px-4 py-2">
+            <div class="flex w-full flex-col items-end px-4 py-2 text-black">
                 <div class="flex flex-row">
                     <div class="flex flex-row">
                         <p class="mr-1">محاضرة</p>
@@ -41,7 +41,57 @@
             </div>
         </div>
 
-        <h1 class="mt-2 place-self-end text-lg">قائمة المحاضرات</h1>
+        <div class="mt-2 place-self-end text-lg">
+            <button id="examTabLink" class="tablink mr-3" onclick="showTab('#examTab')">Exams</button>
+            <button id="lecTabLink" class="tablink" onclick="showTab('#lecTab')">Lectures</button>
+        </div>
+        <div id="lecTab" class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden">
+            <div class="flex flex-row justify-between py-4 px-4">
+                <img src="https://placehold.co/25x25" />
+                <div class="flex flex-row">
+                    <h1>1</h1>
+                    <h1>المحاضرة رقم</h1>
+                </div>
+            </div>
+        </div>
+        <div id="examTab" class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden">
+            <h1>content</h1>
+        </div>
+
     </div>
+    <script>
+        function showTab(tabName) {
+            console.log(tabName);
+            let tabToClose = ''
+            if (tabName === '#examTab') {
+                tabToClose = '#lecTab'
+            } else {
+                tabToClose = '#examTab'
+            }
+            console.log(tabToClose);
+            tabToCloseEl = document.querySelector(tabToClose)
+            console.log("tab to close", tabToCloseEl);
+            tabToCloseEl.classList.add("hidden");
+
+            tablinks = document.querySelectorAll(".tablink");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("activeTab");
+            }
+
+            tabToShowEl = document.querySelector(tabName)
+            console.log("tab to show", tabToShowEl);
+            tabToShowEl.classList.remove("hidden");
+
+            if (tabName === "#lecTab") {
+                document.querySelector("#lecTabLink").classList.add("activeTab");
+            } else {
+                document.querySelector("#examTabLink").classList.add("activeTab");
+            }
+        }
+        let lecTab = document.querySelector('#lecTab')
+        if (lecTab) {
+            showTab("#lecTab");
+        }
+    </script>
 </div>
 {{ end }}

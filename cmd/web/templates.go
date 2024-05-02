@@ -12,8 +12,8 @@ type templateData struct {
 	CurrentYear  int
 	Course       *models.Course
 	Courses      *[]models.Course
-	isLoggedIn   bool
-	isSubscribed bool
+	IsLoggedIn   bool
+	IsSubscribed bool
 }
 
 var function = template.FuncMap{

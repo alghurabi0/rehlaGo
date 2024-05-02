@@ -60,8 +60,8 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 func (app *application) newTemplateData(r *http.Request) *templateData {
 	return &templateData{
 		CurrentYear:  time.Now().Year(),
-		isLoggedIn:   app.isLoggedInCheck(r),
-		isSubscribed: app.isSubscribedCheck(r),
+		IsLoggedIn:   app.isLoggedInCheck(r),
+		IsSubscribed: app.isSubscribedCheck(r),
 	}
 }
 

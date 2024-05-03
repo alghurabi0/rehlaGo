@@ -2,10 +2,13 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"net/http"
 	"runtime/debug"
 	"time"
+
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 // serverError helper writes an error message and stack trace to the errorLog
@@ -76,4 +79,18 @@ func (app *application) isLoggedInCheck(r *http.Request) bool {
 
 func (app *application) isSubscribedCheck(r *http.Request) bool {
     return false
+}
+
+func (app *application) getCourse(ctx context.Context, courseId string) (*models.Course, error) {
+    course, err := app.course.Get(ctx, courseId)
+    if err != nil {
+        return &models.Course{}, err
+    }
+    lecs, err := app.lec.GetAll(ctx, courseId)
+    if err != nil {
+        return &models.Course{}, err
+    }
+    course.Lecs = *lecs
+
+    return course, nil
 }

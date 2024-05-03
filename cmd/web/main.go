@@ -22,6 +22,7 @@ type application struct {
 	infoLog       *log.Logger
 	templateCache map[string]*template.Template
 	course        *models.CourseModel
+	lec           *models.LecModel
 }
 
 func main() {
@@ -40,7 +41,7 @@ func main() {
 	}
 	defer db.Close()
 
-    infoLog.Println(auth)
+	infoLog.Println(auth)
 	templateCache, err := newTemplateCache()
 	if err != nil {
 		errorLog.Fatal(err)
@@ -51,6 +52,7 @@ func main() {
 		infoLog:       infoLog,
 		templateCache: templateCache,
 		course:        &models.CourseModel{DB: db},
+		lec:           &models.LecModel{DB: db},
 	}
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
@@ -70,7 +72,7 @@ func main() {
 }
 
 func initDB_AUTH(ctx context.Context, projectId, credFile string) (*firestore.Client, *firebase.App, error) {
-    opt := option.WithCredentialsFile(credFile)
+	opt := option.WithCredentialsFile(credFile)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		log.Fatalln(err)

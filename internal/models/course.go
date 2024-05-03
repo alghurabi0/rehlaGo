@@ -25,15 +25,15 @@ type CourseModel struct {
 	DB *firestore.Client
 }
 
-func (c *CourseModel) Get(ctx context.Context, courseId string) (Course, error) {
+func (c *CourseModel) Get(ctx context.Context, courseId string) (*Course, error) {
 	courseDoc, err := c.DB.Collection("courses").Doc(courseId).Get(ctx)
 	if err != nil {
-		return Course{}, err
+		return &Course{}, err
 	}
 	var course Course
 	courseDoc.DataTo(&course)
 	course.ID = courseDoc.Ref.ID
-	return course, nil
+	return &course, nil
 }
 
 func (c *CourseModel) GetAll(ctx context.Context) (*[]Course, error) {

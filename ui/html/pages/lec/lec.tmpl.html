@@ -1,0 +1,29 @@
+{{ define "title" }}{{ .TemplateTitle }}{{ end }}
+{{ define "main" }}
+<div class="view">
+    <div class="flex flex-row justify-end mt-3">
+        <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">تفاصيل المحاضرة</h1>
+        <img src="https://placehold.co/20x20" />
+    </div>
+
+    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
+        <div class="flex h-full w-full flex-col items-center justify-between pb-5">
+            <div class="flex w-full flex-col items-end rounded-xl px-4 py-2 text-black">
+                <h1 class="text-2xl font-bold">{{ .Lec.Title }}</h1>
+                <p class="text-md self mt-4">{{ .Lec.Description }}</p>
+            </div>
+
+            <div class="w-full mt-1">
+                <img src="https://placehold.co/75x50" class="w-full" />
+            </div>
+
+            <div class="flex flex-row w-full h-14 text-white text-lg rounded-xl bg-[#A490BB] mt-7 justify-center">
+                <button class="mr-2">PDF تحميل المواد الخاصة بالمحاضرة</button>
+                <img src="https://placehold.co/25x25" />
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{{ end }}

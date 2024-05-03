@@ -12,6 +12,7 @@ type templateData struct {
 	CurrentYear  int
 	Course       *models.Course
 	Courses      *[]models.Course
+	Lec          *models.Lec
 	IsLoggedIn   bool
 	IsSubscribed bool
 }
@@ -42,6 +43,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		}
 		cache[name] = ts
 	}
-    fmt.Println(cache)
+	fmt.Println(cache)
 	return cache, nil
 }

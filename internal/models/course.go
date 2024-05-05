@@ -15,7 +15,7 @@ type Course struct {
 	TeacherImg   string     `firestore:"-"`
 	Price        int        `firestore:"price"`
 	Duration     string     `firestore:"duration"`
-	NumberOfLecs int        `firestore:"number_of_lecs"`
+	NumberOfLecs int        `firestore:"-"`
 	Lecs         []Lec      `firestore:"-"`
 	Exams        []Exam     `firestore:"-"`
 	Materials    []Material `firestore:"-"`
@@ -31,7 +31,10 @@ func (c *CourseModel) Get(ctx context.Context, courseId string) (*Course, error)
 		return &Course{}, err
 	}
 	var course Course
-	courseDoc.DataTo(&course)
+	err = courseDoc.DataTo(&course)
+    if err != nil {
+        return &Course{}, err
+    }
 	course.ID = courseDoc.Ref.ID
 	return &course, nil
 }

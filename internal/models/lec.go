@@ -9,6 +9,7 @@ import (
 
 type Lec struct {
 	ID          string `firestore:"-"`
+	CourseId    string `firestore:"-"`
 	Title       string `firestore:"title"`
 	Description string `firestore:"description"`
 	Order       int    `firestore:"order"`
@@ -25,8 +26,12 @@ func (l *LecModel) Get(ctx context.Context, courseId, lecId string) (*Lec, error
 		return &Lec{}, err
 	}
 	var lec Lec
-	lecDoc.DataTo(&lec)
+    err = lecDoc.DataTo(&lec)
+    if err != nil {
+        return &Lec{}, err
+    }
 	lec.ID = lecDoc.Ref.ID
+    lec.CourseId = courseId
 	return &lec, nil
 }
 
@@ -46,6 +51,7 @@ func (l *LecModel) GetAll(ctx context.Context, courseId string) (*[]Lec, error) 
 			return nil, err
 		}
 		lec.ID = doc.Ref.ID
+        lec.CourseId = courseId
 		lecs = append(lecs, lec)
 	}
 	return &lecs, nil

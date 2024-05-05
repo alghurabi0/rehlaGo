@@ -9,12 +9,14 @@ import (
 )
 
 type templateData struct {
-	CurrentYear  int
-	Course       *models.Course
-	Courses      *[]models.Course
-	Lec          *models.Lec
-	IsLoggedIn   bool
-	IsSubscribed bool
+	CurrentYear   int
+	Course        *models.Course
+	Courses       *[]models.Course
+	Lec           *models.Lec
+	Exam          *models.Exam
+	IsLoggedIn    bool
+	IsSubscribed  bool
+	TemplateTitle string
 }
 
 var function = template.FuncMap{

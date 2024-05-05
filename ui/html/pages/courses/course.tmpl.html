@@ -10,15 +10,15 @@
         <div
             class="flex max-h-[302px] w-full flex-col items-center justify-between rounded-lg bg-[#E5E5E5E5] shadow-lg md:w-5/6">
             <div class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white">
-                <h1 class="text-3xl">{{ .Course.Title }}</h1>
+                <h1 class="text-2xl">{{ .Course.Title }}</h1>
                 <div class="mt-2 flex flex-row w-full justify-end">
-                    <div class="mr-2 text-xl">
-                        <h2>{{ .Course.Teacher }}</h2>
+                    <div class="flex flex-row mr-2 text-lg">
+                        <h2 class="mr-2">{{ .Course.Teacher }}</h2>
                         <h2>الاستاذ</h2>
                     </div>
-                    <img src="https://placehold.co/25x25" />
+                    <img src="https://placehold.co/15x15" />
                 </div>
-                <p class="text-md self mt-2">{{ .Course.Description }}</p>
+                <p class="text-sm self mt-2">{{ .Course.Description }}</p>
             </div>
 
             <div class="flex w-full flex-col items-end px-4 py-2 text-black">
@@ -54,7 +54,9 @@
             {{ end }}
         </div>
         <div id="examTab" class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden">
-            <h1>content</h1>
+            {{ range .Course.Exams}}
+            {{ template "examCard" . }}
+            {{ end }}
         </div>
 
     </div>
@@ -96,10 +98,22 @@
 {{ end }}
 {{ define "lecCard" }}
 <div class="flex flex-row justify-between py-4 px-4">
-    <img src="https://placehold.co/25x25" />
-    <div class="flex flex-row">
+    <img src="https://placehold.co/25x25" class="cursor-pointer" hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
+        hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true" />
+    <div class="flex flex-row cursor-pointer" hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}" hx-select=".view"
+        hx-target=".view" hx-swap="outerHTML" hx-push-url="true">
         <h1>{{ .Order }}</h1>
         <h1>المحاضرة رقم</h1>
+    </div>
+</div>
+{{ end }}
+{{ define "examCard" }}
+<div class="flex flex-row justify-between py-4 px-4">
+    <img src="https://placehold.co/25x25" class="cursor-pointer" hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"
+        hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true" />
+    <div class="flex flex-row cursor-pointer" hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}" hx-select=".view"
+        hx-target=".view" hx-swap="outerHTML" hx-push-url="true">
+        <h1>{{ .Title }}</h1>
     </div>
 </div>
 {{ end }}

@@ -74,23 +74,31 @@ func (app *application) isLoggedInCheck(r *http.Request) bool {
 	//	return false
 	//}
 	//return isAuthenticated
-    return false
+	return false
 }
 
 func (app *application) isSubscribedCheck(r *http.Request) bool {
-    return false
+	return false
 }
 
 func (app *application) getCourse(ctx context.Context, courseId string) (*models.Course, error) {
-    course, err := app.course.Get(ctx, courseId)
-    if err != nil {
-        return &models.Course{}, err
-    }
-    lecs, err := app.lec.GetAll(ctx, courseId)
-    if err != nil {
-        return &models.Course{}, err
-    }
-    course.Lecs = *lecs
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		return &models.Course{}, err
+	}
 
-    return course, nil
+	lecs, err := app.lec.GetAll(ctx, courseId)
+	if err != nil {
+		return &models.Course{}, err
+	}
+	course.Lecs = *lecs
+	course.NumberOfLecs = len(course.Lecs)
+
+	exams, err := app.exam.GetAll(ctx, courseId)
+	if err != nil {
+		return &models.Course{}, err
+	}
+	course.Exams = *exams
+
+	return course, nil
 }

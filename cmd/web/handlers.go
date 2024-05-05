@@ -24,21 +24,51 @@ func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 	courses, err := app.course.GetAll(ctx)
 	if err != nil {
 		app.serverError(w, err)
-        return
+		return
 	}
 	data.Courses = courses
 	app.renderFull(w, http.StatusOK, "courses.tmpl.html", data)
 }
 
 func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
-    courseId := r.PathValue("id")
-    data := app.newTemplateData(r)
-    ctx := context.Background()
-    course, err := app.getCourse(ctx, courseId)
-    if err != nil {
-        app.serverError(w, err)
-    }
-    data.Course = course
-    data.IsSubscribed = true
-    app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
+	courseId := r.PathValue("id")
+	data := app.newTemplateData(r)
+	ctx := context.Background()
+	course, err := app.getCourse(ctx, courseId)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	data.Course = course
+	data.IsSubscribed = true
+	app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
+}
+
+func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	lecId := r.PathValue("lecId")
+	ctx := context.Background()
+	lec, err := app.lec.Get(ctx, courseId, lecId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data := app.newTemplateData(r)
+	data.Lec = lec
+    data.TemplateTitle = lec.Title
+	app.renderFull(w, http.StatusOK, "lec.tmpl.html", data)
+}
+
+func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	examId:= r.PathValue("examId")
+	ctx := context.Background()
+	exam, err := app.exam.Get(ctx, courseId, examId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data := app.newTemplateData(r)
+	data.Exam = exam
+    data.TemplateTitle = exam.Title
+	app.renderFull(w, http.StatusOK, "exam.tmpl.html", data)
 }

@@ -1,83 +1,109 @@
-{{ define "title" }}{{ .TemplateTitle }}{{ end }}
-{{ define "main" }}
+{{ define "title" }}{{ .TemplateTitle }}{{ end }} {{ define "main" }}
 <div class="view">
-    <div class="mt-3 flex flex-row justify-end">
-        <h1 class="my-2 mr-2 text-end text-xl font-bold text-black">الاختبار</h1>
-        <img src="https://placehold.co/20x20" />
-    </div>
+  <div class="mt-3 flex flex-row justify-end">
+    <h1 class="my-2 mr-2 text-end text-xl font-bold text-black">الاختبار</h1>
+    <img src="https://placehold.co/20x20" />
+  </div>
 
-    <div class="text-md mt-4 grid grid-cols-1 place-items-center gap-y-4 pb-20 md:pb-0">
-        <p class="mt-4 text-center text-lg font-bold">قم بتحميل اسئلة الاختبار بصيغة (بي دي أف) بالضغط على الزر ادناه
+  <div
+    class="text-md mt-4 grid grid-cols-1 place-items-center gap-y-4 pb-20 md:pb-0"
+  >
+    <p class="mt-4 text-center text-lg font-bold">
+      قم بتحميل اسئلة الاختبار بصيغة (بي دي أف) بالضغط على الزر ادناه
+    </p>
+
+    <a
+      href="{{ .Exam.URL }}"
+      class="mt-4 w-full rounded-xl bg-[#A490BB]"
+      download
+      target="_blank"
+    >
+      <div class="flex h-14 w-full flex-row justify-center text-lg text-white">
+        <button class="mr-2">تحميل اسئلة الاختبار</button>
+        <img src="https://placehold.co/25x25" />
+      </div>
+    </a>
+
+    <div class="mt-14 flex w-full flex-col items-center">
+      <h1 class="text-2xl font-bold">رفع الاجابة</h1>
+      <label
+        for="file_upload"
+        class="mt-6 flex w-full flex-row justify-between"
+      >
+        <div
+          class="text-md w-1/3 rounded-s-xl border-2 border-purple-600 px-6 py-2 flex text-center items-center justify-center font-bold cursor-pointer"
+        >
+          اختر ملف
+        </div>
+        <div
+          class="flex w-2/3 flex-row justify-end rounded-e-xl border-2 border-l-0 border-gray-300 px-3 py-3"
+        >
+          <div id="filename" class="mr-2">لم تقم باختيار ملف بعد</div>
+          <img src="https://placehold.co/25x25" />
+        </div>
+      </label>
+      <input
+        id="file_upload"
+        type="file"
+        accept="application/pdf"
+        class="mr-2 hidden w-2/3 text-end"
+      />
+
+      <div class="mt-3 flex w-full flex-row justify-end text-gray-400">
+        <p class="mr-2 text-end">
+          أرفق ملف. يجب ألا يتجاوز حجم ملف مستنداتك 10 ميغا بايت. الصيغ
+          المسموحة: بي دي أف, ورد, صورة
         </p>
-
-        <a href="{{ .Exam.URL }}" class="mt-4 w-full rounded-xl bg-[#A490BB]" download target="_blank">
-            <div class="flex h-14 w-full flex-row justify-center text-lg text-white">
-                <button class="mr-2">تحميل اسئلة الاختبار</button>
-                <img src="https://placehold.co/25x25" />
-            </div>
-        </a>
-
-        <div class="mt-14 flex w-full flex-col items-center">
-            <h1 class="text-2xl font-bold">رفع الاجابة</h1>
-            <label for="file_upload" class="mt-6 flex w-full flex-row justify-between">
-                <div
-                    class="text-md w-1/3 rounded-s-xl border-2 border-purple-600 px-6 py-2 flex text-center items-center justify-center font-bold cursor-pointer">
-                    اختر ملف</div>
-                <div class="flex w-2/3 flex-row justify-end rounded-e-xl border-2 border-l-0 border-gray-300 px-3 py-3">
-                    <div id="filename" class="mr-2">لم تقم باختيار ملف بعد</div>
-                    <img src="https://placehold.co/25x25" />
-                </div>
-            </label>
-            <input id="file_upload" type="file" accept="application/pdf" class="mr-2 hidden w-2/3 text-end" />
-
-            <div class="mt-3 flex w-full flex-row justify-end text-gray-400">
-                <p class="mr-2 text-end">أرفق ملف. يجب ألا يتجاوز حجم ملف مستنداتك 10 ميغا بايت. الصيغ المسموحة: بي
-                    دي
-                    أف, ورد, صورة</p>
-                <img src="https://placehold.co/25x25" />
-            </div>
-        </div>
-
-        <div class="mt-14 flex w-full flex-row text-lg font-bold">
-            <div id="cancel_upload"
-                class="mr-6 flex flex-grow flex-row justify-center rounded-xl border-[3px] border-purple-700 py-3 cursor-pointer">
-                <h1 class="mr-2">الغاء</h1>
-                <img class="w-6" src="https://placehold.co/25x25" />
-            </div>
-            <div id="send_file"
-                class="flex flex-grow flex-row justify-center rounded-xl bg-[#A490BB] py-3 cursor-pointer">
-                <h1 class="mr-2 text-white">ارسال</h1>
-                <img class="w-6" src="https://placehold.co/25x25" />
-            </div>
-        </div>
-        <div class="mt-3 flex w-full flex-row justify-end text-gray-400">
-            <p class="mr-2 text-end">في حال مواجهتك لأي مشكلة يرجى التواصل مع مشرف المادة</p>
-            <img src="https://placehold.co/25x25" />
-        </div>
+        <img src="https://placehold.co/25x25" />
+      </div>
     </div>
-    <script>
-        const inputEl = document.querySelector("#file_upload")
-        const filename = document.querySelector("#filename")
-        if (inputEl && filename) {
-            inputEl.addEventListener("change", handleFile, "false");
-        }
-        function handleFile() {
-            if (!inputEl || !filename) {
-                return
-            }
-            const fileList = this.files;
-            const file = fileList[0];
-            filename.innerText = file.name;
-        }
-        const cancelDiv = document.querySelector("#cancel_upload")
-        if (cancelDiv) {
-            cancelDiv.addEventListener("click", cancelUpload);
-        }
-        function cancelUpload() {
-            inputEl.value = ""
-            "لم تقم باختيار ملف بعد"
-            filename.innerText = "لم تقم باختيار ملف بعد"
-        }
-    </script>
+
+    <div class="mt-14 flex w-full flex-row text-lg font-bold">
+      <div
+        id="cancel_upload"
+        class="mr-6 flex flex-grow flex-row justify-center rounded-xl border-[3px] border-purple-700 py-3 cursor-pointer"
+      >
+        <h1 class="mr-2">الغاء</h1>
+        <img class="w-6" src="https://placehold.co/25x25" />
+      </div>
+      <div
+        id="send_file"
+        class="flex flex-grow flex-row justify-center rounded-xl bg-[#A490BB] py-3 cursor-pointer"
+      >
+        <h1 class="mr-2 text-white">ارسال</h1>
+        <img class="w-6" src="https://placehold.co/25x25" />
+      </div>
+    </div>
+    <div class="mt-3 flex w-full flex-row justify-end text-gray-400">
+      <p class="mr-2 text-end">
+        في حال مواجهتك لأي مشكلة يرجى التواصل مع مشرف المادة
+      </p>
+      <img src="https://placehold.co/25x25" />
+    </div>
+  </div>
+  <script>
+    // const inputEl = document.querySelector("#file_upload");
+    // const filename = document.querySelector("#filename");
+    // if (inputEl && filename) {
+    //   inputEl.addEventListener("change", handleFile, "false");
+    // }
+    // function handleFile() {
+    //   if (!inputEl || !filename) {
+    //     return;
+    //   }
+    //   const fileList = this.files;
+    //   const file = fileList[0];
+    //   filename.innerText = file.name;
+    // }
+    // const cancelDiv = document.querySelector("#cancel_upload");
+    // if (cancelDiv) {
+    //   cancelDiv.addEventListener("click", cancelUpload);
+    // }
+    // function cancelUpload() {
+    //   inputEl.value = "";
+    //   filename.innerText = "لم تقم باختيار ملف بعد";
+    // }
+  </script>
+  <script type="module" src="/static/js/main.js"></script>
 </div>
 {{ end }}

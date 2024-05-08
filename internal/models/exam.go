@@ -39,7 +39,7 @@ func (e *ExamModel) Get(ctx context.Context, courseId, examId string) (*Exam, er
 	exam.ID = examDoc.Ref.ID
 	exam.CourseId = courseId
 
-    examPath := fmt.Sprintf("courses/%s/exams/%s", courseId, examId)
+    examPath := fmt.Sprintf("courses/%s/exams/%s.pdf", courseId, examId)
     bkt, err := e.ST.DefaultBucket()
     if err != nil {
         return &Exam{}, err

@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"firebase.google.com/go/storage"
 	firebase "firebase.google.com/go"
+	"firebase.google.com/go/storage"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
 )
@@ -25,6 +25,7 @@ type application struct {
 	course        *models.CourseModel
 	lec           *models.LecModel
 	exam          *models.ExamModel
+	answer        *models.AnswerModel
 }
 
 func main() {
@@ -57,6 +58,7 @@ func main() {
 		course:        &models.CourseModel{DB: db},
 		lec:           &models.LecModel{DB: db},
 		exam:          &models.ExamModel{DB: db, ST: strg},
+		answer:        &models.AnswerModel{DB: db},
 	}
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},

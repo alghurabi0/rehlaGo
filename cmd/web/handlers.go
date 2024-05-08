@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -54,13 +55,13 @@ func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
 	}
 	data := app.newTemplateData(r)
 	data.Lec = lec
-    data.TemplateTitle = lec.Title
+	data.TemplateTitle = lec.Title
 	app.renderFull(w, http.StatusOK, "lec.tmpl.html", data)
 }
 
 func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 	courseId := r.PathValue("courseId")
-	examId:= r.PathValue("examId")
+	examId := r.PathValue("examId")
 	ctx := context.Background()
 	exam, err := app.exam.Get(ctx, courseId, examId)
 	if err != nil {
@@ -69,6 +70,37 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 	}
 	data := app.newTemplateData(r)
 	data.Exam = exam
-    data.TemplateTitle = exam.Title
+	data.TemplateTitle = exam.Title
 	app.renderFull(w, http.StatusOK, "exam.tmpl.html", data)
+}
+
+func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
+	var info struct {
+		courseId string
+		examId   string
+		userId   string
+		filename string
+	}
+	info.courseId = r.PathValue("courseId")
+	info.examId = r.PathValue("examId")
+	info.userId = "12345"
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	info.filename = r.PostFormValue("filename")
+	ctx := context.Background()
+	exam, err := app.exam.Get(ctx, info.courseId, info.examId)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	err = app.answer.Set(ctx, info.userId, info.courseId, info.examId, exam.Title, info.filename)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "success")
+}
+
+func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
 }

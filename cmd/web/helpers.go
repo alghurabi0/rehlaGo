@@ -81,6 +81,11 @@ func (app *application) isSubscribedCheck(r *http.Request) bool {
 	return false
 }
 
+func (app *application) getUserId(r *http.Request) string {
+	// TODO
+	return "12345"
+}
+
 func (app *application) getCourse(ctx context.Context, courseId string) (*models.Course, error) {
 	course, err := app.course.Get(ctx, courseId)
 	if err != nil {

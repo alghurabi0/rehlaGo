@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
@@ -36,7 +37,22 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// to do
+		ctx := context.Background()
+		cookie, err := r.Cookie("sessionId")
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		token, err := app.user.Auth.VerifyIDToken(ctx, cookie.Value)
+		if err != nil {
+			// TODO - token invalid
+			next.ServeHTTP(w, r)
+			app.errorLog.Println(err)
+			return
+		}
+		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
+		ctx = context.WithValue(ctx, userIdContextKey, token.UID)
+		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
 }

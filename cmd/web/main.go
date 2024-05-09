@@ -13,6 +13,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
 	"firebase.google.com/go/storage"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
@@ -26,6 +27,7 @@ type application struct {
 	lec           *models.LecModel
 	exam          *models.ExamModel
 	answer        *models.AnswerModel
+	user          *models.UserModel
 }
 
 func main() {
@@ -59,6 +61,7 @@ func main() {
 		lec:           &models.LecModel{DB: db},
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		answer:        &models.AnswerModel{DB: db},
+		user:          &models.UserModel{DB: db, Auth: auth},
 	}
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
@@ -77,12 +80,17 @@ func main() {
 	errorLog.Fatal(err)
 }
 
-func initDB_AUTH(ctx context.Context, projectId, credFile, dfBkt string) (*firestore.Client, *firebase.App, *storage.Client, error) {
+func initDB_AUTH(ctx context.Context, projectId, credFile, dfBkt string) (*firestore.Client, *auth.Client, *storage.Client, error) {
 	opt := option.WithCredentialsFile(credFile)
 	cfg := &firebase.Config{
 		StorageBucket: dfBkt,
 	}
 	app, err := firebase.NewApp(ctx, cfg, opt)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	auth, err := app.Auth(ctx)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -112,5 +120,5 @@ func initDB_AUTH(ctx context.Context, projectId, credFile, dfBkt string) (*fires
 		return nil, nil, nil, fmt.Errorf("ping test failed, expected %s, got %s", expectedValue, value)
 	}
 
-	return firestoreClient, app, storageClient, nil
+	return firestoreClient, auth, storageClient, nil
 }

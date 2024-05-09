@@ -69,12 +69,11 @@ func (app *application) newTemplateData(r *http.Request) *templateData {
 }
 
 func (app *application) isLoggedInCheck(r *http.Request) bool {
-	//isAuthenticated, ok := r.Context().Value(isLoggedInContextKey).(bool)
-	//if !ok {
-	//	return false
-	//}
-	//return isAuthenticated
-	return false
+	isLoggedIn, ok := r.Context().Value(isLoggedInContextKey).(bool)
+	if !ok {
+		return false
+	}
+	return isLoggedIn
 }
 
 func (app *application) isSubscribedCheck(r *http.Request) bool {

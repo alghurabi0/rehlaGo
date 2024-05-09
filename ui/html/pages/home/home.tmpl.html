@@ -1,6 +1,10 @@
 {{ define "title" }}Home{{ end }}
 {{ define "main" }}
 <div class="view">
+    {{ if not .IsLoggedIn }}
+    <button hx-get="/signup" hx-select=".view" hx-target=".view" hx-swap="outerHTML">sign up</button>
+    <button hx-get="/login" hx-select=".view" hx-target=".view" hx-swap="outerHTML">log in</button>
+    {{ end }}
     <h1 class="text-end font-bold text-xl my-2 text-black">الاقسام الرئيسية</h1>
 
     <div

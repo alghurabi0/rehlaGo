@@ -2,6 +2,6 @@ package main
 
 type contextKey string
 
-const isLoggedInContextKey = contextKey("isAuthenticated")
+const isLoggedInContextKey = contextKey("isLoggenIn")
 const userIdContextKey = contextKey("userId")
 

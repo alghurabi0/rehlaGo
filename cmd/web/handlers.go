@@ -104,3 +104,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
 }
+
+func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
+	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
+}

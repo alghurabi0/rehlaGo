@@ -21,6 +21,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /courses/{courseId}/exam/{examId}", isLoggedIn.ThenFunc(app.examPage))
 	mux.Handle("POST /answers/{courseId}/{examId}", isLoggedIn.ThenFunc(app.createAnswer))
 	mux.Handle("GET /progress", isLoggedIn.ThenFunc(app.progressPage))
+	mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 
 	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 

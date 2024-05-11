@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -107,4 +109,71 @@ func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
 	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
+}
+
+func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
+	// get values from json object
+	formData := struct {
+		Firstname   string `json:"firstname"`
+		Lastname    string `json:"lastname"`
+		Phone       string `json:"phone_number"`
+		ParentPhone string `json:"parent_phone_number"`
+		Pwd         string `json:"password"`
+	}{}
+	err := json.NewDecoder(r.Body).Decode(&formData)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// validate the form
+	ctx := context.Background()
+	err = app.user.CheckUserExists(ctx, formData.Phone)
+	if err != nil {
+		app.clientError(w, http.StatusConflict)
+		print(err)
+		return
+	}
+	w.WriteHeader(http.StatusAccepted)
+	w.Write([]byte("success"))
+}
+
+func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
+	// get values from json object
+	formData := struct {
+		Firstname   string `json:"firstname"`
+		Lastname    string `json:"lastname"`
+		Phone       string `json:"phone_number"`
+		ParentPhone string `json:"parent_phone_number"`
+		Pwd         string `json:"password"`
+	}{}
+	err := json.NewDecoder(r.Body).Decode(&formData)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// create the user
+	ctx := context.Background()
+	userId, sessId, err := app.user.Create(ctx, formData.Firstname, formData.Lastname, formData.Phone, formData.ParentPhone, formData.Pwd)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	cookie := &http.Cookie{
+		Name:     "rehlaSessionId",
+		Value:    sessId,
+		Path:     "/",
+		Expires:  time.Now().Add(365 * 24 * time.Hour),
+		HttpOnly: true,
+	}
+	cookie1 := &http.Cookie{
+		Name:     "rehlaUserId",
+		Value:    userId,
+		Path:     "/",
+		Expires:  time.Now().Add(365 * 24 * time.Hour),
+		HttpOnly: true,
+	}
+	http.SetCookie(w, cookie)
+	http.SetCookie(w, cookie1)
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("success"))
 }

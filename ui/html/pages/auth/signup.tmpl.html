@@ -18,34 +18,71 @@
         >
           <img src="https://placehold.co/100x100" class="w-2/5" />
           <form
-            id="signup-form"
+            id="signup_form"
             class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2"
           >
             <input
+              id="firstname"
+              name="firstname"
+              type="text"
               class="h-12 w-full rounded-lg pr-4 text-end"
               placeholder="الاسم الأول"
             />
             <input
+              id="lastname"
+              name="lastname"
+              type="text"
               class="h-12 w-full rounded-lg pr-4 text-end"
               placeholder="الاسم الثاني"
             />
             <input
               id="phone_number"
+              name="phone_number"
+              type="tel"
               class="h-12 w-full rounded-lg pr-4 text-end"
               placeholder="رقم الهاتف"
             />
             <input
+              id="parent_phone_number"
+              name="parent_phone_number"
+              type="tel"
               class="h-12 w-full rounded-lg pr-4 text-end"
               placeholder="رقم هاتف ولي الأمر"
             />
+            <input
+              id="password"
+              name="password"
+              type="password"
+              class="h-12 w-full rounded-lg pr-4 text-end"
+              placeholder="الرمز السري"
+            />
+            <div id="recaptcha_container"></div>
             <button
               id="signup_button"
-              class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
               type="submit"
+              class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
             >
               انشاء الحساب
             </button>
           </form>
+
+          <div
+            id="verify_form"
+            class="mt-10 w-full grid-cols-1 justify-items-center gap-y-4 p-2 hidden"
+          >
+            <input
+              id="otp"
+              type="number"
+              class="h-12 w-full rounded-lg pr-4 text-end"
+              placeholder="رمز التأكيد"
+            />
+            <button
+              id="verify_button"
+              class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
+            >
+              تأكيد
+            </button>
+          </div>
 
           <div class="flex w-full flex-row justify-between text-white">
             <div class="ml-2 flex flex-row">

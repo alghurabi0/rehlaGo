@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"fmt"
 	"net/http"
 	"runtime/debug"
@@ -105,4 +106,16 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 	course.Exams = *exams
 
 	return course, nil
+}
+
+func (app *application) GenerateRandomID() string {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+
+	id := fmt.Sprintf("%x", b)
+	return id
 }

@@ -18,7 +18,7 @@ func secureHeaders(next http.Handler) http.Handler {
 
 func (app *application) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		app.infoLog.Printf("&s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
+		app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 		next.ServeHTTP(w, r)
 	})
 }
@@ -38,12 +38,17 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.Background()
-		cookie, err := r.Cookie("sessionId")
+		cookie, err := r.Cookie("rehlaSessionId")
 		if err != nil {
 			next.ServeHTTP(w, r)
 			return
 		}
-		token, err := app.user.Auth.VerifyIDToken(ctx, cookie.Value)
+		cookie1, err := r.Cookie("rehlaUserId")
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		err = app.user.VerifySessionId(ctx, cookie1.Value, cookie.Value)
 		if err != nil {
 			// TODO - token invalid
 			next.ServeHTTP(w, r)
@@ -51,7 +56,7 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 			return
 		}
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
-		ctx = context.WithValue(ctx, userIdContextKey, token.UID)
+		ctx = context.WithValue(ctx, userIdContextKey, cookie1.Value)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

@@ -11,12 +11,13 @@ import (
 )
 
 type User struct {
-	ID                string `firestore:"-"`
-	Firstname         string `firestore:"firstname"`
-	Lastname          string `firestore:"lastname"`
-	PhoneNumber       string `firestore:"phone_number"`
-	ParentPhoneNumber string `firestore:"parent_phone_number"`
-	Pwd               string `firestore:"pwd"`
+	ID                string   `firestore:"-"`
+	Firstname         string   `firestore:"firstname"`
+	Lastname          string   `firestore:"lastname"`
+	PhoneNumber       string   `firestore:"phone_number"`
+	ParentPhoneNumber string   `firestore:"parent_phone_number"`
+	Pwd               string   `firestore:"pwd"`
+	Subscriptions     []string `firestore:"Subscriptions"`
 }
 
 type UserModel struct {
@@ -25,18 +26,18 @@ type UserModel struct {
 }
 
 func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {
-    userDoc, err := u.DB.Collection("users").Doc(userId).Get(ctx)
-    if err != nil {
-        return &User{}, err
-    }
-    var user User
-    err = userDoc.DataTo(&user)
-    if err != nil {
-        print(err)
-        return &User{}, err
-    }
-    user.ID = userDoc.Ref.ID
-    return &user, nil
+	userDoc, err := u.DB.Collection("users").Doc(userId).Get(ctx)
+	if err != nil {
+		return &User{}, err
+	}
+	var user User
+	err = userDoc.DataTo(&user)
+	if err != nil {
+		print(err)
+		return &User{}, err
+	}
+	user.ID = userDoc.Ref.ID
+	return &user, nil
 }
 
 func generateRandomID() string {

@@ -9,6 +9,7 @@ import (
 
 type Subscription struct {
 	ID      string    `firestore:"-"`
+	Active  bool      `firestore:"active"`
 	Answers *[]Answer `firestore:"-"`
 }
 
@@ -49,4 +50,15 @@ func (s *SubscriptionModel) GetAll(ctx context.Context, userId string) (*[]Subsc
 		subs = append(subs, sub)
 	}
 	return &subs, nil
+}
+
+func (s *SubscriptionModel) IsActive(ctx context.Context, userId, subId string) (bool) {
+    sub, err := s.Get(ctx, userId, subId)
+    if err != nil {
+        return false
+    }
+    if sub.Active {
+        return true
+    }
+    return false
 }

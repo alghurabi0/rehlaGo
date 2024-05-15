@@ -86,14 +86,10 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 	info.courseId = r.PathValue("courseId")
 	info.examId = r.PathValue("examId")
-    contextUserId := r.Context().Value(userIdContextKey)
-    if contextUserId == "" {
-        app.serverError(w, errors.New("empty userId"))
-    }
-    userId, ok := contextUserId.(string)
-    if !ok {
-        app.serverError(w, errors.New("userId is not a string"))
-    }
+	userId := app.getUserId(r)
+	if userId == "" {
+		app.serverError(w, errors.New("userId is not a string"))
+	}
 	info.userId = userId
 	err := r.ParseForm()
 	if err != nil {
@@ -114,6 +110,44 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
+    user, err := app.getUser(r)
+    if err != nil {
+        app.serverError(w, err)
+    }
+    ctx := context.Background()
+    subedCourses, err := app.getSubscribedCourses(ctx, *user)
+    if err != nil {
+        app.serverError(w, err)
+    }
+    data := app.newTemplateData(r)
+    data.SubscribedCourses = subedCourses
+    app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
+
+}
+
+func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
+    data := app.newTemplateData(r)
+    if !data.IsLoggedIn {
+        app.renderFull(w, http.StatusUnauthorized, "loginRequired.tmpl.html", nil)
+    }
+    if !data.IsSubscribed {
+        app.renderFull(w, http.StatusUnauthorized, "subRequired.tmpl.html", nil)
+    }
+    user, err := app.getUser(r)
+    if err != nil {
+        app.serverError(w, err)
+    }
+    courseId := r.PathValue("courseId")
+    if courseId == "" {
+        app.serverError(w, errors.New("empty courseId"))
+    }
+    ctx := context.Background()
+    answers, err := app.answer.GetAll(ctx, user.ID, courseId)
+    if err != nil {
+        app.serverError(w, err)
+    }
+    data.Answers = answers
+    app.renderFull(w, http.StatusOK, "gradesPage.tmpl.html", data)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {

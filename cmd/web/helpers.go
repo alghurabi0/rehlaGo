@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime/debug"
@@ -78,12 +79,11 @@ func (app *application) isLoggedInCheck(r *http.Request) bool {
 }
 
 func (app *application) isSubscribedCheck(r *http.Request) bool {
-	return false
-}
-
-func (app *application) getUserId(r *http.Request) string {
-	// TODO
-	return "12345"
+	isSubscribed, ok := r.Context().Value(isSubscribedContextKey).(bool)
+	if !ok {
+		return false
+	}
+	return isSubscribed
 }
 
 func (app *application) getCourse(ctx context.Context, courseId string) (*models.Course, error) {
@@ -106,6 +106,22 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 	course.Exams = *exams
 
 	return course, nil
+}
+
+func (app *application) getUserId(r *http.Request) string {
+	userId, ok := r.Context().Value(userIdContextKey).(string)
+	if !ok {
+		return ""
+	}
+	return userId
+}
+
+func (app *application) getUser(r *http.Request) (*models.User, error) {
+	user, ok := r.Context().Value(userIdContextKey).(models.User)
+	if !ok {
+		return &models.User{}, errors.New("can't get user object from context")
+	}
+	return &user, nil
 }
 
 func (app *application) GenerateRandomID() string {

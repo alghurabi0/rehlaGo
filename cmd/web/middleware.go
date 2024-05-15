@@ -37,23 +37,52 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        userId := app.session.GetString(r.Context(), "userId")
-        print(userId)
-        if userId == "" {
+		userId := app.session.GetString(r.Context(), "userId")
+		print(userId)
+		if userId == "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		ctx := context.Background()
+		user, err := app.user.Get(ctx, userId)
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
+		ctx = context.WithValue(ctx, userModelContextKey, user)
+		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (app *application) isSubscribed(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		isLoggedIn := app.isLoggedInCheck(r)
+		if !isLoggedIn {
+			next.ServeHTTP(w, r)
+            return
+		}
+        courseId := r.PathValue("courseId")
+        if courseId == "" {
             next.ServeHTTP(w, r)
             return
         }
-
-        ctx := context.Background()
-        _, err := app.user.Get(ctx, userId)
+        user, err := app.getUser(r)
         if err != nil {
             next.ServeHTTP(w, r)
             return
         }
-
-        ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
-		ctx = context.WithValue(ctx, userIdContextKey, userId)
-		r = r.WithContext(ctx)
+        ctx := context.Background()
+        isSubscribed := app.sub.IsActive(ctx, user.ID, courseId)
+        if !isSubscribed {
+            next.ServeHTTP(w, r)
+            return
+        }
+        ctx = context.WithValue(r.Context(), isSubscribedContextKey, true)
+        r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
 }

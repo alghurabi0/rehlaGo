@@ -14,6 +14,7 @@ func (app *application) routes() http.Handler {
 
 	// is logged in middleware
 	isLoggedIn := alice.New(app.session.LoadAndSave, app.isLoggedIn)
+    isSubscribed := alice.New(app.session.LoadAndSave, app.isLoggedIn, app.isSubscribed)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 	mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))
@@ -21,6 +22,8 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /courses/{courseId}/exam/{examId}", isLoggedIn.ThenFunc(app.examPage))
 	mux.Handle("POST /answers/{courseId}/{examId}", isLoggedIn.ThenFunc(app.createAnswer))
 	mux.Handle("GET /progress", isLoggedIn.ThenFunc(app.progressPage))
+	mux.Handle("GET /progress/{courseId}", isSubscribed.ThenFunc(app.gradesPage))
+
 	mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 	mux.Handle("POST /signup_validate", isLoggedIn.ThenFunc(app.validateSignUp))
 	mux.Handle("POST /signup", isLoggedIn.ThenFunc(app.createUser))

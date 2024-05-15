@@ -30,6 +30,7 @@ type application struct {
 	exam          *models.ExamModel
 	answer        *models.AnswerModel
 	user          *models.UserModel
+	sub           *models.SubscriptionModel
 	session       *scs.SessionManager
 }
 
@@ -68,6 +69,7 @@ func main() {
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		answer:        &models.AnswerModel{DB: db},
 		user:          &models.UserModel{DB: db, Auth: auth},
+		sub:           &models.SubscriptionModel{DB: db},
 		session:       session,
 	}
 	tlsConfig := &tls.Config{

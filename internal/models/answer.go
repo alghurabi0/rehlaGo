@@ -2,19 +2,21 @@ package models
 
 import (
 	"context"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 )
 
 type Answer struct {
-	ID          string `firestore:"-"`
-	CourseId    string `firestore:"course_id"`
-	ExamId      string `firestore:"exam_id"`
-	ExamTitle   string `firestore:"exam_title"`
-	StoragePath string `firestore:"storage_path"`
-	Mark        string `firestore:"mark"`
-	OutOf       string `firestore:"out_of"`
+	ID               string    `firestore:"-"`
+	CourseId         string    `firestore:"course_id"`
+	ExamId           string    `firestore:"exam_id"`
+	ExamTitle        string    `firestore:"exam_title"`
+	StoragePath      string    `firestore:"storage_path"`
+	Grade            int       `firestore:"mark"`
+	OutOf            int       `firestore:"out_of"`
+	DateOfSubmission time.Time `firestore:"date_of_submission"`
 }
 
 type AnswerModel struct {

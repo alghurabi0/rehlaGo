@@ -63,7 +63,7 @@ func (s *AnswerModel) Set(ctx context.Context, userId, courseId, examId, examTit
 		ExamTitle:   examTitle,
 		StoragePath: filename,
 	}
-	_, _, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(courseId).Collection("answers").Add(ctx, answer)
+	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(courseId).Collection("answers").Doc(examId).Set(ctx, answer)
 	if err != nil {
 		return err
 	}

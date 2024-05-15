@@ -13,7 +13,7 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /ping", app.ping)
 
 	// is logged in middleware
-	isLoggedIn := alice.New(app.isLoggedIn)
+	isLoggedIn := alice.New(app.session.LoadAndSave, app.isLoggedIn)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 	mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))

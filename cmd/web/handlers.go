@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -85,7 +86,15 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 	info.courseId = r.PathValue("courseId")
 	info.examId = r.PathValue("examId")
-	info.userId = "12345"
+    contextUserId := r.Context().Value(userIdContextKey)
+    if contextUserId == "" {
+        app.serverError(w, errors.New("empty userId"))
+    }
+    userId, ok := contextUserId.(string)
+    if !ok {
+        app.serverError(w, errors.New("userId is not a string"))
+    }
+	info.userId = userId
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)

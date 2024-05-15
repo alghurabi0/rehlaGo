@@ -37,26 +37,22 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.Background()
-		cookie, err := r.Cookie("rehlaSessionId")
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		cookie1, err := r.Cookie("rehlaUserId")
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		err = app.user.VerifySessionId(ctx, cookie1.Value, cookie.Value)
-		if err != nil {
-			// TODO - token invalid
-			next.ServeHTTP(w, r)
-			app.errorLog.Println(err)
-			return
-		}
-		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
-		ctx = context.WithValue(ctx, userIdContextKey, cookie1.Value)
+        userId := app.session.GetString(r.Context(), "userId")
+        print(userId)
+        if userId == "" {
+            next.ServeHTTP(w, r)
+            return
+        }
+
+        ctx := context.Background()
+        _, err := app.user.Get(ctx, userId)
+        if err != nil {
+            next.ServeHTTP(w, r)
+            return
+        }
+
+        ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
+		ctx = context.WithValue(ctx, userIdContextKey, userId)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

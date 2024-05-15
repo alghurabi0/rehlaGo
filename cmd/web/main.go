@@ -15,6 +15,8 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"firebase.google.com/go/storage"
+	scsfs "github.com/alexedwards/scs/firestore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
 )
@@ -28,6 +30,7 @@ type application struct {
 	exam          *models.ExamModel
 	answer        *models.AnswerModel
 	user          *models.UserModel
+	session       *scs.SessionManager
 }
 
 func main() {
@@ -47,11 +50,14 @@ func main() {
 	}
 	defer db.Close()
 
-	infoLog.Println(auth)
 	templateCache, err := newTemplateCache()
 	if err != nil {
 		errorLog.Fatal(err)
 	}
+
+	session := scs.New()
+	session.Store = scsfs.New(db)
+	session.Lifetime = 24 * time.Hour
 
 	app := &application{
 		errorLog:      errorLog,
@@ -62,6 +68,7 @@ func main() {
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		answer:        &models.AnswerModel{DB: db},
 		user:          &models.UserModel{DB: db, Auth: auth},
+		session:       session,
 	}
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},

@@ -17,12 +17,26 @@ type User struct {
 	PhoneNumber       string `firestore:"phone_number"`
 	ParentPhoneNumber string `firestore:"parent_phone_number"`
 	Pwd               string `firestore:"pwd"`
-	SessionId         string `firestore:"session_id"`
 }
 
 type UserModel struct {
 	DB   *firestore.Client
 	Auth *auth.Client
+}
+
+func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {
+    userDoc, err := u.DB.Collection("users").Doc(userId).Get(ctx)
+    if err != nil {
+        return &User{}, err
+    }
+    var user User
+    err = userDoc.DataTo(&user)
+    if err != nil {
+        print(err)
+        return &User{}, err
+    }
+    user.ID = userDoc.Ref.ID
+    return &user, nil
 }
 
 func generateRandomID() string {
@@ -62,7 +76,6 @@ func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, pare
 		PhoneNumber:       phone,
 		ParentPhoneNumber: parentPhone,
 		Pwd:               pwd,
-		SessionId:         sessionId,
 	}
 	_, err = u.DB.Collection("users").Doc(userId).Set(ctx, userData)
 	if err != nil {
@@ -78,8 +91,5 @@ func (u *UserModel) VerifySessionId(ctx context.Context, userId, sessionId strin
 	}
 	var user User
 	doc.DataTo(&user)
-	if user.SessionId != sessionId {
-		return errors.New("session id invalid")
-	}
 	return nil
 }

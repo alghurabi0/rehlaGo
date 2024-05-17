@@ -109,19 +109,25 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 }
 
 func (app *application) getUserId(r *http.Request) string {
-	userId, ok := r.Context().Value(userIdContextKey).(string)
+	user, ok := r.Context().Value(userModelContextKey).(models.User)
 	if !ok {
 		return ""
 	}
-	return userId
+	return user.ID
 }
 
 func (app *application) getUser(r *http.Request) (*models.User, error) {
-	user, ok := r.Context().Value(userIdContextKey).(models.User)
+	user, ok := r.Context().Value(userModelContextKey).(models.User)
 	if !ok {
 		return &models.User{}, errors.New("can't get user object from context")
 	}
 	return &user, nil
+}
+
+func (app *application) unauthorized(w http.ResponseWriter, msg string) {
+    w.WriteHeader(http.StatusUnauthorized)
+    w.Header().Set("Content-Type", "text/plain")
+    w.Write([]byte(msg))
 }
 
 func (app *application) GenerateRandomID() string {

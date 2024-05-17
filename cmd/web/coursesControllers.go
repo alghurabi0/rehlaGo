@@ -10,8 +10,8 @@ import (
 func (app *application) getSubscribedCourses(ctx context.Context, user models.User) (*[]models.Course, error) {
     var courses []models.Course
     for _, subId := range user.Subscriptions {
-        valid := app.sub.IsActive(ctx, user.ID, subId)
-        if !valid {
+        active := app.sub.IsActive(ctx, user.ID, subId)
+        if !active {
             continue
         }
         course, err := app.course.Get(ctx, subId)

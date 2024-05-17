@@ -28,6 +28,7 @@ type application struct {
 	course        *models.CourseModel
 	lec           *models.LecModel
 	exam          *models.ExamModel
+	material      *models.MaterialModel
 	answer        *models.AnswerModel
 	user          *models.UserModel
 	sub           *models.SubscriptionModel
@@ -67,7 +68,8 @@ func main() {
 		course:        &models.CourseModel{DB: db},
 		lec:           &models.LecModel{DB: db},
 		exam:          &models.ExamModel{DB: db, ST: strg},
-		answer:        &models.AnswerModel{DB: db},
+		material:      &models.MaterialModel{DB: db, ST: strg},
+		answer:        &models.AnswerModel{DB: db, ST: strg},
 		user:          &models.UserModel{DB: db, Auth: auth},
 		sub:           &models.SubscriptionModel{DB: db},
 		session:       session,

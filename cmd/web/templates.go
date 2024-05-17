@@ -14,10 +14,12 @@ type templateData struct {
 	Courses           *[]models.Course
 	Lec               *models.Lec
 	Exam              *models.Exam
+	ExamURL           string
 	IsLoggedIn        bool
 	IsSubscribed      bool
 	TemplateTitle     string
 	SubscribedCourses *[]models.Course
+	Answer            *models.Answer
 	Answers           *[]models.Answer
 }
 

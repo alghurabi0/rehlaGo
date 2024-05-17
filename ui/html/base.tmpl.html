@@ -18,7 +18,10 @@
         <div class="w-full p-4">
             {{ template "username" . }} {{ template "main" . }}
         </div>
-        {{ template "tabNav" . }} {{ template "nav" . }}
+        {{ template "loginRequired" }}
+        {{ template "subRequired" }}
+        {{ template "tabNav" . }}
+        {{ template "nav" . }}
     </main>
 </body>
 

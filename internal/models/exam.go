@@ -22,7 +22,7 @@ type Exam struct {
 }
 
 type ExamModel struct {
-	DB      *firestore.Client
+	DB *firestore.Client
 	ST *storage.Client
 }
 
@@ -39,25 +39,11 @@ func (e *ExamModel) Get(ctx context.Context, courseId, examId string) (*Exam, er
 	exam.ID = examDoc.Ref.ID
 	exam.CourseId = courseId
 
-    examPath := fmt.Sprintf("courses/%s/exams/%s.pdf", courseId, examId)
-    bkt, err := e.ST.DefaultBucket()
-    if err != nil {
-        return &Exam{}, err
-    }
-    // send expiration as an arg to this func
-    expiration := time.Now().Add(time.Hour)
-    opts := &gcloud.SignedURLOptions{
-        Expires: expiration,
-        Method: http.MethodGet,
-    }
-    url, err := bkt.SignedURL(examPath, opts)
-    if err != nil {
-        return &Exam{}, err
-    }
-    if url == "" {
-        return &Exam{}, errors.New("empty exam file url")
-    }
-    exam.URL = url
+	url, err := e.GetExamUrl(courseId, examId)
+	if err != nil {
+		return &Exam{}, err
+	}
+	exam.URL = url
 
 	return &exam, nil
 }
@@ -82,4 +68,26 @@ func (e *ExamModel) GetAll(ctx context.Context, courseId string) (*[]Exam, error
 		exams = append(exams, exam)
 	}
 	return &exams, nil
+}
+
+func (e *ExamModel) GetExamUrl(courseId, examId string) (string, error) {
+	examPath := fmt.Sprintf("courses/%s/exams/%s.pdf", courseId, examId)
+	bkt, err := e.ST.DefaultBucket()
+	if err != nil {
+		return "", err
+	}
+	// send expiration as an arg to this func
+	expiration := time.Now().Add(time.Hour)
+	opts := &gcloud.SignedURLOptions{
+		Expires: expiration,
+		Method:  http.MethodGet,
+	}
+	url, err := bkt.SignedURL(examPath, opts)
+	if err != nil {
+		return "", err
+	}
+	if url == "" {
+		return "", errors.New("empty exam file url")
+	}
+	return url, nil
 }

@@ -8,7 +8,7 @@
 
     <div class="text-md mt-4 grid grid-cols-1 justify-items-center pb-20 md:pb-0">
         <h1 class="mt-6 justify-self-end text-end text-xl font-bold">تفاصيل ودرجات الامتحانات</h1>
-        <div class="grid grid-cols-5 mt-3 font-bold justify-items-center gap-x-3 border-b-4 border-r-4 py-4">
+        <div class="grid grid-cols-5 w-full mt-3 font-bold justify-items-center gap-x-3 border-b-4 border-r-4 py-4">
             <h2 class="text-center col-span-1">الملاحظات</h2>
             <h2 class="text-center col-span-1">الدرجة</h2>
             <h2 class="text-center col-span-1">التاريخ</h2>
@@ -26,12 +26,12 @@
 </div>
 {{ end }}
 {{ define "gradeCard" }}
-<div class="grid grid-cols-5 font-medium justify-items-center gap-x-3 border-b-4 border-r-4 py-4">
+<div class="grid grid-cols-5 w-full font-medium justify-items-center gap-x-3 border-b-4 border-r-4 py-4">
     <h2 class="text-center col-span-1">جيد</h2>
     {{ if .Grade }}
     <h2 class="text-center col-span-1">{{ .Grade }}</h2>
     {{ else }}
-    <h2 class="text-center col-span-1">In Process</h2>
+    <button class="text-center col-span-1 rounded-full bg-[#A490BB]">Details</button>
     {{ end }}
     <h2 class="text-center col-span-1">{{ .DateOfSubmission }}</h2>
     <h2 class="text-center col-span-2">{{ .ExamTitle }}</h2>

@@ -49,7 +49,7 @@ function sendFile() {
   }
   const examInfo = document.querySelector("#examInfo");
   // TODO - userId
-  const storageRef = ref(storage, `/users/userId/${examInfo.dataset.courseId}/${examInfo.dataset.examId}/${file.name}`);
+  const storageRef = ref(storage, `/users/userId/courses/${examInfo.dataset.courseId}/answers/${examInfo.dataset.examId}.pdf`);
   const uploadFile = uploadBytesResumable(storageRef, file);
 
   uploadFile.on(

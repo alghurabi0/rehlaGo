@@ -11,3 +11,42 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginDialog = document.querySelector('#loginDialog');
+    const subDialog = document.querySelector('#subDialog');
+    const loginClose = document.querySelector('#loginClose');
+    const subClose = document.querySelector('#subClose');
+    if (loginDialog && loginClose) {
+        loginClose.addEventListener('click', () => {
+            loginDialog.close();
+        }
+    }
+
+    if (subDialog && subClose) {
+        subClose.addEventListener('click', () => {
+            subDialog.close();
+        }
+    }
+
+    document.addEventListener('htmx:responseError', (event) => {
+        if (!event) {
+            console.log("empty event");
+            return
+        }
+
+        if (event.detail.xhr.status == 401) {
+
+            if (event.detail.xhr.responseText == 'loginRequired') {
+                if (loginDialog) {
+                    loginDialog.showModal();
+                }
+            } else if (event.detail.xhr.responseText == 'subRequired`) {
+                if (subDialog) {
+                    subDialog.showModal();
+                }
+            }
+
+        }
+    }
+});

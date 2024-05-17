@@ -43,7 +43,6 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 	}
 	data.Course = course
-	data.IsSubscribed = true
 	app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
 }
 
@@ -57,12 +56,27 @@ func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := app.newTemplateData(r)
+	if lec.Order > 3 {
+		if !data.IsSubscribed {
+			app.unauthorized(w, "subRequired")
+			return
+		}
+	}
 	data.Lec = lec
 	data.TemplateTitle = lec.Title
 	app.renderFull(w, http.StatusOK, "lec.tmpl.html", data)
 }
 
 func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+        app.unauthorized(w, "loginRequired")
+		return
+	}
+	if !data.IsSubscribed {
+        app.unauthorized(w, "subRequired")
+		return
+	}
 	courseId := r.PathValue("courseId")
 	examId := r.PathValue("examId")
 	ctx := context.Background()
@@ -71,13 +85,21 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	data := app.newTemplateData(r)
 	data.Exam = exam
 	data.TemplateTitle = exam.Title
 	app.renderFull(w, http.StatusOK, "exam.tmpl.html", data)
 }
 
 func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+        app.unauthorized(w, "loginRequired")
+		return
+	}
+	if !data.IsSubscribed {
+        app.unauthorized(w, "subRequired")
+		return
+	}
 	var info struct {
 		courseId string
 		examId   string
@@ -89,6 +111,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	userId := app.getUserId(r)
 	if userId == "" {
 		app.serverError(w, errors.New("userId is not a string"))
+		return
 	}
 	info.userId = userId
 	err := r.ParseForm()
@@ -101,53 +124,138 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	exam, err := app.exam.Get(ctx, info.courseId, info.examId)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 	err = app.answer.Set(ctx, info.userId, info.courseId, info.examId, exam.Title, info.filename)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 	fmt.Fprintf(w, "success")
 }
 
 func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
-    user, err := app.getUser(r)
-    if err != nil {
-        app.serverError(w, err)
-    }
-    ctx := context.Background()
-    subedCourses, err := app.getSubscribedCourses(ctx, *user)
-    if err != nil {
-        app.serverError(w, err)
-    }
-    data := app.newTemplateData(r)
-    data.SubscribedCourses = subedCourses
-    app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	ctx := context.Background()
+	subedCourses, err := app.getSubscribedCourses(ctx, *user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data.SubscribedCourses = subedCourses
+	app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
 
 }
 
 func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
-    data := app.newTemplateData(r)
-    if !data.IsLoggedIn {
-        app.renderFull(w, http.StatusUnauthorized, "loginRequired.tmpl.html", nil)
-    }
-    if !data.IsSubscribed {
-        app.renderFull(w, http.StatusUnauthorized, "subRequired.tmpl.html", nil)
-    }
-    user, err := app.getUser(r)
-    if err != nil {
-        app.serverError(w, err)
-    }
-    courseId := r.PathValue("courseId")
-    if courseId == "" {
-        app.serverError(w, errors.New("empty courseId"))
-    }
-    ctx := context.Background()
-    answers, err := app.answer.GetAll(ctx, user.ID, courseId)
-    if err != nil {
-        app.serverError(w, err)
-    }
-    data.Answers = answers
-    app.renderFull(w, http.StatusOK, "gradesPage.tmpl.html", data)
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+        app.unauthorized(w, "loginRequired")
+		return
+	}
+	if !data.IsSubscribed {
+        app.unauthorized(w, "subRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	answers, err := app.answer.GetAll(ctx, user.ID, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data.Answers = answers
+	app.renderFull(w, http.StatusOK, "gradesPage.tmpl.html", data)
+}
+
+func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+        app.unauthorized(w, "loginRequired")
+		return
+	}
+	if !data.IsSubscribed {
+        app.unauthorized(w, "subRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	examId := r.PathValue("examId")
+	if examId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	answer, err := app.answer.Get(ctx, user.ID, courseId, examId)
+	if err != nil {
+		app.clientError(w, http.StatusNotFound)
+		return
+	}
+	data.Answer = answer
+	examUrl, err := app.exam.GetExamUrl(courseId, examId)
+	if err != nil {
+		app.serverError(w, errors.New("can't get exam url"))
+		return
+	}
+	data.ExamURL = examUrl
+	app.renderFull(w, http.StatusOK, "answer.tmpl.html", data)
+}
+
+func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+        app.unauthorized(w, "loginRequired")
+		return
+	}
+	if !data.IsSubscribed {
+		app.unauthorized(w, "subRequired")
+		return
+	}
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.clientError(w, http.StatusNotFound)
+		return
+	}
+	mats, err := app.material.GetAll(ctx, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	course.Materials = *mats
+	data.Course = course
+	app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {

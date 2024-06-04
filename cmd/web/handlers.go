@@ -70,11 +70,11 @@ func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
 func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
-        app.unauthorized(w, "loginRequired")
+		app.unauthorized(w, "loginRequired")
 		return
 	}
 	if !data.IsSubscribed {
-        app.unauthorized(w, "subRequired")
+		app.unauthorized(w, "subRequired")
 		return
 	}
 	courseId := r.PathValue("courseId")
@@ -93,11 +93,11 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
-        app.unauthorized(w, "loginRequired")
+		app.unauthorized(w, "loginRequired")
 		return
 	}
 	if !data.IsSubscribed {
-        app.unauthorized(w, "subRequired")
+		app.unauthorized(w, "subRequired")
 		return
 	}
 	var info struct {
@@ -153,17 +153,16 @@ func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
 	}
 	data.SubscribedCourses = subedCourses
 	app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
-
 }
 
 func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
-        app.unauthorized(w, "loginRequired")
+		app.unauthorized(w, "loginRequired")
 		return
 	}
 	if !data.IsSubscribed {
-        app.unauthorized(w, "subRequired")
+		app.unauthorized(w, "subRequired")
 		return
 	}
 	user, err := app.getUser(r)
@@ -189,11 +188,11 @@ func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
 func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
-        app.unauthorized(w, "loginRequired")
+		app.unauthorized(w, "loginRequired")
 		return
 	}
 	if !data.IsSubscribed {
-        app.unauthorized(w, "subRequired")
+		app.unauthorized(w, "subRequired")
 		return
 	}
 	user, err := app.getUser(r)
@@ -230,7 +229,28 @@ func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
 func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
-        app.unauthorized(w, "loginRequired")
+		app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	ctx := context.Background()
+	subedCourses, err := app.getSubscribedCourses(ctx, *user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data.SubscribedCourses = subedCourses
+	app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
+}
+
+func (app *application) courseMaterials(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
 		return
 	}
 	if !data.IsSubscribed {
@@ -255,7 +275,126 @@ func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
 	}
 	course.Materials = *mats
 	data.Course = course
-	app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
+	app.renderFull(w, http.StatusOK, "courseMaterials.tmpl.html", data)
+}
+
+func (app *application) paymentsPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	ctx := context.Background()
+	subedCourses, err := app.getAllSubscribedCourses(ctx, *user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data.SubscribedCourses = subedCourses
+	app.renderFull(w, http.StatusOK, "payments.tmpl.html", data)
+}
+
+func (app *application) paymentHistory(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.clientError(w, http.StatusNotFound)
+		return
+	}
+	payments, err := app.payment.GetAll(ctx, user.ID, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+    course.UserPayments = *payments
+	data.Course = course
+    app.renderFull(w, http.StatusOK, "paymentHistory.tmpl.html", data)
+}
+
+func (app *application) myCoursesPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	ctx := context.Background()
+	subedCourses, err := app.getAllSubscribedCourses(ctx, *user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data.SubscribedCourses = subedCourses
+	app.renderFull(w, http.StatusOK, "mycourses.tmpl.html", data)
+}
+
+func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.clientError(w, http.StatusNotFound)
+		return
+	}
+    sub, err := app.sub.Get(ctx, user.ID, courseId)
+    if err != nil {
+        app.serverError(w, err)
+        return
+    }
+	payments, err := app.payment.GetAll(ctx, user.ID, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+    course.UserSubscription = *sub
+    if len(*payments) > 0 {
+        course.UserLastPayment = (*payments)[0] // check in template
+        totalPaid := 0
+        for _, payment := range *payments {
+            totalPaid += payment.AmountPaid
+        }
+        course.UserAmountPaid = totalPaid // check in template
+    }
+	data.Course = course
+    app.renderFull(w, http.StatusOK, "mycourse.tmpl.html", data)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {

@@ -21,7 +21,7 @@
     <div class="flex w-1/2 flex-col gap-3 items-end">
         <h1 class="text-xl font-bold">{{ .Title }}</h1>
         <div class="flex flex-row mr-2 font-bold">
-            <h2 class="mr-2">{{ .Course.Teacher }}</h2>
+            <h2 class="mr-2">{{ .Teacher }}</h2>
             <h2>الاستاذ</h2>
         </div>
         <button hx-get"/progress/{{ .ID }}" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"

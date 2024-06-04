@@ -8,17 +8,21 @@ import (
 )
 
 type Course struct {
-	ID           string     `firestore:"-"`
-	Title        string     `firestore:"title"`
-	Description  string     `firestore:"description"`
-	Teacher      string     `firestore:"teacher"`
-	TeacherImg   string     `firestore:"-"`
-	Price        int        `firestore:"price"`
-	Duration     string     `firestore:"duration"`
-	NumberOfLecs int        `firestore:"-"`
-	Lecs         []Lec      `firestore:"-"`
-	Exams        []Exam     `firestore:"-"`
-	Materials    []Material `firestore:"-"`
+	ID               string       `firestore:"-"`
+	Title            string       `firestore:"title"`
+	Description      string       `firestore:"description"`
+	Teacher          string       `firestore:"teacher"`
+	TeacherImg       string       `firestore:"-"`
+	Price            int          `firestore:"price"`
+	Duration         string       `firestore:"duration"`
+	NumberOfLecs     int          `firestore:"-"`
+	Lecs             []Lec        `firestore:"-"`
+	Exams            []Exam       `firestore:"-"`
+	Materials        []Material   `firestore:"-"`
+	UserSubscription Subscription `firestore:"-"`
+	UserPayments     []Payment    `firestore:"-"`
+	UserLastPayment  Payment      `firestore:"-"`
+	UserAmountPaid   int          `firestore:"-"`
 }
 
 type CourseModel struct {
@@ -32,30 +36,30 @@ func (c *CourseModel) Get(ctx context.Context, courseId string) (*Course, error)
 	}
 	var course Course
 	err = courseDoc.DataTo(&course)
-    if err != nil {
-        return &Course{}, err
-    }
+	if err != nil {
+		return &Course{}, err
+	}
 	course.ID = courseDoc.Ref.ID
 	return &course, nil
 }
 
 func (c *CourseModel) GetAll(ctx context.Context) (*[]Course, error) {
-    coursesIter := c.DB.Collection("courses").Documents(ctx)
-    var courses []Course
-    for {
-        doc, err := coursesIter.Next()
-        if err == iterator.Done {
-            break
-        }
-        if err != nil {
-            return nil, err
-        }
-        var course Course
-        if err := doc.DataTo(&course); err != nil {
-            return nil, err
-        }
-        course.ID = doc.Ref.ID
-        courses = append(courses, course)
-    }
-    return &courses, nil
+	coursesIter := c.DB.Collection("courses").Documents(ctx)
+	var courses []Course
+	for {
+		doc, err := coursesIter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var course Course
+		if err := doc.DataTo(&course); err != nil {
+			return nil, err
+		}
+		course.ID = doc.Ref.ID
+		courses = append(courses, course)
+	}
+	return &courses, nil
 }

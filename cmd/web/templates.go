@@ -23,8 +23,8 @@ type templateData struct {
 	Answers           *[]models.Answer
 }
 
-var function = template.FuncMap{
-	// "price": price,
+var functions = template.FuncMap{
+	"subtract": subtract,
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -35,7 +35,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 	for _, page := range pages {
 		name := filepath.Base(page)
-		ts, err := template.New(name).Funcs(function).ParseFiles("./ui/html/base.tmpl.html")
+		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/base.tmpl.html")
 		if err != nil {
 			return nil, err
 		}
@@ -51,4 +51,8 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 	fmt.Println(cache)
 	return cache, nil
+}
+
+func subtract(a, b int) (int) {
+    return a - b
 }

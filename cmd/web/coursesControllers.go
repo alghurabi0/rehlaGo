@@ -22,3 +22,15 @@ func (app *application) getSubscribedCourses(ctx context.Context, user models.Us
     }
     return &courses, nil
 }
+
+func (app *application) getAllSubscribedCourses(ctx context.Context, user models.User) (*[]models.Course, error) {
+    var courses []models.Course
+    for _, subId := range user.Subscriptions {
+        course, err := app.course.Get(ctx, subId)
+        if err != nil {
+            return &[]models.Course{}, err
+        }
+        courses = append(courses, *course)
+    }
+    return &courses, nil
+}

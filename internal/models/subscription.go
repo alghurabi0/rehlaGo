@@ -52,13 +52,13 @@ func (s *SubscriptionModel) GetAll(ctx context.Context, userId string) (*[]Subsc
 	return &subs, nil
 }
 
-func (s *SubscriptionModel) IsActive(ctx context.Context, userId, subId string) (bool) {
-    sub, err := s.Get(ctx, userId, subId)
-    if err != nil {
-        return false
-    }
-    if sub.Active {
-        return true
-    }
-    return false
+func (s *SubscriptionModel) IsActive(ctx context.Context, userId, subId string) bool {
+	sub, err := s.Get(ctx, userId, subId)
+	if err != nil {
+		return false
+	}
+	if sub.Active {
+		return true
+	}
+	return false
 }

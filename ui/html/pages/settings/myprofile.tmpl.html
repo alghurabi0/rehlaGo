@@ -1,0 +1,39 @@
+{{ define "title" }}My Profile{{ end }}
+{{ define "main" }}
+<div class="view">
+    <div class="mt-2 flex flex-row justify-end">
+        <h1 class="my-2 mr-2 text-end text-lg font-bold text-black">My Profile</h1>
+        <img src="https://placehold.co/20x20" />
+    </div>
+
+    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
+        <img src="https://placehold.co/100x100" />
+        <h1 class="font-bold text-lg">{{ .User.Firstname}} {{ .User.Lastname }}</h1>
+
+        <div class="grid grid-cols-1 gap-5 w-full justify-items-end mt-8">
+
+            <div class="flex flex-row-reverse font-bold">
+                <img src="https://placehold.co/30x30" />
+                <h1 class="mr-3">تغيير كلمة المرور</h1>
+            </div>
+            <div hx-get="/payments" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+                class="flex flex-row-reverse font-bold">
+                <img src="https://placehold.co/30x30" />
+                <h1 class="mr-3">عرض تاريخ الدفع</h1>
+            </div>
+            <div hx-get="/privacy_policy" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+                class="flex flex-row-reverse font-bold">
+                <img src="https://placehold.co/30x30" />
+                <h1 class="mr-3">سياسة الخصوصية</h1>
+            </div>
+            <div class="flex flex-row-reverse font-bold">
+                <img src="https://placehold.co/30x30" />
+                <h1 class="mr-3">تواصل معنا</h1>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{{ end }}

@@ -326,9 +326,9 @@ func (app *application) paymentHistory(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-    course.UserPayments = *payments
+	course.UserPayments = *payments
 	data.Course = course
-    app.renderFull(w, http.StatusOK, "paymentHistory.tmpl.html", data)
+	app.renderFull(w, http.StatusOK, "paymentHistory.tmpl.html", data)
 }
 
 func (app *application) myCoursesPage(w http.ResponseWriter, r *http.Request) {
@@ -374,27 +374,46 @@ func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusNotFound)
 		return
 	}
-    sub, err := app.sub.Get(ctx, user.ID, courseId)
-    if err != nil {
-        app.serverError(w, err)
-        return
-    }
+	sub, err := app.sub.Get(ctx, user.ID, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 	payments, err := app.payment.GetAll(ctx, user.ID, courseId)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-    course.UserSubscription = *sub
-    if len(*payments) > 0 {
-        course.UserLastPayment = (*payments)[0] // check in template
-        totalPaid := 0
-        for _, payment := range *payments {
-            totalPaid += payment.AmountPaid
-        }
-        course.UserAmountPaid = totalPaid // check in template
-    }
+	course.UserSubscription = *sub
+	if len(*payments) > 0 {
+		course.UserLastPayment = (*payments)[0] // check in template
+		totalPaid := 0
+		for _, payment := range *payments {
+			totalPaid += payment.AmountPaid
+		}
+		course.UserAmountPaid = totalPaid // check in template
+	}
 	data.Course = course
-    app.renderFull(w, http.StatusOK, "mycourse.tmpl.html", data)
+	app.renderFull(w, http.StatusOK, "mycourse.tmpl.html", data)
+}
+
+func (app *application) policyPage(w http.ResponseWriter, r *http.Request) {
+	app.renderFull(w, http.StatusOK, "policy.tmpl.html", nil)
+}
+
+func (app *application) myprofile(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+    data.User = user
+    app.renderFull(w, http.StatusOK, "myprofile.tmpl.html", data)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {

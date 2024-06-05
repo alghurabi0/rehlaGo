@@ -21,6 +21,7 @@ type templateData struct {
 	SubscribedCourses *[]models.Course
 	Answer            *models.Answer
 	Answers           *[]models.Answer
+	User              *models.User
 }
 
 var functions = template.FuncMap{
@@ -53,6 +54,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	return cache, nil
 }
 
-func subtract(a, b int) (int) {
-    return a - b
+func subtract(a, b int) int {
+	return a - b
 }

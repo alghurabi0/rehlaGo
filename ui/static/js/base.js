@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const subDialog = document.querySelector('#subDialog');
     const loginClose = document.querySelector('#loginClose');
     const subClose = document.querySelector('#subClose');
+    const username = document.querySelector('#username');
+    const tabUsername = document.querySelector('#tabUsername');
+    const navDrawer = document.querySelector('#nav_drawer');
     if (loginDialog && loginClose) {
         loginClose.addEventListener('click', () => {
             loginDialog.close();
@@ -47,6 +50,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+        }
+    }
+    if (navDrawer && username && tabUsername) {
+        const navDrawerUsername = navDrawer.querySelector('#nav_drawer_username');
+        username.addEventListener('click', () => {
+            if (navDrawer.classList.contains('hidden')) {
+                navDrawer.classList.remove('hidden');
+                navDrawer.classList.add('flex');
+            } else if (navDrawer.classList.contains('flex')) {
+                navDrawer.classList.remove('flex');
+                navDrawer.classList.add('hidden');
+            }
+        });
+        tabUsername.addEventListener('click', () => {
+            if (navDrawer.classList.contains('hidden')) {
+                navDrawer.classList.remove('hidden');
+                navDrawer.classList.add('flex');
+            } else if (navDrawer.classList.contains('flex')) {
+                navDrawer.classList.remove('flex');
+                navDrawer.classList.add('hidden');
+            }
+        });
+
+        if (navDrawerUsername) {
+            navDrawerUsername.addEventListener('click', () => {
+                if (navDrawer.classList.contains('hidden')) {
+                    navDrawer.classList.remove('hidden');
+                    navDrawer.classList.add('flex');
+                } else if (navDrawer.classList.contains('flex')) {
+                    navDrawer.classList.remove('flex');
+                    navDrawer.classList.add('hidden');
+                }
+            });
         }
     }
 });

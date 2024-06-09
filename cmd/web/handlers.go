@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"google.golang.org/genproto/googleapis/type/phone_number"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -414,6 +416,69 @@ func (app *application) myprofile(w http.ResponseWriter, r *http.Request) {
 	}
     data.User = user
     app.renderFull(w, http.StatusOK, "myprofile.tmpl.html", data)
+}
+
+func (app *application) contactPage(w http.ResponseWriter, r *http.Request) {
+    ctx := context.Background()
+    contactInfo, err := app.contact.GetContactInfo(ctx)
+    if err != nil {
+        app.serverError(w, err)
+        return
+    }
+    data := app.newTemplateData(r)
+    data.ContactInfo = contactInfo
+	app.renderFull(w, http.StatusOK, "contact.tmpl.html", data)
+}
+
+func (app *application) contactMessage(w http.ResponseWriter, r *http.Request) {
+    err := r.ParseForm()
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    fullname := r.PostFormValue("fullname")
+    phone_number := r.PostFormValue("phone_number")
+    message := r.PostFormValue("message")
+    if (fullname == "" || phone_number == "" || message == "") {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    // TODO - validate
+    ctx := context.Background()
+    err = app.contact.SendInquiry(ctx, fullname, phone_number, message)
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+        // TODO - send errors
+    }
+    w.WriteHeader(http.StatusOK)
+}
+
+func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+    app.renderFull(w, http.StatusOK, "reset_password.tmpl.html", data)
+}
+
+func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		app.unauthorized(w, "loginRequired")
+		return
+	}
+    err := r.ParseForm()
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    //currect_password := r.PostFormValue("current_password")
+    //new_password := r.PostFormValue("new_password")
+    //confirm := r.PostFormValue("confirm_new_password")
+    // TODO - validate
+    w.WriteHeader(http.StatusOK)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {

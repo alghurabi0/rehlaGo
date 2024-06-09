@@ -32,6 +32,10 @@ func (app *application) routes() http.Handler {
     mux.Handle("GET /mycourses/{courseId}", isLoggedIn.ThenFunc(app.myCourse))
     mux.Handle("GET /myprofile", isLoggedIn.ThenFunc(app.myprofile))
     mux.Handle("GET /privacy_policy", isLoggedIn.ThenFunc(app.policyPage))
+    mux.Handle("GET /contact", isLoggedIn.ThenFunc(app.contactPage))
+    mux.Handle("POST /contact", isLoggedIn.ThenFunc(app.contactMessage))
+    mux.Handle("GET /reset", isLoggedIn.ThenFunc(app.resetPasswordPage))
+    mux.Handle("POST /reset", isLoggedIn.ThenFunc(app.resetPassword))
 
 	mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 	mux.Handle("POST /signup_validate", isLoggedIn.ThenFunc(app.validateSignUp))

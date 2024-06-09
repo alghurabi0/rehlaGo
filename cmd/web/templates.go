@@ -9,6 +9,7 @@ import (
 )
 
 type templateData struct {
+	ContactInfo       *models.ContactInfo
 	CurrentYear       int
 	Course            *models.Course
 	Courses           *[]models.Course

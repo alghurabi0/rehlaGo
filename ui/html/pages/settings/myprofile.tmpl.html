@@ -12,7 +12,8 @@
 
         <div class="grid grid-cols-1 gap-5 w-full justify-items-end mt-8">
 
-            <div class="flex flex-row-reverse font-bold">
+            <div hx-get="/reset" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+                class="flex flex-row-reverse font-bold">
                 <img src="https://placehold.co/30x30" />
                 <h1 class="mr-3">تغيير كلمة المرور</h1>
             </div>
@@ -26,7 +27,8 @@
                 <img src="https://placehold.co/30x30" />
                 <h1 class="mr-3">سياسة الخصوصية</h1>
             </div>
-            <div class="flex flex-row-reverse font-bold">
+            <div hx-get="/contact" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+                class="flex flex-row-reverse font-bold">
                 <img src="https://placehold.co/30x30" />
                 <h1 class="mr-3">تواصل معنا</h1>
             </div>

@@ -34,6 +34,7 @@ type application struct {
 	sub           *models.SubscriptionModel
 	session       *scs.SessionManager
 	payment       *models.PaymentModel
+	contact       *models.ContactModel
 }
 
 func main() {
@@ -74,6 +75,7 @@ func main() {
 		user:          &models.UserModel{DB: db, Auth: auth},
 		sub:           &models.SubscriptionModel{DB: db},
 		payment:       &models.PaymentModel{DB: db},
+		contact:       &models.ContactModel{DB: db},
 		session:       session,
 	}
 	tlsConfig := &tls.Config{

@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
-	"google.golang.org/genproto/googleapis/type/phone_number"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -483,6 +481,34 @@ func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
 	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
+}
+
+func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
+	app.render(w, http.StatusOK, "login.tmpl.html", nil)
+}
+
+func (app *application) login(w http.ResponseWriter, r *http.Request) {
+    data := app.newTemplateData(r)
+    if data.IsLoggedIn {
+        w.Write([]byte("already logged in"))
+        return
+    }
+    err := r.ParseForm()
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    phone := r.PostFormValue("phone_number")
+    pass := r.PostFormValue("password")
+    ctx := context.Background()
+    user, err := app.user.ValidateLogin(ctx, phone, pass)
+    if err != nil {
+        fmt.Print(err)
+        app.clientError(w, http.StatusUnauthorized)
+        return
+    }
+    app.session.Put(r.Context(), "userId", user.ID)
+    http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {

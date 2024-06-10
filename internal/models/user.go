@@ -5,9 +5,11 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"log"
 
 	"cloud.google.com/go/firestore"
 	"firebase.google.com/go/auth"
+	"google.golang.org/api/iterator"
 )
 
 type User struct {
@@ -93,4 +95,34 @@ func (u *UserModel) VerifySessionId(ctx context.Context, userId, sessionId strin
 	var user User
 	doc.DataTo(&user)
 	return nil
+}
+
+func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*User, error) {
+	query := u.DB.Collection("users").Where("phone_number", "==", phone)
+	iter := query.Documents(ctx)
+    var user User
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+            log.Fatalf("failed to iterate: %v", err)
+		}
+        fmt.Print(doc.Data())
+        err = doc.DataTo(&user)
+        if err != nil {
+            fmt.Print(err)
+        }
+        fmt.Print(user)
+	}
+    fmt.Print(phone)
+    fmt.Print(pass)
+	if user.PhoneNumber != phone {
+		return &User{}, errors.New("user not found")
+	}
+	if user.Pwd != pass {
+		return &User{}, errors.New("incorrect password")
+	}
+    return &user, nil
 }

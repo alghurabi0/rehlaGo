@@ -1,0 +1,47 @@
+{{ define "title" }}Login{{ end }}
+{{ define "main" }}
+
+<body class="bg-white font-sans leading-normal tracking-normal">
+    <div class="view mx-auto overflow-hidden rounded-lg shadow-lg">
+        <div class="w-full bg-cover bg-center bg-no-repeat" style="
+        background-image: url(&quot;https://raw.githubusercontent.com/alghurabi0/temp-icons/main/bgimg&quot;);
+      ">
+            <div class="mx-auto max-w-md">
+                <div class="ml-2 flex flex-row justify-start">
+                    <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
+                    <img src="https://placehold.co/20x20" />
+                </div>
+
+                <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-10">
+                    <img src="https://placehold.co/100x100" class="w-2/5" />
+                    <form id="login_form" class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2">
+                        <input id="phone_number" name="phone_number" type="tel"
+                            class="h-12 w-full rounded-lg pr-4 text-end" placeholder="رقم الهاتف" />
+                        <input id="password" name="password" type="password"
+                            class="h-12 w-full rounded-lg pr-4 text-end" placeholder="الرمز السري" />
+                        <button hx-post="/login" id="login_button"
+                            class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900">
+                            Login
+                        </button>
+                    </form>
+
+                    <div class="flex w-full flex-row justify-between text-white">
+                        <div class="ml-2 flex flex-row">
+                            <h2 class="mr-2">البريد الالكتروني</h2>
+                            <img src="https://placehold.co/25x25" />
+                        </div>
+                        <div class="mr-2 flex flex-row">
+                            <h2 class="mr-2">اتصل بنا</h2>
+                            <img src="https://placehold.co/25x25" />
+                        </div>
+                    </div>
+                    <div class="flex flex-row text-sm text-white">
+                        <p class="mr-2">جميع الحقوق محفوظة لتطبيق رحلة 2023</p>
+                        <img src="https://placehold.co/20x20" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{{ end }}

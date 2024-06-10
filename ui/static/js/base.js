@@ -20,16 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = document.querySelector('#username');
     const tabUsername = document.querySelector('#tabUsername');
     const navDrawer = document.querySelector('#nav_drawer');
+    subDialog.close();
+    loginDialog.close();
     if (loginDialog && loginClose) {
         loginClose.addEventListener('click', () => {
             loginDialog.close();
-        }
+        });
     }
 
     if (subDialog && subClose) {
         subClose.addEventListener('click', () => {
             subDialog.close();
-        }
+        });
     }
 
     document.addEventListener('htmx:responseError', (event) => {
@@ -44,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (loginDialog) {
                     loginDialog.showModal();
                 }
-            } else if (event.detail.xhr.responseText == 'subRequired`) {
+            } else if (event.detail.xhr.responseText == 'subRequired') {
                 if (subDialog) {
                     subDialog.showModal();
                 }
             }
 
         }
-    }
+    });
     if (navDrawer && username && tabUsername) {
         const navDrawerUsername = navDrawer.querySelector('#nav_drawer_username');
         username.addEventListener('click', () => {

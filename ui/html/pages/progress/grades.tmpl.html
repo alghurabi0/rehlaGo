@@ -1,4 +1,4 @@
-{{ define "title" }}{{ Grades }}{{ end }}
+{{ define "title" }}Grades{{ end }}
 {{ define "main" }}
 <div class="view">
     <div class="mt-2 flex flex-row justify-end">
@@ -16,7 +16,7 @@
         </div>
         {{ if .Answers }}
             {{ range .Answers }}
-            {{ template "gradeCard . }}
+            {{ template "gradeCard" . }}
             {{ end }}
             {{ template "exportGrades" . }}
         {{ else }}

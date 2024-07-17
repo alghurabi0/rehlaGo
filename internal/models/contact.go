@@ -32,7 +32,7 @@ func (c *ContactModel) GetContactInfo(ctx context.Context) (*ContactInfo, error)
         return nil, errors.New("no contactInfo doc in contact collection")
     }
     var info ContactInfo
-    err = contactDoc.DataTo(info)
+    err = contactDoc.DataTo(&info)
     if err != nil {
         return &ContactInfo{}, err
     }

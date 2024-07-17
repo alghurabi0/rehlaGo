@@ -60,6 +60,7 @@
             <button
               id="signup_button"
               type="submit"
+              hx-post="/signup"
               class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
             >
               انشاء الحساب
@@ -101,7 +102,6 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/static/js/auth.js"></script>
   </div>
 </body>
 {{ end }}

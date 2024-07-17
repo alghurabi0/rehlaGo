@@ -117,11 +117,13 @@ func (app *application) getUserId(r *http.Request) string {
 }
 
 func (app *application) getUser(r *http.Request) (*models.User, error) {
-	user, ok := r.Context().Value(userModelContextKey).(models.User)
+    print("helper\n")
+    fmt.Printf("%v", r.Context().Value(userModelContextKey))
+	user, ok := r.Context().Value(userModelContextKey).(*models.User)
 	if !ok {
 		return &models.User{}, errors.New("can't get user object from context")
 	}
-	return &user, nil
+	return user, nil
 }
 
 func (app *application) unauthorized(w http.ResponseWriter, msg string) {

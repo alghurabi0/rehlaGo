@@ -63,16 +63,7 @@ func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {
 	return errors.New("user already exists")
 }
 
-func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, parentPhone, pwd string) (string, string, error) {
-	user, err := u.Auth.GetUserByPhoneNumber(ctx, phone)
-	if err != nil {
-		return "", "", err
-	}
-	userId := user.UID
-	sessionId := generateRandomID()
-	if sessionId == "" {
-		return "", "", errors.New("could not generate session id")
-	}
+func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, parentPhone, pwd string) (string, error) {
 	userData := User{
 		Firstname:         firstname,
 		Lastname:          lastname,
@@ -80,11 +71,11 @@ func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, pare
 		ParentPhoneNumber: parentPhone,
 		Pwd:               pwd,
 	}
-	_, err = u.DB.Collection("users").Doc(userId).Set(ctx, userData)
+    doc, _, err := u.DB.Collection("users").Add(ctx, userData)
 	if err != nil {
-		return "", "", err
+		return "", err
 	}
-	return userId, sessionId, nil
+	return doc.ID, nil
 }
 
 func (u *UserModel) VerifySessionId(ctx context.Context, userId, sessionId string) error {

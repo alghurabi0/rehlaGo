@@ -38,7 +38,6 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userId := app.session.GetString(r.Context(), "userId")
-		print(userId)
 		if userId == "" {
 			next.ServeHTTP(w, r)
 			return
@@ -53,6 +52,8 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
 		ctx = context.WithValue(ctx, userModelContextKey, user)
+        print("middleware\n")
+        fmt.Printf("%v", user)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

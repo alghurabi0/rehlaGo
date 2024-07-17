@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -514,17 +512,22 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
 	// get values from json object
 	formData := struct {
-		Firstname   string `json:"firstname"`
-		Lastname    string `json:"lastname"`
-		Phone       string `json:"phone_number"`
-		ParentPhone string `json:"parent_phone_number"`
-		Pwd         string `json:"password"`
+		Firstname   string
+		Lastname    string
+		Phone       string
+		ParentPhone string
+		Pwd         string
 	}{}
-	err := json.NewDecoder(r.Body).Decode(&formData)
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
+    err := r.ParseForm()
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    formData.Phone = r.PostFormValue("phone_number")
+    formData.Pwd = r.PostFormValue("password")
+    formData.ParentPhone = r.PostFormValue("parent_phone_number")
+    formData.Firstname = r.PostFormValue("firstname")
+    formData.Lastname = r.PostFormValue("lastname")
 	// validate the form
 	ctx := context.Background()
 	err = app.user.CheckUserExists(ctx, formData.Phone)
@@ -540,40 +543,29 @@ func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	// get values from json object
 	formData := struct {
-		Firstname   string `json:"firstname"`
-		Lastname    string `json:"lastname"`
-		Phone       string `json:"phone_number"`
-		ParentPhone string `json:"parent_phone_number"`
-		Pwd         string `json:"password"`
+		Firstname   string
+		Lastname    string
+		Phone       string
+		ParentPhone string
+		Pwd         string
 	}{}
-	err := json.NewDecoder(r.Body).Decode(&formData)
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
+    err := r.ParseForm()
+    if err != nil {
+        app.clientError(w, http.StatusBadRequest)
+        return
+    }
+    formData.Phone = r.PostFormValue("phone_number")
+    formData.Pwd = r.PostFormValue("password")
+    formData.ParentPhone = r.PostFormValue("parent_phone_number")
+    formData.Firstname = r.PostFormValue("firstname")
+    formData.Lastname = r.PostFormValue("lastname")
 	// create the user
 	ctx := context.Background()
-	userId, sessId, err := app.user.Create(ctx, formData.Firstname, formData.Lastname, formData.Phone, formData.ParentPhone, formData.Pwd)
+	userId, err := app.user.Create(ctx, formData.Firstname, formData.Lastname, formData.Phone, formData.ParentPhone, formData.Pwd)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	cookie := &http.Cookie{
-		Name:     "rehlaSessionId",
-		Value:    sessId,
-		Path:     "/",
-		Expires:  time.Now().Add(365 * 24 * time.Hour),
-		HttpOnly: true,
-	}
-	cookie1 := &http.Cookie{
-		Name:     "rehlaUserId",
-		Value:    userId,
-		Path:     "/",
-		Expires:  time.Now().Add(365 * 24 * time.Hour),
-		HttpOnly: true,
-	}
-	http.SetCookie(w, cookie)
-	http.SetCookie(w, cookie1)
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("success"))
+    app.session.Put(r.Context(), "userId", userId)
+    http.Redirect(w, r, "/", http.StatusFound)
 }

@@ -20,17 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = document.querySelector('#username');
     const tabUsername = document.querySelector('#tabUsername');
     const navDrawer = document.querySelector('#nav_drawer');
-    subDialog.close();
-    loginDialog.close();
     if (loginDialog && loginClose) {
         loginClose.addEventListener('click', () => {
-            loginDialog.close();
+            loginDialog.classList.add('hidden');
         });
     }
 
     if (subDialog && subClose) {
         subClose.addEventListener('click', () => {
-            subDialog.close();
+            subDialog.classList.add('hidden');
         });
     }
 
@@ -43,12 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.detail.xhr.status == 401) {
 
             if (event.detail.xhr.responseText == 'loginRequired') {
+                console.log('login required');
                 if (loginDialog) {
-                    loginDialog.showModal();
+                    loginDialog.classList.remove('hidden');
                 }
             } else if (event.detail.xhr.responseText == 'subRequired') {
+                console.log('subscription required');
                 if (subDialog) {
-                    subDialog.showModal();
+                    subDialog.classList.remove('hidden');
                 }
             }
 

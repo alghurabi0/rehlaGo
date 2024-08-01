@@ -52,8 +52,8 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
 		ctx = context.WithValue(ctx, userModelContextKey, user)
-        print("middleware\n")
-        fmt.Printf("%v", user)
+		print("middleware\n")
+		fmt.Printf("%v", user)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
@@ -64,26 +64,26 @@ func (app *application) isSubscribed(next http.Handler) http.Handler {
 		isLoggedIn := app.isLoggedInCheck(r)
 		if !isLoggedIn {
 			next.ServeHTTP(w, r)
-            return
+			return
 		}
-        courseId := r.PathValue("courseId")
-        if courseId == "" {
-            next.ServeHTTP(w, r)
-            return
-        }
-        user, err := app.getUser(r)
-        if err != nil {
-            next.ServeHTTP(w, r)
-            return
-        }
-        ctx := context.Background()
-        isSubscribed := app.sub.IsActive(ctx, user.ID, courseId)
-        if !isSubscribed {
-            next.ServeHTTP(w, r)
-            return
-        }
-        ctx = context.WithValue(r.Context(), isSubscribedContextKey, true)
-        r = r.WithContext(ctx)
+		courseId := r.PathValue("courseId")
+		if courseId == "" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		user, err := app.getUser(r)
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		ctx := context.Background()
+		isSubscribed := app.sub.IsActive(ctx, user.ID, courseId)
+		if !isSubscribed {
+			next.ServeHTTP(w, r)
+			return
+		}
+		ctx = context.WithValue(r.Context(), isSubscribedContextKey, true)
+		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
 }

@@ -11,6 +11,12 @@ func (app *application) ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
 
+func ping(w http.ResponseWriter, r *http.Request) {
+	if r != nil {
+		w.Write([]byte("OK"))
+	}
+}
+
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		app.notFound(w)
@@ -410,44 +416,44 @@ func (app *application) myprofile(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-    data.User = user
-    app.renderFull(w, http.StatusOK, "myprofile.tmpl.html", data)
+	data.User = user
+	app.renderFull(w, http.StatusOK, "myprofile.tmpl.html", data)
 }
 
 func (app *application) contactPage(w http.ResponseWriter, r *http.Request) {
-    ctx := context.Background()
-    contactInfo, err := app.contact.GetContactInfo(ctx)
-    if err != nil {
-        app.serverError(w, err)
-        return
-    }
-    data := app.newTemplateData(r)
-    data.ContactInfo = contactInfo
+	ctx := context.Background()
+	contactInfo, err := app.contact.GetContactInfo(ctx)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	data := app.newTemplateData(r)
+	data.ContactInfo = contactInfo
 	app.renderFull(w, http.StatusOK, "contact.tmpl.html", data)
 }
 
 func (app *application) contactMessage(w http.ResponseWriter, r *http.Request) {
-    err := r.ParseForm()
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    fullname := r.PostFormValue("fullname")
-    phone_number := r.PostFormValue("phone_number")
-    message := r.PostFormValue("message")
-    if (fullname == "" || phone_number == "" || message == "") {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    // TODO - validate
-    ctx := context.Background()
-    err = app.contact.SendInquiry(ctx, fullname, phone_number, message)
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-        // TODO - send errors
-    }
-    w.WriteHeader(http.StatusOK)
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	fullname := r.PostFormValue("fullname")
+	phone_number := r.PostFormValue("phone_number")
+	message := r.PostFormValue("message")
+	if fullname == "" || phone_number == "" || message == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// TODO - validate
+	ctx := context.Background()
+	err = app.contact.SendInquiry(ctx, fullname, phone_number, message)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+		// TODO - send errors
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request) {
@@ -456,7 +462,7 @@ func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request
 		app.unauthorized(w, "loginRequired")
 		return
 	}
-    app.renderFull(w, http.StatusOK, "reset_password.tmpl.html", data)
+	app.renderFull(w, http.StatusOK, "reset_password.tmpl.html", data)
 }
 
 func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
@@ -465,16 +471,16 @@ func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
 		app.unauthorized(w, "loginRequired")
 		return
 	}
-    err := r.ParseForm()
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    //currect_password := r.PostFormValue("current_password")
-    //new_password := r.PostFormValue("new_password")
-    //confirm := r.PostFormValue("confirm_new_password")
-    // TODO - validate
-    w.WriteHeader(http.StatusOK)
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	//currect_password := r.PostFormValue("current_password")
+	//new_password := r.PostFormValue("new_password")
+	//confirm := r.PostFormValue("confirm_new_password")
+	// TODO - validate
+	w.WriteHeader(http.StatusOK)
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
@@ -486,27 +492,27 @@ func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
-    data := app.newTemplateData(r)
-    if data.IsLoggedIn {
-        w.Write([]byte("already logged in"))
-        return
-    }
-    err := r.ParseForm()
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    phone := r.PostFormValue("phone_number")
-    pass := r.PostFormValue("password")
-    ctx := context.Background()
-    user, err := app.user.ValidateLogin(ctx, phone, pass)
-    if err != nil {
-        fmt.Print(err)
-        app.clientError(w, http.StatusUnauthorized)
-        return
-    }
-    app.session.Put(r.Context(), "userId", user.ID)
-    http.Redirect(w, r, "/", http.StatusFound)
+	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		w.Write([]byte("already logged in"))
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	phone := r.PostFormValue("phone_number")
+	pass := r.PostFormValue("password")
+	ctx := context.Background()
+	user, err := app.user.ValidateLogin(ctx, phone, pass)
+	if err != nil {
+		fmt.Print(err)
+		app.clientError(w, http.StatusUnauthorized)
+		return
+	}
+	app.session.Put(r.Context(), "userId", user.ID)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
@@ -518,16 +524,16 @@ func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
 		ParentPhone string
 		Pwd         string
 	}{}
-    err := r.ParseForm()
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    formData.Phone = r.PostFormValue("phone_number")
-    formData.Pwd = r.PostFormValue("password")
-    formData.ParentPhone = r.PostFormValue("parent_phone_number")
-    formData.Firstname = r.PostFormValue("firstname")
-    formData.Lastname = r.PostFormValue("lastname")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	formData.Phone = r.PostFormValue("phone_number")
+	formData.Pwd = r.PostFormValue("password")
+	formData.ParentPhone = r.PostFormValue("parent_phone_number")
+	formData.Firstname = r.PostFormValue("firstname")
+	formData.Lastname = r.PostFormValue("lastname")
 	// validate the form
 	ctx := context.Background()
 	err = app.user.CheckUserExists(ctx, formData.Phone)
@@ -549,16 +555,16 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		ParentPhone string
 		Pwd         string
 	}{}
-    err := r.ParseForm()
-    if err != nil {
-        app.clientError(w, http.StatusBadRequest)
-        return
-    }
-    formData.Phone = r.PostFormValue("phone_number")
-    formData.Pwd = r.PostFormValue("password")
-    formData.ParentPhone = r.PostFormValue("parent_phone_number")
-    formData.Firstname = r.PostFormValue("firstname")
-    formData.Lastname = r.PostFormValue("lastname")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	formData.Phone = r.PostFormValue("phone_number")
+	formData.Pwd = r.PostFormValue("password")
+	formData.ParentPhone = r.PostFormValue("parent_phone_number")
+	formData.Firstname = r.PostFormValue("firstname")
+	formData.Lastname = r.PostFormValue("lastname")
 	// create the user
 	ctx := context.Background()
 	userId, err := app.user.Create(ctx, formData.Firstname, formData.Lastname, formData.Phone, formData.ParentPhone, formData.Pwd)
@@ -566,6 +572,6 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-    app.session.Put(r.Context(), "userId", userId)
-    http.Redirect(w, r, "/", http.StatusFound)
+	app.session.Put(r.Context(), "userId", userId)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

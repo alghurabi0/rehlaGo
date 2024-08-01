@@ -117,8 +117,8 @@ func (app *application) getUserId(r *http.Request) string {
 }
 
 func (app *application) getUser(r *http.Request) (*models.User, error) {
-    print("helper\n")
-    fmt.Printf("%v", r.Context().Value(userModelContextKey))
+	print("helper\n")
+	fmt.Printf("%v", r.Context().Value(userModelContextKey))
 	user, ok := r.Context().Value(userModelContextKey).(*models.User)
 	if !ok {
 		return &models.User{}, errors.New("can't get user object from context")
@@ -127,9 +127,9 @@ func (app *application) getUser(r *http.Request) (*models.User, error) {
 }
 
 func (app *application) unauthorized(w http.ResponseWriter, msg string) {
-    w.WriteHeader(http.StatusUnauthorized)
-    w.Header().Set("Content-Type", "text/plain")
-    w.Write([]byte(msg))
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte(msg))
 }
 
 func (app *application) GenerateRandomID() string {

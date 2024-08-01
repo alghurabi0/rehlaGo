@@ -65,11 +65,11 @@ func (m *MaterialModel) GetAll(ctx context.Context, courseId string) (*[]Materia
 		}
 		mat.ID = doc.Ref.ID
 		mat.CourseId = courseId
-        url, err := m.GetMaterialUrl(courseId, mat.ID)
-        if err != nil {
-            return nil, err
-        }
-        mat.URL = url
+		url, err := m.GetMaterialUrl(courseId, mat.ID)
+		if err != nil {
+			return nil, err
+		}
+		mat.URL = url
 		mats = append(mats, mat)
 	}
 	return &mats, nil

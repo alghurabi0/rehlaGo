@@ -26,12 +26,12 @@ func (l *LecModel) Get(ctx context.Context, courseId, lecId string) (*Lec, error
 		return &Lec{}, err
 	}
 	var lec Lec
-    err = lecDoc.DataTo(&lec)
-    if err != nil {
-        return &Lec{}, err
-    }
+	err = lecDoc.DataTo(&lec)
+	if err != nil {
+		return &Lec{}, err
+	}
 	lec.ID = lecDoc.Ref.ID
-    lec.CourseId = courseId
+	lec.CourseId = courseId
 	return &lec, nil
 }
 
@@ -51,7 +51,7 @@ func (l *LecModel) GetAll(ctx context.Context, courseId string) (*[]Lec, error) 
 			return nil, err
 		}
 		lec.ID = doc.Ref.ID
-        lec.CourseId = courseId
+		lec.CourseId = courseId
 		lecs = append(lecs, lec)
 	}
 	return &lecs, nil

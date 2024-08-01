@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"crypto/rand"
 	"errors"
 	"fmt"
 	"log"
@@ -42,18 +41,6 @@ func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {
 	return &user, nil
 }
 
-func generateRandomID() string {
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-
-	id := fmt.Sprintf("%x", b)
-	return id
-}
-
 func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {
 	user, err := u.Auth.GetUserByPhoneNumber(ctx, phone)
 	print(user)
@@ -71,7 +58,7 @@ func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, pare
 		ParentPhoneNumber: parentPhone,
 		Pwd:               pwd,
 	}
-    doc, _, err := u.DB.Collection("users").Add(ctx, userData)
+	doc, _, err := u.DB.Collection("users").Add(ctx, userData)
 	if err != nil {
 		return "", err
 	}
@@ -91,29 +78,29 @@ func (u *UserModel) VerifySessionId(ctx context.Context, userId, sessionId strin
 func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*User, error) {
 	query := u.DB.Collection("users").Where("phone_number", "==", phone)
 	iter := query.Documents(ctx)
-    var user User
+	var user User
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
 			break
 		}
 		if err != nil {
-            log.Fatalf("failed to iterate: %v", err)
+			log.Fatalf("failed to iterate: %v", err)
 		}
-        fmt.Print(doc.Data())
-        err = doc.DataTo(&user)
-        if err != nil {
-            fmt.Print(err)
-        }
-        fmt.Print(user)
+		fmt.Print(doc.Data())
+		err = doc.DataTo(&user)
+		if err != nil {
+			fmt.Print(err)
+		}
+		fmt.Print(user)
 	}
-    fmt.Print(phone)
-    fmt.Print(pass)
+	fmt.Print(phone)
+	fmt.Print(pass)
 	if user.PhoneNumber != phone {
 		return &User{}, errors.New("user not found")
 	}
 	if user.Pwd != pass {
 		return &User{}, errors.New("incorrect password")
 	}
-    return &user, nil
+	return &user, nil
 }

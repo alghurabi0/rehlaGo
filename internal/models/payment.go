@@ -52,8 +52,8 @@ func (p *PaymentModel) GetAll(ctx context.Context, userId, subId string) (*[]Pay
 		payment.ID = doc.Ref.ID
 		payments = append(payments, payment)
 	}
-    sort.Slice(payments, func(i, j int) bool {
-        return payments[i].DateOfPayment.After(payments[j].DateOfPayment)
-    })
+	sort.Slice(payments, func(i, j int) bool {
+		return payments[i].DateOfPayment.After(payments[j].DateOfPayment)
+	})
 	return &payments, nil
 }

@@ -6,6 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/static/css/tailwind.css" />
+    <link rel="manifest" href="/static/manifest.json" />
     <script src="https://unpkg.com/htmx.org@1.9.12"
         integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
         crossorigin="anonymous"></script>
@@ -24,6 +25,18 @@
         {{ template "nav" . }}
         {{ template "nav_drawer" . }}
     </main>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/js/service-worker.js')
+                .then((registration) => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, (error) => {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>

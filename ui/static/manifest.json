@@ -1,0 +1,66 @@
+{
+  "name": "Rehla",
+  "short_name": "Rehla",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/static/icons/Video.png",
+      "sizes": "104x104",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/home.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/sub.png",
+      "sizes": "180x187",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_courses.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_materials.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_contact.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_payment.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_logout.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_progress.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_privacy.png",
+      "sizes": "24x24",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/nav_myprofile.png",
+      "sizes": "28x28",
+      "type": "image/png"
+    }
+  ]
+}
+

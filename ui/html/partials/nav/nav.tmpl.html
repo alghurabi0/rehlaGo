@@ -6,59 +6,59 @@
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/home.png" class="w-7 h-7" />
+            <img src="/static/icons/home.png" class="w-7 h-7" />
             <p class="leading-none">Home</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/myprofile" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_myprofile.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_myprofile.png" class="w-7 h-7" />
             <p class="leading-none">My Profile</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/courses" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_courses.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_courses.png" class="w-7 h-7" />
             <p class="leading-none">Courses</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/materials" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_materials.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_materials.png" class="w-7 h-7" />
             <p class="leading-none">Materials</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/progress" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_progress.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_progress.png" class="w-7 h-7" />
             <p class="leading-none">Progress</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/mycourses" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_courses.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_courses.png" class="w-7 h-7" />
             <p class="leading-none">My Courses</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/payments" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_payment.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_payment.png" class="w-7 h-7" />
             <p class="leading-none">Payment History</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/privacy_policy" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_privacy.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_privacy.png" class="w-7 h-7" />
             <p class="leading-none">Privacy Policy</p>
         </div>
         <div class="flex flex-col items-center my-1.5" hx-get="/contact" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_contact.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_contact.png" class="w-7 h-7" />
             <p class="leading-none">Contact Us</p>
         </div>
         {{ if .IsLoggedIn }}
         <div class="flex flex-col items-center my-1.5" hx-post="/logout" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_logout.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_logout.png" class="w-7 h-7" />
             <p class="leading-none">Logout</p>
         </div>
         {{ else }}
         <div class="flex flex-col items-center my-1.5" hx-get="/login" hx-select=".view" hx-target=".view"
             hx-swap="outerHTML" hx-push-url="true">
-            <img src="https://raw.githubusercontent.com/alghurabi0/temp-icons/main/nav_logout.png" class="w-7 h-7" />
+            <img src="/static/icons/nav_logout.png" class="w-7 h-7" />
             <p class="leading-none">Login</p>
         </div>
         {{ end }}

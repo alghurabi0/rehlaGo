@@ -37,12 +37,20 @@ type application struct {
 	contact       *models.ContactModel
 }
 
+const version = "1.0.0"
+
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	projectId := flag.String("project-id", "rehla-74745", "Google Cloud Project ID")
 	credFile := flag.String("cred-file", "./internal/rehla-74745-firebase-adminsdk-m9ksq-dc2a61849d.json", "Path to the credentials file")
 	dfBkt := flag.String("default-bucket", "rehla-74745.appspot.com", "Defualt google storage bucket")
+	versionDisplay := flag.Bool("version", false, "display version and exit")
 	flag.Parse()
+
+	if *versionDisplay {
+		fmt.Printf("Version\t%s\n", version)
+		os.Exit(0)
+	}
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)

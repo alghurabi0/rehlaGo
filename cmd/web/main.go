@@ -37,7 +37,7 @@ type application struct {
 	contact       *models.ContactModel
 }
 
-const version = "1.0.0"
+var version string
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")

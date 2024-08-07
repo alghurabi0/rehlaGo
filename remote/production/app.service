@@ -15,7 +15,7 @@ Type=exec
 User=zaid
 Group=zaid
 EnvironmentFile=/etc/environment
-WorkingDirectory=/home/zaid
+WorkingDirectory=/home/zaid/rehlaGo
 ExecStart=/home/zaid/rehlaGo/bin/linux_amd64/app
 # Automatically restart the service after a 5-second wait if it exits with a non-zero
 # exit code. If it restarts more than 5 times in 600 seconds, then the rate limit we

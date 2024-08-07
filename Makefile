@@ -33,4 +33,4 @@ linker_flags = '-s -X main.version=${git_description}'
 build:
 	echo "building ..."
 	go build -ldflags=${linker_flags} -o=./bin/app ./cmd/web
-	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64/app ./cmd/web
+	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/app ./cmd/web

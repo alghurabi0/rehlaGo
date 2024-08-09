@@ -2,7 +2,7 @@
 run:
 	go run ./cmd/web
 
-# Quality Control
+# Quality Control a
 
 .PHONY: audit
 audit: vendor

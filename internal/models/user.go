@@ -87,12 +87,11 @@ func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*Use
 		if err != nil {
 			log.Fatalf("failed to iterate: %v", err)
 		}
-		fmt.Print(doc.Data())
 		err = doc.DataTo(&user)
 		if err != nil {
 			fmt.Print(err)
 		}
-		fmt.Print(user)
+		user.ID = doc.Ref.ID
 	}
 	fmt.Print(phone)
 	fmt.Print(pass)

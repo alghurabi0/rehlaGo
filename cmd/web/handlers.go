@@ -511,6 +511,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusUnauthorized)
 		return
 	}
+	fmt.Printf("user id is: %s\n", user.ID)
 	app.session.Put(r.Context(), "userId", user.ID)
 	http.Redirect(w, r, "/", http.StatusFound)
 }

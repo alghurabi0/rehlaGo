@@ -39,6 +39,7 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userId := app.session.GetString(r.Context(), "userId")
 		if userId == "" {
+			fmt.Println("no session cookie")
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -46,6 +47,7 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 		ctx := context.Background()
 		user, err := app.user.Get(ctx, userId)
 		if err != nil {
+			fmt.Println("didn't find session")
 			next.ServeHTTP(w, r)
 			return
 		}

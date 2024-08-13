@@ -10,6 +10,9 @@ func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	mux.HandleFunc("GET /service-worker.js", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "service-worker.js")
+	})
 	mux.HandleFunc("GET /ping", app.ping)
 
 	// is logged in middleware

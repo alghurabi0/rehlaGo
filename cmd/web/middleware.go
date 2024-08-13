@@ -54,8 +54,6 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
 		ctx = context.WithValue(ctx, userModelContextKey, user)
-		print("middleware\n")
-		fmt.Printf("%v", user)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
@@ -63,24 +61,30 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 
 func (app *application) isSubscribed(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("is subscribed middleware activated")
 		isLoggedIn := app.isLoggedInCheck(r)
 		if !isLoggedIn {
+			fmt.Println("the user is not logged in")
 			next.ServeHTTP(w, r)
 			return
 		}
 		courseId := r.PathValue("courseId")
 		if courseId == "" {
+			fmt.Println("empty courseId")
 			next.ServeHTTP(w, r)
 			return
 		}
+		fmt.Printf("course id: %s\n", courseId)
 		user, err := app.getUser(r)
 		if err != nil {
+			fmt.Println("couldn't get user struct")
 			next.ServeHTTP(w, r)
 			return
 		}
 		ctx := context.Background()
 		isSubscribed := app.sub.IsActive(ctx, user.ID, courseId)
 		if !isSubscribed {
+			fmt.Println("subscription is not active")
 			next.ServeHTTP(w, r)
 			return
 		}

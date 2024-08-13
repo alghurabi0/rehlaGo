@@ -6,7 +6,7 @@
     </div>
 
     <div class="text-md mt-4 grid grid-cols-1 place-items-center gap-y-4 pb-20 md:pb-0">
-        <h1 id="examInfo" data-courseId="{{ .Exam.CourseId }} data-examId=" {{ .Exam.ID }}
+        <h1 id="examInfo" data-courseId="{{ .Exam.CourseId }}" data-examId="{{ .Exam.ID }}"
             class="text-center text-lg font-bold" hx-post="/answers/{{ .Exam.CourseId }}/{{ .Exam.ID }}"
             hx-trigger="successfulUpload" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
             hx-vals='js:{filename: event.detail.filename}'>{{ .Exam.Title }}</h1>

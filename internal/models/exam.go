@@ -71,7 +71,7 @@ func (e *ExamModel) GetAll(ctx context.Context, courseId string) (*[]Exam, error
 }
 
 func (e *ExamModel) GetExamUrl(courseId, examId string) (string, error) {
-	examPath := fmt.Sprintf("courses/%s/exams/%s.pdf", courseId, examId)
+	examPath := fmt.Sprintf("courses/%s/exams/%s", courseId, examId)
 	bkt, err := e.ST.DefaultBucket()
 	if err != nil {
 		return "", err

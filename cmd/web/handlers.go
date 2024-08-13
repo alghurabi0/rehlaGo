@@ -114,7 +114,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	info.examId = r.PathValue("examId")
 	userId := app.getUserId(r)
 	if userId == "" {
-		app.serverError(w, errors.New("userId is not a string"))
+		app.serverError(w, errors.New("user id is empty string"))
 		return
 	}
 	info.userId = userId
@@ -186,7 +186,7 @@ func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Answers = answers
-	app.renderFull(w, http.StatusOK, "gradesPage.tmpl.html", data)
+	app.renderFull(w, http.StatusOK, "grades.tmpl.html", data)
 }
 
 func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {

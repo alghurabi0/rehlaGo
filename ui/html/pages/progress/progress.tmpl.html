@@ -6,10 +6,12 @@
         <img src="https://placehold.co/20x20" />
     </div>
     <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
-        {{ range .SubscribedCourses }}
-        {{ template "progressCard" . }}
+        {{ if .SubscribedCourses }}
+            {{ range .SubscribedCourses }}
+            {{ template "progressCard" . }}
+            {{ end }}
         {{ else }}
-        <h1>You don't have subscribed courses</h1>
+             <h1>You don't have subscribed courses</h1>
         {{ end }}
     </div>
 </div>

@@ -19,6 +19,10 @@ func (app *application) getSubscribedCourses(ctx context.Context, user models.Us
 		}
 		courses = append(courses, *course)
 	}
+
+	if len(courses) == 0 {
+		return &[]models.Course{}, nil
+	}
 	return &courses, nil
 }
 

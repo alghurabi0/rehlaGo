@@ -402,7 +402,8 @@ func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) policyPage(w http.ResponseWriter, r *http.Request) {
-	app.renderFull(w, http.StatusOK, "policy.tmpl.html", nil)
+	data := app.newTemplateData(r)
+	app.renderFull(w, http.StatusOK, "policy.tmpl.html", data)
 }
 
 func (app *application) myprofile(w http.ResponseWriter, r *http.Request) {

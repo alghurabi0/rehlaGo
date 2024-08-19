@@ -517,37 +517,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func (app *application) validateSignUp(w http.ResponseWriter, r *http.Request) {
-	// get values from json object
-	formData := struct {
-		Firstname   string
-		Lastname    string
-		Phone       string
-		ParentPhone string
-		Pwd         string
-	}{}
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	formData.Phone = r.PostFormValue("phone_number")
-	formData.Pwd = r.PostFormValue("password")
-	formData.ParentPhone = r.PostFormValue("parent_phone_number")
-	formData.Firstname = r.PostFormValue("firstname")
-	formData.Lastname = r.PostFormValue("lastname")
-	// validate the form
-	ctx := context.Background()
-	err = app.user.CheckUserExists(ctx, formData.Phone)
-	if err != nil {
-		app.clientError(w, http.StatusConflict)
-		print(err)
-		return
-	}
-	w.WriteHeader(http.StatusAccepted)
-	w.Write([]byte("success"))
-}
-
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	// get values from json object
 	formData := struct {

@@ -41,14 +41,14 @@ func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {
 	return &user, nil
 }
 
-func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {
-	user, err := u.Auth.GetUserByPhoneNumber(ctx, phone)
-	print(user)
-	if err != nil {
-		return nil
-	}
-	return errors.New("user already exists")
-}
+//func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {
+//user, err := u.Auth.GetUserByPhoneNumber(ctx, phone)
+//print(user)
+//if err != nil {
+//return nil
+//}
+//return errors.New("user already exists")
+//}
 
 func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, parentPhone, pwd string) (string, error) {
 	userData := User{
@@ -63,16 +63,6 @@ func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, pare
 		return "", err
 	}
 	return doc.ID, nil
-}
-
-func (u *UserModel) VerifySessionId(ctx context.Context, userId, sessionId string) error {
-	doc, err := u.DB.Collection("users").Doc(userId).Get(ctx)
-	if err != nil {
-		return err
-	}
-	var user User
-	doc.DataTo(&user)
-	return nil
 }
 
 func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*User, error) {

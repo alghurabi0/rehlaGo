@@ -1,4 +1,4 @@
-package dashboard
+package main
 
 import (
 	"context"
@@ -78,6 +78,7 @@ func main() {
 		lec:           &models.LecModel{DB: db},
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		material:      &models.MaterialModel{DB: db, ST: strg},
+		user:          &models.UserModel{DB: db},
 		answer:        &models.AnswerModel{DB: db, ST: strg},
 		sub:           &models.SubscriptionModel{DB: db},
 		payment:       &models.PaymentModel{DB: db},

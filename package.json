@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tailwindcss -i ./ui/static/css/main.css -o ./ui/static/css/tailwind.css",
+    "buildDash": "npx tailwindcss -i ./ui/dashboard/static/css/main.css -o ./ui/dashboard/static/css/tailwind.css",
     "watch": "npx tailwindcss -i ./ui/static/css/main.css -o ./ui/static/css/tailwind.css --watch"
   },
   "repository": {

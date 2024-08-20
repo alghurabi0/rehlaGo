@@ -2,8 +2,11 @@ package dashboard_models
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
 )
 
 type DashboardUser struct {
@@ -42,4 +45,32 @@ func (u *DashboardUserModel) Create(ctx context.Context, username, role, pwd str
 		return "", err
 	}
 	return doc.ID, nil
+}
+
+func (u *DashboardUserModel) ValidateLogin(ctx context.Context, username, password string) (string, error) {
+	query := u.DB.Collection("dashboard_users").Where("username", "==", username)
+	iter := query.Documents(ctx)
+	var user DashboardUser
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			fmt.Printf("failed to iterate: %v", err)
+			return "", err
+		}
+		err = doc.DataTo(&user)
+		if err != nil {
+			return "", err
+		}
+		user.ID = doc.Ref.ID
+	}
+	if user.Username != username {
+		return "", errors.New("user not found")
+	}
+	if user.Password != password {
+		return "", errors.New("incorrect password")
+	}
+	return user.ID, nil
 }

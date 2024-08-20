@@ -30,15 +30,15 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 		userId := app.session.GetString(r.Context(), "userId")
 		if userId == "" {
 			fmt.Println("no session cookie")
-			next.ServeHTTP(w, r)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 
 		ctx := context.Background()
-		user, err := app.user.Get(ctx, userId)
+		user, err := app.dashboardUser.Get(ctx, userId)
 		if err != nil {
 			fmt.Println("didn't find session")
-			next.ServeHTTP(w, r)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 

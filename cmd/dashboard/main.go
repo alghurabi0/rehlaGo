@@ -15,6 +15,7 @@ import (
 	"firebase.google.com/go/storage"
 	scsfs "github.com/alexedwards/scs/firestore"
 	"github.com/alexedwards/scs/v2"
+	"github.com/alghurabi0/rehla/internal/dashboard_models"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
 )
@@ -30,6 +31,7 @@ type application struct {
 	material      *models.MaterialModel
 	answer        *models.AnswerModel
 	user          *models.UserModel
+	dashboardUser *dashboard_models.DashboardUserModel
 	sub           *models.SubscriptionModel
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
@@ -66,8 +68,12 @@ func main() {
 	}
 
 	// sessions manager
+	collection := db.Collection("dashboard_sessions")
+	store := scsfs.New(db)
+	store.Sessions = collection
+
 	session := scs.New()
-	session.Store = scsfs.New(db)
+	session.Store = store
 	session.Lifetime = 100 * time.Hour
 
 	app := &application{
@@ -79,6 +85,7 @@ func main() {
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		material:      &models.MaterialModel{DB: db, ST: strg},
 		user:          &models.UserModel{DB: db},
+		dashboardUser: &dashboard_models.DashboardUserModel{DB: db},
 		answer:        &models.AnswerModel{DB: db, ST: strg},
 		sub:           &models.SubscriptionModel{DB: db},
 		payment:       &models.PaymentModel{DB: db},

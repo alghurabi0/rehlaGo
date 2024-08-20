@@ -12,7 +12,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
 	// is logged in middleware
-	isLoggedIn := alice.New(app.session.LoadAndSave, app.isLoggedIn)
+	isLoggedIn := alice.New(app.isLoggedIn)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	//mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 	//mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))
@@ -38,10 +38,10 @@ func (app *application) routes() http.Handler {
 	//mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 	//mux.Handle("POST /signup_validate", isLoggedIn.ThenFunc(app.validateSignUp))
 	//mux.Handle("POST /signup", isLoggedIn.ThenFunc(app.createUser))
-	//mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
-	//mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
+	mux.HandleFunc("GET /login", app.loginPage)
+	mux.HandleFunc("POST /login", app.login)
 
-	standard := alice.New(app.recoverPanic, app.logRequest)
+	standard := alice.New(app.recoverPanic, app.logRequest, app.session.LoadAndSave)
 
 	return standard.Then(mux)
 

@@ -2,9 +2,12 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime/debug"
+
+	"github.com/alghurabi0/rehla/internal/dashboard_models"
 )
 
 // serverError helper writes an error message and stack trace to the errorLog
@@ -40,23 +43,20 @@ func (app *application) isLoggedInCheck(r *http.Request) bool {
 	return isLoggedIn
 }
 
-//func (app *application) getUserId(r *http.Request) (string, error) {
-//user, ok := r.Context().Value(userModelContextKey).(*dashboard_models.DashboardUser)
-//if !ok {
-//return "", errors.New("can't get user object from context")
-//}
-//return user.ID, nil
-//}
-//
-//func (app *application) getUser(r *http.Request) (*dashboard_models.DashboardUser, error) {
-//print("helper\n")
-//fmt.Printf("%v", r.Context().Value(userModelContextKey))
-//user, ok := r.Context().Value(userModelContextKey).(*dashboard_models.DashboardUser)
-//if !ok {
-//return &dashboard_models.DashboardUser{}, errors.New("can't get user object from context")
-//}
-//return user, nil
-//}
+// func (app *application) getUserId(r *http.Request) (string, error) {
+// user, ok := r.Context().Value(userModelContextKey).(*dashboard_models.DashboardUser)
+// if !ok {
+// return "", errors.New("can't get user object from context")
+// }
+// return user.ID, nil
+// }
+func (app *application) getUser(r *http.Request) (*dashboard_models.DashboardUser, error) {
+	user, ok := r.Context().Value(userModelContextKey).(*dashboard_models.DashboardUser)
+	if !ok {
+		return &dashboard_models.DashboardUser{}, errors.New("can't get user object from context")
+	}
+	return user, nil
+}
 
 func (app *application) render(w http.ResponseWriter, status int, page string, data *templateData) {
 	ts, ok := app.templateCache[page]

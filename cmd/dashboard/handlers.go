@@ -10,8 +10,21 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 	data := app.newTemplateData(r)
-	app.render(w, http.StatusOK, "home.tmpl.html", data)
+	switch user.Role {
+	case "admin":
+		app.render(w, http.StatusOK, "home.tmpl.html", data)
+	case "corrector":
+		app.render(w, http.StatusOK, "correctorHome.tmpl.html", data)
+	default:
+		app.clientError(w, http.StatusUnauthorized)
+		return
+	}
 }
 
 func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
@@ -46,4 +59,17 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.session.Put(r.Context(), "userId", userId)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 
+}
+
+func (app *application) courses(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	courses, err := app.course.GetAll(ctx)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Courses = courses
+	app.render(w, http.StatusOK, "courses.tmpl.html", data)
 }

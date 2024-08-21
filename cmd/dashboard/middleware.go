@@ -48,3 +48,19 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func (app *application) isAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+
+		if user.Role != "admin" {
+			app.clientError(w, http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}

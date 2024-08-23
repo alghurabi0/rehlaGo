@@ -1,0 +1,177 @@
+{{ define "title" }}Course Informations{{ end }} {{ define "main" }}
+<div class="mt-12 mb-8 flex flex-col gap-12 view">
+  <div
+    class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
+  >
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        Course Information
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <div
+        class="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3"
+      >
+        <div>
+          <h6
+            class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-3"
+          >
+            Platform Settings
+          </h6>
+          <div class="flex flex-col gap-12">
+            <div>
+              <p
+                class="antialiased font-sans mb-4 block text-xs font-semibold uppercase text-blue-gray-500"
+              >
+                account
+              </p>
+              <form
+                class="flex flex-col gap-6"
+                hx-put="/course"
+                hx-trigger="submit"
+                hx-select=".view"
+                hx-target=".view"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+              >
+                <label
+                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+                >
+                  Title
+                </label>
+                <input type="text" placeholder="blabla" name="title" />
+                <label
+                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+                >
+                  Teacher Name
+                </label>
+                <input type="text" placeholder="blabla" name="title" />
+                <label
+                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+                >
+                  Teacher Image
+                </label>
+                <input type="text" placeholder="blabla" name="title" />
+                <label
+                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+                >
+                  Price
+                </label>
+                <input type="text" placeholder="blabla" name="title" />
+                <label
+                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+                >
+                  Description
+                </label>
+                <input type="text" placeholder="blabla" name="title" />
+                <button type="submit">Save</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          class="relative flex flex-col bg-clip-border rounded-xl bg-transparent text-gray-700 shadow-none"
+        >
+          <div
+            class="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none mx-0 mt-0 mb-4 flex items-center justify-between gap-4"
+          >
+            <h6
+              class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900"
+            >
+              Profile Information
+            </h6>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              class="h-4 w-4 cursor-pointer text-blue-gray-500"
+            >
+              <path
+                d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
+              ></path>
+            </svg>
+          </div>
+          <div class="p-0">
+            <p
+              class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-500"
+            >
+              Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer
+              is no. If two equally difficult paths, choose the one more painful
+              in the short term (pain avoidance is creating an illusion of
+              equality).
+            </p>
+            <hr class="my-8 border-blue-gray-50" />
+            <ul class="flex flex-col gap-4 p-0">
+              <li class="flex items-center gap-4">
+                <p
+                  class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold capitalize"
+                >
+                  first name:
+                </p>
+                <p
+                  class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-500"
+                >
+                  Alec M. Thompson
+                </p>
+              </li>
+              <li class="flex items-center gap-4">
+                <p
+                  class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold capitalize"
+                >
+                  mobile:
+                </p>
+                <p
+                  class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-500"
+                >
+                  (44) 123 1234 123
+                </p>
+              </li>
+              <li class="flex items-center gap-4">
+                <p
+                  class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold capitalize"
+                >
+                  email:
+                </p>
+                <p
+                  class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-500"
+                >
+                  alecthompson@mail.com
+                </p>
+              </li>
+              <li class="flex items-center gap-4">
+                <p
+                  class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold capitalize"
+                >
+                  location:
+                </p>
+                <p
+                  class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-500"
+                >
+                  USA
+                </p>
+              </li>
+              <li class="flex items-center gap-4">
+                <p
+                  class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold capitalize"
+                >
+                  social:
+                </p>
+                <div class="flex items-center gap-4">
+                  <i class="fa-brands fa-facebook text-blue-700"></i
+                  ><i class="fa-brands fa-twitter text-blue-400"></i
+                  ><i class="fa-brands fa-instagram text-purple-500"></i>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

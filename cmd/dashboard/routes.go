@@ -18,7 +18,7 @@ func (app *application) routes() http.Handler {
 	app.infoLog.Print(isAdmin)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	mux.Handle("GET /courses", isAdmin.ThenFunc(app.courses))
-	//mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))
+	mux.Handle("GET /courses/{id}", isAdmin.ThenFunc(app.coursePage))
 	//mux.Handle("GET /courses/{courseId}/lec/{lecId}", isLoggedIn.ThenFunc(app.lecPage))
 	//mux.Handle("GET /courses/{courseId}/exam/{examId}", isSubscribed.ThenFunc(app.examPage))
 	//mux.Handle("POST /answers/{courseId}/{examId}", isSubscribed.ThenFunc(app.createAnswer))

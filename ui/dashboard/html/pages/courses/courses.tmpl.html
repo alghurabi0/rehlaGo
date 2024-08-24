@@ -55,6 +55,7 @@
           {{ range .Courses }} {{ template "courseRow" . }} {{ end }}
         </tbody>
       </table>
+      <button hx-get="/course" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true">Add Course</button>
     </div>
   </div>
 </div>

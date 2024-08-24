@@ -15,9 +15,9 @@ func (app *application) routes() http.Handler {
 	isLoggedIn := alice.New(app.isLoggedIn)
 	// admin or corrector middleware
 	isAdmin := alice.New(app.isLoggedIn, app.isAdmin)
-	app.infoLog.Print(isAdmin)
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	mux.Handle("GET /courses", isAdmin.ThenFunc(app.courses))
+	mux.Handle("GET /course", isAdmin.ThenFunc(app.createCoursePage))
 	mux.Handle("POST /courses", isAdmin.ThenFunc(app.createCourse))
 	mux.Handle("GET /courses/{id}", isAdmin.ThenFunc(app.coursePage))
 	mux.Handle("PATCH /courses/{id}", isAdmin.ThenFunc(app.editCourse))

@@ -24,63 +24,7 @@
           </h6>
           <div class="flex flex-col gap-12">
             <div>
-              <form
-                class="flex flex-col gap-6"
-                hx-patch="/course/{{.Course.ID}}"
-                hx-trigger="submit"
-                hx-select=".view"
-                hx-target=".view"
-                hx-swap="outerHTML"
-                hx-push-url="true"
-              >
-                <label
-                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-                >
-                  Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="{{.Course.Title}}"
-                  name="title"
-                />
-                <label
-                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-                >
-                  Teacher Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="{{.Course.Teacher}}"
-                  name="teacher_name"
-                />
-                <label
-                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-                >
-                  Teacher Image
-                </label>
-                <input type="text" placeholder="blabla" name="teacher_img" />
-                <label
-                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-                >
-                  Price
-                </label>
-                <input
-                  type="number"
-                  placeholder="{{.Course.Price}}"
-                  name="price"
-                />
-                <label
-                  class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-                >
-                  Description
-                </label>
-                <input
-                  type="text"
-                  placeholder="{{.Course.Description}}"
-                  name="description"
-                />
-                <button type="submit">Save</button>
-              </form>
+                {{ template "courseForm" . }}
             </div>
           </div>
         </div>

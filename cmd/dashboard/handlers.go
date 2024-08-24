@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -91,6 +93,8 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 
 	data := app.newTemplateData(r)
 	data.Course = course
+	data.HxMethod = "patch"
+	data.HxRoute = fmt.Sprintf("/courses/%s", course.ID)
 	app.render(w, http.StatusOK, "course.tmpl.html", data)
 }
 
@@ -137,21 +141,25 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
-	_, err = app.course.Update(ctx, courseId, title, description, teacher, price)
+	id, err := app.course.Update(ctx, courseId, title, description, teacher, price)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		print(err)
 		return
 	}
-	course, err := app.course.Get(ctx, courseId)
-	if err != nil {
+	if id == "" {
 		app.serverError(w, err)
 		return
 	}
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
+}
 
+func (app *application) createCoursePage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
-	data.Course = course
-	app.render(w, http.StatusOK, "course.tmpl.html", data)
+	data.Course = &models.Course{}
+	data.HxMethod = "post"
+	data.HxRoute = "/courses"
+	app.render(w, http.StatusOK, "createCoursePage.tmpl.html", data)
 }
 
 func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {

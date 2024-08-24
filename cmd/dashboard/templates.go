@@ -17,6 +17,8 @@ type templateData struct {
 	Exams         *[]models.Exam
 	IsLoggedIn    bool
 	TemplateTitle string
+	HxMethod      string
+	HxRoute       string
 }
 
 var functions = template.FuncMap{}

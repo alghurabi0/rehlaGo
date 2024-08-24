@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strconv"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -75,6 +77,130 @@ func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("id")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
 	data := app.newTemplateData(r)
+	data.Course = course
 	app.render(w, http.StatusOK, "course.tmpl.html", data)
+}
+
+func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("id")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	description := r.FormValue("description")
+	if description == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	teacher := r.FormValue("teacher_name")
+	if teacher == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// teacherImg := r.FormValue("teacher_img")
+	priceStr := r.FormValue("price")
+	if priceStr == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	price, err := strconv.Atoi(priceStr)
+	if err != nil {
+		http.Error(w, "invalid number format", http.StatusBadRequest)
+		return
+	}
+	if price < 0 {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+	_, err = app.course.Update(ctx, courseId, title, description, teacher, price)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		print(err)
+		return
+	}
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Course = course
+	app.render(w, http.StatusOK, "course.tmpl.html", data)
+}
+
+func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	description := r.FormValue("description")
+	if description == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	teacher := r.FormValue("teacher_name")
+	if teacher == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// teacherImg := r.FormValue("teacher_img")
+	priceStr := r.FormValue("price")
+	if priceStr == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	price, err := strconv.Atoi(priceStr)
+	if err != nil {
+		http.Error(w, "invalid number format", http.StatusBadRequest)
+		return
+	}
+	if price < 0 {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	ctx := context.Background()
+	id, err := app.course.Create(ctx, title, description, teacher, price)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		print(err)
+		return
+	}
+	if id == "" {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
 }

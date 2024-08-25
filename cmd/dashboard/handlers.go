@@ -204,3 +204,83 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
 }
+
+func (app *application) lecsPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	lecs, err := app.lec.GetAll(ctx, courseId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%v\n", err), http.StatusBadRequest)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Lecs = lecs
+	app.render(w, http.StatusOK, "lecs.tmpl.html", data)
+}
+
+func (app *application) examsPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	exams, err := app.exam.GetAll(ctx, courseId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%v\n", err), http.StatusBadRequest)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Exams = exams
+	app.render(w, http.StatusOK, "exams.tmpl.html", data)
+}
+
+func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	lecId := r.PathValue("lecId")
+	if lecId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	lec, err := app.lec.Get(ctx, courseId, lecId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%v\n", err), http.StatusBadRequest)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Lec = lec
+	data.HxMethod = "patch"
+	data.HxRoute = fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId)
+	app.render(w, http.StatusOK, "lec.tmpl.html", data)
+}
+
+func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	examId := r.PathValue("examId")
+	if examId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	exam, err := app.exam.Get(ctx, courseId, examId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%v\n", err), http.StatusBadRequest)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Exam = exam
+	data.HxMethod = "patch"
+	data.HxRoute = fmt.Sprintf("/courses/%s/lecs/%s", courseId, examId)
+	app.render(w, http.StatusOK, "exam.tmpl.html", data)
+}

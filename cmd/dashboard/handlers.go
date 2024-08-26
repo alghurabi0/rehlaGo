@@ -175,7 +175,6 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	// teacherImg := r.FormValue("teacher_img")
 	priceStr := r.FormValue("price")
 	if priceStr == "" {
 		app.clientError(w, http.StatusBadRequest)
@@ -190,9 +189,11 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
+	// teacherImg := r.FormValue("teacher_img")
+	folderId := ""
 
 	ctx := context.Background()
-	id, err := app.course.Create(ctx, title, description, teacher, price)
+	id, err := app.course.Create(ctx, title, description, teacher, folderId, price)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		print(err)

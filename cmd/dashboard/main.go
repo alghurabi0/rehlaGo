@@ -35,6 +35,7 @@ type application struct {
 	sub           *models.SubscriptionModel
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
+	wistiaToken   string
 }
 
 var version string
@@ -76,6 +77,8 @@ func main() {
 	session.Store = store
 	session.Lifetime = 100 * time.Hour
 
+	wistiaToken := os.Getenv("wistiaToken")
+
 	app := &application{
 		infoLog:       infoLog,
 		errorLog:      errorLog,
@@ -91,6 +94,7 @@ func main() {
 		payment:       &models.PaymentModel{DB: db},
 		contact:       &models.ContactModel{DB: db},
 		session:       session,
+		wistiaToken:   wistiaToken,
 	}
 
 	srv := &http.Server{

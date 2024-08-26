@@ -15,6 +15,7 @@ type Course struct {
 	TeacherImg       string       `firestore:"-"`
 	Price            int          `firestore:"price"`
 	Duration         string       `firestore:"duration"`
+	FolderId         string       `firestore:"folder_id"`
 	NumberOfLecs     int          `firestore:"-"`
 	Lecs             []Lec        `firestore:"-"`
 	Exams            []Exam       `firestore:"-"`
@@ -69,6 +70,6 @@ func (c *CourseModel) Update(ctx context.Context, id, title, description, teache
 	return "", nil
 }
 
-func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int) (string, error) {
+func (c *CourseModel) Create(ctx context.Context, title, description, teacher, folderId string, price int) (string, error) {
 	return "", nil
 }

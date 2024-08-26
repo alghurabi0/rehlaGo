@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"runtime/debug"
 
@@ -71,4 +73,37 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 		app.serverError(w, err)
 	}
 	buf.WriteTo(w)
+}
+
+func (app *application) WistiaReq(method, url string, jsonData []byte) (string, error) {
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		app.errorLog.Printf("error creating request: %v\n", err)
+		return "", err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", app.wistiaToken))
+	client := http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		app.errorLog.Printf("error making request: %v\n", err)
+		return "", err
+	}
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		app.errorLog.Printf("error reading response: %v\n", err)
+		return "", err
+	}
+	var response map[string]interface{}
+	if err := json.Unmarshal(body, &response); err != nil {
+		app.errorLog.Printf("error unmarshalling data: %v\n", err)
+		return "", err
+	}
+	hashedId := response["hashedId"].(string)
+	if hashedId == "" {
+		app.errorLog.Printf("hashedId is empty")
+		return "", nil
+	}
+	return hashedId, nil
 }

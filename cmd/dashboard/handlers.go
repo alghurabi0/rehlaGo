@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -163,9 +164,10 @@ func (app *application) createCoursePage(w http.ResponseWriter, r *http.Request)
 }
 
 func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	// max form size 10 MB
+	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
 		return
 	}
 	title := r.FormValue("title")
@@ -197,18 +199,22 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	// teacherImg := r.FormValue("teacher_img")
-	folderId := ""
+	photo, handler, err := r.FormFile("teacher_img")
+	if err != nil {
+		http.Error(w, "Error Retrieving the File", http.StatusInternalServerError)
+		app.errorLog.Printf("%v\n", err)
+		return
+	}
+	defer photo.Close()
 
 	ctx := context.Background()
-	id, err := app.course.Create(ctx, title, description, teacher, folderId, price)
+	id, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		print(err)
+		app.serverError(w, err)
 		return
 	}
 	if id == "" {
-		app.serverError(w, err)
+		app.serverError(w, errors.New("empty course id"))
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)

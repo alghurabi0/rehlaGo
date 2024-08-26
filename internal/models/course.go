@@ -2,8 +2,16 @@ package models
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"time"
 
 	"cloud.google.com/go/firestore"
+	gcloud "cloud.google.com/go/storage"
+	"firebase.google.com/go/storage"
 	"google.golang.org/api/iterator"
 )
 
@@ -12,7 +20,7 @@ type Course struct {
 	Title            string       `firestore:"title"`
 	Description      string       `firestore:"description"`
 	Teacher          string       `firestore:"teacher"`
-	TeacherImg       string       `firestore:"-"`
+	TeacherImg       string       `firestore:"teacher_img"`
 	Price            int          `firestore:"price"`
 	Duration         string       `firestore:"duration"`
 	FolderId         string       `firestore:"folder_id"`
@@ -29,6 +37,7 @@ type Course struct {
 
 type CourseModel struct {
 	DB *firestore.Client
+	ST *storage.Client
 }
 
 func (c *CourseModel) Get(ctx context.Context, courseId string) (*Course, error) {
@@ -70,6 +79,50 @@ func (c *CourseModel) Update(ctx context.Context, id, title, description, teache
 	return "", nil
 }
 
-func (c *CourseModel) Create(ctx context.Context, title, description, teacher, folderId string, price int) (string, error) {
-	return "", nil
+func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader) (string, error) {
+	bkt, err := c.ST.DefaultBucket()
+	if err != nil {
+		return "", err
+	}
+	// Upload the file to Firebase Storage
+	wc := bkt.Object(handler.Filename).NewWriter(ctx)
+	defer wc.Close()
+	// Copy the uploaded file's content to Firebase storage
+	if _, err := io.Copy(wc, photo); err != nil {
+		return "", err
+	}
+	expiration := time.Now().Add(time.Hour * 8640)
+	opts := &gcloud.SignedURLOptions{
+		Expires: expiration,
+		Method:  http.MethodGet,
+	}
+	url, err := bkt.SignedURL(handler.Filename, opts)
+	if err != nil {
+		return "", fmt.Errorf("couldn't get signed url: %v", err)
+	}
+	if url == "" {
+		return "", errors.New("empty photo signed file url")
+	}
+	// create wistia folder
+	jsonData := []byte(fmt.Sprintf(`{"name": "%s", "public": "true"}`, title))
+	folderId, err := wistiaReq("POST", "https://api.wistia.com/v1/projects", jsonData)
+	if err != nil {
+		return "", fmt.Errorf("couldn't create a wistia folder: %s", err)
+	}
+
+	course := &Course{
+		Title:       title,
+		Description: description,
+		Teacher:     teacher,
+		TeacherImg:  url,
+		Price:       price,
+		FolderId:    folderId,
+		Active:      true,
+	}
+	doc, _, err := c.DB.Collection("courses").Add(ctx, course)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
 }

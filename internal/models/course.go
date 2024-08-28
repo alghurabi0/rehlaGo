@@ -75,8 +75,13 @@ func (c *CourseModel) GetAll(ctx context.Context) (*[]Course, error) {
 	return &courses, nil
 }
 
-func (c *CourseModel) Update(ctx context.Context, id, title, description, teacher string, price int) (string, error) {
-	return "", nil
+func (c *CourseModel) Update(ctx context.Context, courseId string, updates []firestore.Update) error {
+	_, err := c.DB.Collection("courses").Doc(courseId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader) (string, error) {

@@ -105,54 +105,56 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	err := r.ParseForm()
+	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
 		return
 	}
+	course := &models.Course{}
 	title := r.FormValue("title")
-	if title == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
+	if title != "" {
+		course.Title = title
 	}
 	description := r.FormValue("description")
-	if description == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
+	if description != "" {
+		course.Description = description
 	}
 	teacher := r.FormValue("teacher_name")
-	if teacher == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
+	if teacher != "" {
+		course.Teacher = teacher
 	}
-	// teacherImg := r.FormValue("teacher_img")
-	priceStr := r.FormValue("price")
-	if priceStr == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	price, err := strconv.Atoi(priceStr)
+	teacherImg, _, err := r.FormFile("teacher_img")
 	if err != nil {
-		http.Error(w, "invalid number format", http.StatusBadRequest)
-		return
+		if err != http.ErrMissingFile {
+			app.errorLog.Printf("%v\n", err)
+			http.Error(w, "Error processing file upload", http.StatusBadRequest)
+			return
+		}
+	} else {
+		defer teacherImg.Close()
 	}
-	if price < 0 {
-		app.clientError(w, http.StatusBadRequest)
-		return
+	priceStr := r.FormValue("price")
+	if priceStr != "" {
+		price, err := strconv.Atoi(priceStr)
+		if err != nil {
+			http.Error(w, "invalid number format", http.StatusBadRequest)
+			return
+		}
+		if price < 0 {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+		course.Price = price
 	}
 
+	updates := app.createFsUpdateArr(course)
 	ctx := context.Background()
-	id, err := app.course.Update(ctx, courseId, title, description, teacher, price)
+	err = app.course.Update(ctx, courseId, updates)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		print(err)
-		return
-	}
-	if id == "" {
 		app.serverError(w, err)
 		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s", courseId), http.StatusSeeOther)
 }
 
 func (app *application) createCoursePage(w http.ResponseWriter, r *http.Request) {
@@ -296,6 +298,75 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Exam = exam
 	data.HxMethod = "patch"
-	data.HxRoute = fmt.Sprintf("/courses/%s/lecs/%s", courseId, examId)
+	data.HxRoute = fmt.Sprintf("/courses/%s/exams/%s", courseId, examId)
 	app.render(w, http.StatusOK, "exam.tmpl.html", data)
+}
+
+func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		http.Error(w, "must provide title", http.StatusBadRequest)
+		return
+	}
+	orderStr := r.FormValue("order")
+	if orderStr == "" {
+		http.Error(w, "must provide order", http.StatusBadRequest)
+		return
+	}
+	order, err := strconv.Atoi(orderStr)
+	if err != nil {
+		http.Error(w, "couldn't convert order to valid integer", http.StatusBadRequest)
+		return
+	}
+	if order < 1 {
+		http.Error(w, "order can't be less than 1", http.StatusBadRequest)
+		return
+	}
+	file, handler, err := r.FormFile("exam_file")
+	if err != nil {
+		if err == http.ErrMissingFile {
+			http.Error(w, "must provide exam file", http.StatusBadRequest)
+			return
+		}
+		app.errorLog.Printf("%v\n", err)
+		http.Error(w, "error with getting file from form", http.StatusBadRequest)
+		return
+	}
+
+	defer file.Close()
+	path := fmt.Sprintf("courses/%s/exams/%s", courseId, handler.Filename)
+	ctx := context.Background()
+	file_url, err := app.storage.UploadFile(ctx, file, *handler, path)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	exam := &models.Exam{
+		Title: title,
+		Order: order,
+		URL:   file_url,
+	}
+	ctx = context.Background()
+	id, err := app.exam.Create(ctx, courseId, exam)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if id == "" {
+		app.serverError(w, errors.New("got empty exam id from firestore"))
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams/%s", courseId, id), http.StatusSeeOther)
 }

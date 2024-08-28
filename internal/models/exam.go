@@ -18,7 +18,7 @@ type Exam struct {
 	CourseId string `firestore:"-"`
 	Title    string `firestore:"title"`
 	Order    int    `firestore:"order"`
-	URL      string `firestore:"-"`
+	URL      string `firestore:"url"`
 }
 
 type ExamModel struct {
@@ -38,12 +38,6 @@ func (e *ExamModel) Get(ctx context.Context, courseId, examId string) (*Exam, er
 	}
 	exam.ID = examDoc.Ref.ID
 	exam.CourseId = courseId
-
-	url, err := e.GetExamUrl(courseId, examId)
-	if err != nil {
-		return &Exam{}, err
-	}
-	exam.URL = url
 
 	return &exam, nil
 }
@@ -68,6 +62,15 @@ func (e *ExamModel) GetAll(ctx context.Context, courseId string) (*[]Exam, error
 		exams = append(exams, exam)
 	}
 	return &exams, nil
+}
+
+func (e *ExamModel) Create(ctx context.Context, courseId string, exam *Exam) (string, error) {
+	doc, _, err := e.DB.Collection("courses").Doc(courseId).Collection("exams").Add(ctx, exam)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
 }
 
 func (e *ExamModel) GetExamUrl(courseId, examId string) (string, error) {

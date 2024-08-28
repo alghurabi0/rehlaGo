@@ -16,6 +16,7 @@ import (
 	scsfs "github.com/alexedwards/scs/firestore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/alghurabi0/rehla/internal/dashboard_models"
+	"github.com/alghurabi0/rehla/internal/fileStorage"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
 )
@@ -35,6 +36,7 @@ type application struct {
 	sub           *models.SubscriptionModel
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
+	storage       *fileStorage.StorageModel
 }
 
 var version string
@@ -91,6 +93,7 @@ func main() {
 		payment:       &models.PaymentModel{DB: db},
 		contact:       &models.ContactModel{DB: db},
 		session:       session,
+		storage:       &fileStorage.StorageModel{ST: strg},
 	}
 
 	srv := &http.Server{

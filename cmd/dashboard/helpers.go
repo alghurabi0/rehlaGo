@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"runtime/debug"
 
+	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/dashboard_models"
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 // serverError helper writes an error message and stack trace to the errorLog
@@ -71,4 +73,41 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 		app.serverError(w, err)
 	}
 	buf.WriteTo(w)
+}
+
+func (app *application) createFsUpdateArr(course *models.Course) []firestore.Update {
+	var updates []firestore.Update
+
+	if course.Title != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "title",
+			Value: course.Title,
+		})
+	}
+	if course.Description != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "description",
+			Value: course.Description,
+		})
+	}
+	if course.Teacher != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "teacher",
+			Value: course.Teacher,
+		})
+	}
+	if course.TeacherImg != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "teacher_img",
+			Value: course.TeacherImg,
+		})
+	}
+	if course.Price != 0 {
+		updates = append(updates, firestore.Update{
+			Path:  "price",
+			Value: course.Price,
+		})
+	}
+
+	return updates
 }

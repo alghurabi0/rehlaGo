@@ -1,0 +1,47 @@
+{{ define "courseForm" }}
+<form
+  class="flex flex-col gap-6"
+  hx-{{.HxMethod}}="{{.HxRoute}}"
+  hx-trigger="submit"
+  hx-select=".view"
+  hx-target=".view"
+  hx-swap="outerHTML"
+  hx-push-url="true"
+  enctype="multipart/form-data"
+>
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="title"
+  >
+    Title
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Exam.Title }}{{.Exam.Title}}{{ end }}"
+    name="title"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="exam_file"
+  >
+    Exam File
+  </label>
+  <input
+    type="file"
+    placeholder="{{if .Exam.URL}}{{.Exam.URL}}{{ end }}"
+    name="exam_file"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="order"
+  >
+    Order
+  </label>
+  <input
+    type="number"
+    placeholder="{{ if .Exam.Order}}{{.Exam.Order}}{{ end }}"
+    name="order"
+  />
+  <button type="submit">Save</button>
+</form>
+{{ end }}

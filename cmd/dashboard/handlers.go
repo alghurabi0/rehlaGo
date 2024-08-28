@@ -247,12 +247,13 @@ func (app *application) examsPage(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	exams, err := app.exam.GetAll(ctx, courseId)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("%v\n", err), http.StatusBadRequest)
+		app.serverError(w, err)
 		return
 	}
 
 	data := app.newTemplateData(r)
 	data.Exams = exams
+	data.HxRoute = fmt.Sprintf("/courses/%s/exam", courseId)
 	app.render(w, http.StatusOK, "exams.tmpl.html", data)
 }
 
@@ -369,4 +370,84 @@ func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams/%s", courseId, id), http.StatusSeeOther)
+}
+
+func (app *application) editExam(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	examId := r.PathValue("examId")
+	if examId == "" {
+		app.notFound(w)
+	}
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
+		return
+	}
+	exam := &models.Exam{}
+	title := r.FormValue("title")
+	if title != "" {
+		exam.Title = title
+	}
+	file, handler, err := r.FormFile("exam_file")
+	if err != nil {
+		if err != http.ErrMissingFile {
+			app.errorLog.Printf("%v\n", err)
+			http.Error(w, "Error processing file upload", http.StatusBadRequest)
+			return
+		}
+	} else {
+		defer file.Close()
+		ctx := context.Background()
+		path := fmt.Sprintf("courses/%s/exams/%s", courseId, handler.Filename)
+		url, err := app.storage.UploadFile(ctx, file, *handler, path)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		if url == "" {
+			app.serverError(w, errors.New("empty file url after uploading to storage"))
+			return
+		}
+		exam.URL = url
+	}
+	orderStr := r.FormValue("order")
+	if orderStr != "" {
+		order, err := strconv.Atoi(orderStr)
+		if err != nil {
+			http.Error(w, "invalid order number format", http.StatusBadRequest)
+			return
+		}
+		if order < 1 {
+			http.Error(w, "order can't be smaller than 1", http.StatusBadRequest)
+			return
+		}
+		exam.Order = order
+	}
+
+	updates := app.createExamUpdateArr(exam)
+	ctx := context.Background()
+	err = app.exam.Update(ctx, courseId, examId, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams/%s", courseId, examId), http.StatusSeeOther)
+}
+
+func (app *application) createExamPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	exam := &models.Exam{}
+	data := app.newTemplateData(r)
+	data.HxMethod = "post"
+	data.HxRoute = fmt.Sprintf("/courses/%s/exams", courseId)
+	data.Exam = exam
+	app.render(w, http.StatusOK, "createExamPage.tmpl.html", data)
 }

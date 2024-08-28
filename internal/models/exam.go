@@ -73,6 +73,14 @@ func (e *ExamModel) Create(ctx context.Context, courseId string, exam *Exam) (st
 	return doc.ID, nil
 }
 
+func (e *ExamModel) Update(ctx context.Context, courseId, examId string, updates []firestore.Update) error {
+	_, err := e.DB.Collection("courses").Doc(courseId).Collection("exams").Doc(examId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (e *ExamModel) GetExamUrl(courseId, examId string) (string, error) {
 	examPath := fmt.Sprintf("courses/%s/exams/%s", courseId, examId)
 	bkt, err := e.ST.DefaultBucket()

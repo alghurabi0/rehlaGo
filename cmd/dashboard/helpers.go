@@ -111,3 +111,28 @@ func (app *application) createFsUpdateArr(course *models.Course) []firestore.Upd
 
 	return updates
 }
+
+func (app *application) createExamUpdateArr(exam *models.Exam) []firestore.Update {
+	var updates []firestore.Update
+
+	if exam.Title != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "title",
+			Value: exam.Title,
+		})
+	}
+	if exam.URL != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "url",
+			Value: exam.URL,
+		})
+	}
+	if exam.Order != 0 {
+		updates = append(updates, firestore.Update{
+			Path:  "order",
+			Value: exam.Order,
+		})
+	}
+
+	return updates
+}

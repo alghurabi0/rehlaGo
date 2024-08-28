@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"cloud.google.com/go/storage"
 	"github.com/alghurabi0/rehla/internal/models"
 )
 
@@ -347,7 +348,7 @@ func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	path := fmt.Sprintf("courses/%s/exams/%s", courseId, handler.Filename)
 	ctx := context.Background()
-	file_url, err := app.storage.UploadFile(ctx, file, *handler, path)
+	file_url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -361,6 +362,7 @@ func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
 	ctx = context.Background()
 	id, err := app.exam.Create(ctx, courseId, exam)
 	if err != nil {
+		object.Delete(ctx)
 		app.serverError(w, err)
 		return
 	}
@@ -392,28 +394,6 @@ func (app *application) editExam(w http.ResponseWriter, r *http.Request) {
 	if title != "" {
 		exam.Title = title
 	}
-	file, handler, err := r.FormFile("exam_file")
-	if err != nil {
-		if err != http.ErrMissingFile {
-			app.errorLog.Printf("%v\n", err)
-			http.Error(w, "Error processing file upload", http.StatusBadRequest)
-			return
-		}
-	} else {
-		defer file.Close()
-		ctx := context.Background()
-		path := fmt.Sprintf("courses/%s/exams/%s", courseId, handler.Filename)
-		url, err := app.storage.UploadFile(ctx, file, *handler, path)
-		if err != nil {
-			app.serverError(w, err)
-			return
-		}
-		if url == "" {
-			app.serverError(w, errors.New("empty file url after uploading to storage"))
-			return
-		}
-		exam.URL = url
-	}
 	orderStr := r.FormValue("order")
 	if orderStr != "" {
 		order, err := strconv.Atoi(orderStr)
@@ -427,11 +407,36 @@ func (app *application) editExam(w http.ResponseWriter, r *http.Request) {
 		}
 		exam.Order = order
 	}
+	file, handler, err := r.FormFile("exam_file")
+	var object *storage.ObjectHandle
+	if err != nil {
+		if err != http.ErrMissingFile {
+			app.errorLog.Printf("%v\n", err)
+			http.Error(w, "Error processing file upload", http.StatusBadRequest)
+			return
+		}
+	} else {
+		defer file.Close()
+		ctx := context.Background()
+		path := fmt.Sprintf("courses/%s/exams/%s", courseId, handler.Filename)
+		url, obj, err := app.storage.UploadFile(ctx, file, *handler, path)
+		object = obj
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		if url == "" {
+			app.serverError(w, errors.New("empty file url after uploading to storage"))
+			return
+		}
+		exam.URL = url
+	}
 
 	updates := app.createExamUpdateArr(exam)
 	ctx := context.Background()
 	err = app.exam.Update(ctx, courseId, examId, updates)
 	if err != nil {
+		object.Delete(ctx)
 		app.serverError(w, err)
 		return
 	}

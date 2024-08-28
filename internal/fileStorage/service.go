@@ -17,17 +17,19 @@ type StorageModel struct {
 	ST *storage.Client
 }
 
-func (s *StorageModel) UploadFile(ctx context.Context, file multipart.File, handler multipart.FileHeader, path string) (string, error) {
+func (s *StorageModel) UploadFile(ctx context.Context, file multipart.File, handler multipart.FileHeader, path string) (string, *gcloud.ObjectHandle, error) {
 	bkt, err := s.ST.DefaultBucket()
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	// Upload the file to Firebase Storage
-	wc := bkt.Object(path).NewWriter(ctx)
+	object := bkt.Object(path)
+	wc := object.NewWriter(ctx)
 	defer wc.Close()
 	// Copy the uploaded file's content to Firebase storage
 	if _, err := io.Copy(wc, file); err != nil {
-		return "", err
+		object.Delete(ctx)
+		return "", nil, err
 	}
 	expiration := time.Now().Add(time.Hour * 8640)
 	opts := &gcloud.SignedURLOptions{
@@ -36,11 +38,13 @@ func (s *StorageModel) UploadFile(ctx context.Context, file multipart.File, hand
 	}
 	url, err := bkt.SignedURL(path, opts)
 	if err != nil {
-		return "", fmt.Errorf("couldn't get signed url: %v", err)
+		object.Delete(ctx)
+		return "", nil, fmt.Errorf("couldn't get signed url: %v", err)
 	}
 	if url == "" {
-		return "", errors.New("empty photo signed file url")
+		object.Delete(ctx)
+		return "", nil, errors.New("empty photo signed file url")
 	}
 
-	return url, nil
+	return url, object, nil
 }

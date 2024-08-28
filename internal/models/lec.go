@@ -56,3 +56,12 @@ func (l *LecModel) GetAll(ctx context.Context, courseId string) (*[]Lec, error) 
 	}
 	return &lecs, nil
 }
+
+func (l *LecModel) Create(ctx context.Context, courseId string, lec *Lec) (string, error) {
+	doc, _, err := l.DB.Collection("courses").Doc(courseId).Collection("lecs").Add(ctx, lec)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
+}

@@ -1,0 +1,38 @@
+{{ define "lecForm" }}
+<form class="flex flex-col gap-6">
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="title"
+  >
+    Title
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Lec.Title }}{{.Lec.Title}}{{ end }}"
+    name="title"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="description"
+  >
+  Description
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Lec.Title }}{{.Lec.Title}}{{ end }}"
+    name="description"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="order"
+  >
+    Order
+  </label>
+  <input
+    type="number"
+    placeholder="{{ if .Lec.Order}}{{.Lec.Order}}{{ end }}"
+    name="order"
+  />
+  <button type="submit">Save</button>
+</form>
+{{ end }}

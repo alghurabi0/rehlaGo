@@ -19,6 +19,7 @@ type templateData struct {
 	TemplateTitle string
 	HxMethod      string
 	HxRoute       string
+	WistiaToken   string
 }
 
 var functions = template.FuncMap{}

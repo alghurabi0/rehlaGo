@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"cloud.google.com/go/storage"
@@ -455,4 +456,85 @@ func (app *application) createExamPage(w http.ResponseWriter, r *http.Request) {
 	data.HxRoute = fmt.Sprintf("/courses/%s/exams", courseId)
 	data.Exam = exam
 	app.render(w, http.StatusOK, "createExamPage.tmpl.html", data)
+}
+
+func (app *application) createLec(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Error parsing form", http.StatusBadRequest)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		http.Error(w, "must provide title", http.StatusBadRequest)
+		return
+	}
+	description := r.FormValue("description")
+	if description == "" {
+		http.Error(w, "must provide description", http.StatusBadRequest)
+		return
+	}
+	url := r.FormValue("video_url")
+	if url == "" {
+		http.Error(w, "must provide url", http.StatusBadRequest)
+		return
+	}
+	orderStr := r.FormValue("order")
+	if orderStr == "" {
+		http.Error(w, "must provide order", http.StatusBadRequest)
+		return
+	}
+	order, err := strconv.Atoi(orderStr)
+	if err != nil {
+		http.Error(w, "couldn't convert order to valid integer", http.StatusBadRequest)
+		return
+	}
+	if order < 1 {
+		http.Error(w, "order can't be less than 1", http.StatusBadRequest)
+		return
+	}
+
+	lec := &models.Lec{
+		Title:       title,
+		Order:       order,
+		Description: description,
+		VideoUrl:    url,
+	}
+	ctx := context.Background()
+	id, err := app.lec.Create(ctx, courseId, lec)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if id == "" {
+		app.serverError(w, errors.New("got empty exam id from firestore"))
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, id), http.StatusSeeOther)
+}
+
+func (app *application) createLecPage(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		http.Error(w, "course with this id doesn't exist", http.StatusBadRequest)
+		return
+	}
+
+	lec := &models.Lec{}
+	data := app.newTemplateData(r)
+	data.Course = course
+	data.Lec = lec
+	data.WistiaToken = os.Getenv("wistia_token")
+	app.render(w, http.StatusOK, "createLecPage.tmpl.html", data)
 }

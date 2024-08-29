@@ -6,47 +6,50 @@
     {{ template "lecForm" . }}
   </div>
   <div id="wistia_uploader" style="height: 360px; width: 640px"></div>
-</div>
-<script src="//fast.wistia.com/assets/external/api.js" async></script>
-<link rel="stylesheet" href="//fast.wistia.com/assets/external/uploader.css" />
-<script>
-  window._wapiq = window._wapiq || [];
-  _wapiq.push(function (W) {
-    window.wistiaUploader = new W.Uploader({
-      accessToken: "{{ .WistiaToken }}",
-      dropIn: "wistia_uploader",
-      projectId: "{{ .Course.FolderId }}",
-      beforeUpload: validate,
+  <script src="//fast.wistia.com/assets/external/api.js" async></script>
+  <link
+    rel="stylesheet"
+    href="//fast.wistia.com/assets/external/uploader.css"
+  />
+  <script>
+    window._wapiq = window._wapiq || [];
+    _wapiq.push(function (W) {
+      window.wistiaUploader = new W.Uploader({
+        accessToken: "{{ .WistiaToken }}",
+        dropIn: "wistia_uploader",
+        projectId: "{{ .Course.FolderId }}",
+        beforeUpload: validate,
+      });
+      wistiaUploader.bind(
+        "uploadembeddable",
+        function (file, media, embedCode, oembedResponse) {
+          document.getElementById("video_url").value = media.id;
+          const lecForm = document.getElementById("lec_form");
+          console.log("triggering htmx submit");
+          htmx.trigger(lecForm, "submit");
+        },
+      );
     });
-    wistiaUploader.bind(
-      "uploadembeddable",
-      function (file, media, embedCode, oembedResponse) {
-        document.getElementById("video_url").value = media.id;
-        const lecForm = document.getElementById("lec_form");
-        console.log("triggering htmx submit");
-        htmx.trigger(lecForm, "submit");
-      },
-    );
-  });
 
-  function validate() {
-    const title = document.getElementById("title").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const order = document.getElementById("order").value.trim();
+    function validate() {
+      const title = document.getElementById("title").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const order = document.getElementById("order").value.trim();
 
-    if (!title || !description || !order) {
-      alert("All fields are required!");
-      wistiaUploader.cancel();
-      return;
+      if (!title || !description || !order) {
+        alert("All fields are required!");
+        wistiaUploader.cancel();
+        return;
+      }
+
+      // Check if order is a number and is 1 or higher
+      const orderNumber = parseInt(order, 10);
+      if (isNaN(orderNumber) || orderNumber < 1) {
+        alert("Order must be a number and 1 or higher!");
+        wistiaUploader.cancel();
+        return;
+      }
     }
-
-    // Check if order is a number and is 1 or higher
-    const orderNumber = parseInt(order, 10);
-    if (isNaN(orderNumber) || orderNumber < 1) {
-      alert("Order must be a number and 1 or higher!");
-      wistiaUploader.cancel();
-      return;
-    }
-  }
-</script>
+  </script>
+</div>
 {{ end }}

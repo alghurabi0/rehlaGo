@@ -28,7 +28,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /courses/{courseId}/exams", isAdmin.ThenFunc(app.createExam))
 	mux.Handle("POST /courses/{courseId}/lecs", isAdmin.ThenFunc(app.createLec))
 	mux.Handle("PATCH /courses/{courseId}/exams/{examId}", isAdmin.ThenFunc(app.editExam))
-	//mux.Handle("POST /courses/{courseId}/lecs{lecId}", isAdmin.ThenFunc(app.editLec))
+	mux.Handle("PATCH /courses/{courseId}/lecs/{lecId}", isAdmin.ThenFunc(app.editLec))
 	mux.Handle("GET /courses/{courseId}/exam", isAdmin.ThenFunc(app.createExamPage))
 	mux.Handle("GET /courses/{courseId}/lec", isAdmin.ThenFunc(app.createLecPage))
 

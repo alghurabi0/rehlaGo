@@ -65,3 +65,11 @@ func (l *LecModel) Create(ctx context.Context, courseId string, lec *Lec) (strin
 
 	return doc.ID, nil
 }
+
+func (l *LecModel) Update(ctx context.Context, courseId, lecId string, updates []firestore.Update) error {
+	_, err := l.DB.Collection("courses").Doc(courseId).Collection("lecs").Doc(lecId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+	return nil
+}

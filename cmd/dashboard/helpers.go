@@ -136,3 +136,28 @@ func (app *application) createExamUpdateArr(exam *models.Exam) []firestore.Updat
 
 	return updates
 }
+
+func (app *application) createLecUpdateArr(lec *models.Lec) []firestore.Update {
+	var updates []firestore.Update
+
+	if lec.Title != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "title",
+			Value: lec.Title,
+		})
+	}
+	if lec.Description != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "description",
+			Value: lec.Description,
+		})
+	}
+	if lec.Order != 0 {
+		updates = append(updates, firestore.Update{
+			Path:  "order",
+			Value: lec.Order,
+		})
+	}
+
+	return updates
+}

@@ -238,6 +238,7 @@ func (app *application) lecsPage(w http.ResponseWriter, r *http.Request) {
 
 	data := app.newTemplateData(r)
 	data.Lecs = lecs
+	data.HxRoute = fmt.Sprintf("/courses/%s/lec", courseId)
 	app.render(w, http.StatusOK, "lecs.tmpl.html", data)
 }
 
@@ -539,4 +540,49 @@ func (app *application) createLecPage(w http.ResponseWriter, r *http.Request) {
 	data.HxRoute = fmt.Sprintf("/courses/%s/lecs", courseId)
 	data.WistiaToken = os.Getenv("wistia_token")
 	app.render(w, http.StatusOK, "createLecPage.tmpl.html", data)
+}
+
+func (app *application) editLec(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	lecId := r.PathValue("lecId")
+	if lecId == "" {
+		app.notFound(w)
+	}
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Error parsing form", http.StatusBadRequest)
+		return
+	}
+	lec := &models.Lec{}
+	title := r.FormValue("title")
+	if title != "" {
+		lec.Title = title
+	}
+	orderStr := r.FormValue("order")
+	if orderStr != "" {
+		order, err := strconv.Atoi(orderStr)
+		if err != nil {
+			http.Error(w, "invalid order number format", http.StatusBadRequest)
+			return
+		}
+		if order < 1 {
+			http.Error(w, "order can't be smaller than 1", http.StatusBadRequest)
+			return
+		}
+		lec.Order = order
+	}
+
+	updates := app.createLecUpdateArr(lec)
+	ctx := context.Background()
+	err = app.lec.Update(ctx, courseId, lecId, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId), http.StatusSeeOther)
 }

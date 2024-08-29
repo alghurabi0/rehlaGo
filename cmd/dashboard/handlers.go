@@ -535,6 +535,8 @@ func (app *application) createLecPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Course = course
 	data.Lec = lec
+	data.HxMethod = "post"
+	data.HxRoute = fmt.Sprintf("/courses/%s/lecs", courseId)
 	data.WistiaToken = os.Getenv("wistia_token")
 	app.render(w, http.StatusOK, "createLecPage.tmpl.html", data)
 }

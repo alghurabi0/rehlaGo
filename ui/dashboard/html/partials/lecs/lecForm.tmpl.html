@@ -1,5 +1,14 @@
 {{ define "lecForm" }}
-<form class="flex flex-col gap-6">
+<form
+  id="lec_form"
+  class="flex flex-col gap-6"
+  hx-{{.HxMethod}}="{{.HxRoute}}"
+  hx-select=".view"
+  hx-target=".view"
+  hx-swap="outerHTML"
+  hx-push-url="true"
+  hx-include="#video_url"
+>
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="title"
@@ -10,17 +19,19 @@
     type="text"
     placeholder="{{ if .Lec.Title }}{{.Lec.Title}}{{ end }}"
     name="title"
+    id="title"
   />
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="description"
   >
-  Description
+    Description
   </label>
   <input
     type="text"
     placeholder="{{ if .Lec.Title }}{{.Lec.Title}}{{ end }}"
     name="description"
+    id="description"
   />
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
@@ -32,7 +43,9 @@
     type="number"
     placeholder="{{ if .Lec.Order}}{{.Lec.Order}}{{ end }}"
     name="order"
+    id="order"
   />
+  <input type="hidden" name="video_url" id="video_url" />
   <button type="submit">Save</button>
 </form>
 {{ end }}

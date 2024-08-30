@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"html/template"
@@ -37,6 +38,7 @@ type application struct {
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
 	storage       *fileStorage.StorageModel
+	wistia        *fileStorage.WistiaModel
 }
 
 var version string
@@ -73,10 +75,14 @@ func main() {
 	collection := db.Collection("dashboard_sessions")
 	store := scsfs.New(db)
 	store.Sessions = collection
-
 	session := scs.New()
 	session.Store = store
 	session.Lifetime = 100 * time.Hour
+
+	wistiaToken := os.Getenv("wistia_token")
+	if wistiaToken == "" {
+		errorLog.Fatal(errors.New("empty wistia token"))
+	}
 
 	app := &application{
 		infoLog:       infoLog,
@@ -94,6 +100,7 @@ func main() {
 		contact:       &models.ContactModel{DB: db},
 		session:       session,
 		storage:       &fileStorage.StorageModel{ST: strg},
+		wistia:        &fileStorage.WistiaModel{Token: wistiaToken},
 	}
 
 	srv := &http.Server{

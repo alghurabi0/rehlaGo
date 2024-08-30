@@ -73,3 +73,11 @@ func (l *LecModel) Update(ctx context.Context, courseId, lecId string, updates [
 	}
 	return nil
 }
+
+func (l *LecModel) Delete(ctx context.Context, courseId, lecId string) error {
+	_, err := l.DB.Collection("courses").Doc(courseId).Collection("lecs").Doc(lecId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}

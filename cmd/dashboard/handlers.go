@@ -224,6 +224,26 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
 }
 
+func (app *application) deleteCourse(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	if id == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, id)
+	if err != nil {
+		http.Error(w, "course with this id doesn't exist", http.StatusBadRequest)
+		return
+	}
+	err = app.course.Delete(ctx, id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, "/courses", http.StatusSeeOther)
+}
+
 func (app *application) lecsPage(w http.ResponseWriter, r *http.Request) {
 	courseId := r.PathValue("courseId")
 	if courseId == "" {
@@ -585,4 +605,33 @@ func (app *application) editLec(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId), http.StatusSeeOther)
+}
+
+func (app *application) deleteLec(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	lecId := r.PathValue("lecId")
+	if lecId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	lec, err := app.lec.Get(ctx, courseId, lecId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("lec with id %s doesn't exist", lecId), http.StatusBadRequest)
+		return
+	}
+	err = app.wistia.DeleteVideo(lec.VideoUrl)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.lec.Delete(ctx, courseId, lecId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs", courseId), http.StatusSeeOther)
 }

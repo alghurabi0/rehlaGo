@@ -21,6 +21,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /courses", isAdmin.ThenFunc(app.createCourse))
 	mux.Handle("GET /courses/{id}", isAdmin.ThenFunc(app.coursePage))
 	mux.Handle("PATCH /courses/{id}", isAdmin.ThenFunc(app.editCourse))
+	mux.Handle("DELETE /courses/{id}", isAdmin.ThenFunc(app.deleteCourse))
 	mux.Handle("GET /courses/{courseId}/lecs", isAdmin.ThenFunc(app.lecsPage))
 	mux.Handle("GET /courses/{courseId}/exams", isAdmin.ThenFunc(app.examsPage))
 	mux.Handle("GET /courses/{courseId}/lecs/{lecId}", isAdmin.ThenFunc(app.lecPage))
@@ -29,6 +30,8 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /courses/{courseId}/lecs", isAdmin.ThenFunc(app.createLec))
 	mux.Handle("PATCH /courses/{courseId}/exams/{examId}", isAdmin.ThenFunc(app.editExam))
 	mux.Handle("PATCH /courses/{courseId}/lecs/{lecId}", isAdmin.ThenFunc(app.editLec))
+	mux.Handle("DELETE /courses/{courseId}/lecs/{lecId}", isAdmin.ThenFunc(app.deleteLec))
+	mux.Handle("DELETE /courses/{courseId}/exams/{examId}", isAdmin.ThenFunc(app.deleteExam))
 	mux.Handle("GET /courses/{courseId}/exam", isAdmin.ThenFunc(app.createExamPage))
 	mux.Handle("GET /courses/{courseId}/lec", isAdmin.ThenFunc(app.createLecPage))
 

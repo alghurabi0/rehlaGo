@@ -21,6 +21,7 @@ type Course struct {
 	Description      string       `firestore:"description"`
 	Teacher          string       `firestore:"teacher"`
 	TeacherImg       string       `firestore:"teacher_img"`
+	FilePath         string       `firestore:"file_path"`
 	Price            int          `firestore:"price"`
 	Duration         string       `firestore:"duration"`
 	FolderId         string       `firestore:"folder_id"`
@@ -123,6 +124,7 @@ func (c *CourseModel) Create(ctx context.Context, title, description, teacher st
 		Price:       price,
 		FolderId:    folderId,
 		Active:      true,
+		FilePath:    handler.Filename,
 	}
 	doc, _, err := c.DB.Collection("courses").Add(ctx, course)
 	if err != nil {
@@ -130,4 +132,12 @@ func (c *CourseModel) Create(ctx context.Context, title, description, teacher st
 	}
 
 	return doc.ID, nil
+}
+
+func (c *CourseModel) Delete(ctx context.Context, id string) error {
+	_, err := c.DB.Collection("courses").Doc(id).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

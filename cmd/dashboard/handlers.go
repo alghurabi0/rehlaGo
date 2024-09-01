@@ -27,6 +27,17 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	case "admin":
 		app.render(w, http.StatusOK, "home.tmpl.html", data)
 	case "corrector":
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		corrector_courses, err := app.getCorrectorCourses(user.CorrectorCourses)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
 		app.render(w, http.StatusOK, "correctorHome.tmpl.html", data)
 	default:
 		app.clientError(w, http.StatusUnauthorized)
@@ -235,9 +246,71 @@ func (app *application) deleteCourse(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "course with this id doesn't exist", http.StatusBadRequest)
 		return
 	}
+	lecs, err := app.lec.GetAll(ctx, id)
+	if err != nil {
+		app.serverError(w, fmt.Errorf("can't get lecs: %v", err))
+		return
+	}
+	exams, err := app.exam.GetAll(ctx, id)
+	if err != nil {
+		app.serverError(w, fmt.Errorf("can't get exams: %v", err))
+		return
+	}
+	materials, err := app.material.GetAll(ctx, id)
+	if err != nil {
+		app.serverError(w, fmt.Errorf("can't get materials: %v", err))
+		return
+	}
+
+	for _, lec := range *lecs {
+		err := app.wistia.DeleteVideo(lec.VideoUrl)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting wistai video, lec: %v, error: %v", lec, err))
+			return
+		}
+		err = app.lec.Delete(ctx, id, lec.ID)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting lec from firestore, lec: %v, error: %v", lec, err))
+			return
+		}
+
+	}
+	// TODO - delete wistia folder
+	for _, exam := range *exams {
+		err := app.storage.DeleteFile(ctx, exam.FilePath)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting storage file, exam: %v, error: %v", exam, err))
+			return
+		}
+		err = app.exam.Delete(ctx, id, exam.ID)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting exam from firestore, exam: %v, error: %v", exam, err))
+			return
+		}
+
+	}
+	for _, material := range *materials {
+		err := app.storage.DeleteFile(ctx, material.FilePath)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting storage file, material: %v, error: %v", material, err))
+			return
+		}
+		err = app.material.Delete(ctx, id, material.ID)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting material from firestore, material: %v, error: %v", material, err))
+			return
+		}
+
+	}
+
+	err = app.storage.DeleteFile(ctx, course.FilePath)
+	if err != nil {
+		app.serverError(w, fmt.Errorf("error while deleting storage file, course: %v, error: %v", course, err))
+		return
+	}
 	err = app.course.Delete(ctx, id)
 	if err != nil {
-		app.serverError(w, err)
+		app.serverError(w, fmt.Errorf("error while deleting course from firestore: %v", err))
 		return
 	}
 
@@ -377,9 +450,10 @@ func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	exam := &models.Exam{
-		Title: title,
-		Order: order,
-		URL:   file_url,
+		Title:    title,
+		Order:    order,
+		URL:      file_url,
+		FilePath: path,
 	}
 	ctx = context.Background()
 	id, err := app.exam.Create(ctx, courseId, exam)
@@ -452,6 +526,7 @@ func (app *application) editExam(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		exam.URL = url
+		exam.FilePath = path
 	}
 
 	updates := app.createExamUpdateArr(exam)
@@ -634,4 +709,34 @@ func (app *application) deleteLec(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs", courseId), http.StatusSeeOther)
+}
+
+func (app *application) deleteExam(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+	}
+	examId := r.PathValue("examId")
+	if examId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	exam, err := app.exam.Get(ctx, courseId, examId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("exam with id %s doesn't exist", examId), http.StatusBadRequest)
+		return
+	}
+	err = app.storage.DeleteFile(ctx, exam.FilePath)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = app.exam.Delete(ctx, courseId, examId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams", courseId), http.StatusSeeOther)
 }

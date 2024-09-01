@@ -19,6 +19,7 @@ type Exam struct {
 	Title    string `firestore:"title"`
 	Order    int    `firestore:"order"`
 	URL      string `firestore:"url"`
+	FilePath string `firestore:"file_path"`
 }
 
 type ExamModel struct {
@@ -101,4 +102,12 @@ func (e *ExamModel) GetExamUrl(courseId, examId string) (string, error) {
 		return "", errors.New("empty exam file url")
 	}
 	return url, nil
+}
+
+func (e *ExamModel) Delete(ctx context.Context, courseId, examId string) error {
+	_, err := e.DB.Collection("courses").Doc(courseId).Collection("exams").Doc(examId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }

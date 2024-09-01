@@ -48,3 +48,17 @@ func (s *StorageModel) UploadFile(ctx context.Context, file multipart.File, hand
 
 	return url, object, nil
 }
+
+func (s *StorageModel) DeleteFile(ctx context.Context, path string) error {
+	bkt, err := s.ST.DefaultBucket()
+	if err != nil {
+		return fmt.Errorf("failed to get default bucket: %v", err)
+	}
+
+	object := bkt.Object(path)
+	if err := object.Delete(ctx); err != nil {
+		return fmt.Errorf("failed to delete file: %v", err)
+	}
+
+	return nil
+}

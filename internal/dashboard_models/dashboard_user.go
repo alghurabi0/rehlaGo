@@ -10,10 +10,11 @@ import (
 )
 
 type DashboardUser struct {
-	ID       string `firestore:"-"`
-	Username string `firestore:"username"`
-	Role     string `firestore:"role"`
-	Password string `firestore:"password"`
+	ID               string   `firestore:"-"`
+	Username         string   `firestore:"username"`
+	Role             string   `firestore:"role"`
+	Password         string   `firestore:"password"`
+	CorrectorCourses []string `firestore:"corrector_courses"`
 }
 
 type DashboardUserModel struct {

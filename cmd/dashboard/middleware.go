@@ -61,6 +61,8 @@ func (app *application) isAdmin(next http.Handler) http.Handler {
 			app.clientError(w, http.StatusUnauthorized)
 			return
 		}
+		ctx := context.WithValue(r.Context(), isAdminContextKey, true)
+		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
 }

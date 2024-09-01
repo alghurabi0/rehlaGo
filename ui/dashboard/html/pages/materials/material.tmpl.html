@@ -1,4 +1,4 @@
-{{ define "title" }}Exam Informations{{ end }} {{ define "main" }}
+{{ define "title" }}Material Informations{{ end }} {{ define "main" }}
 <div class="mt-12 mb-8 flex flex-col gap-12 view">
   <div
     class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
@@ -9,7 +9,7 @@
       <h6
         class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
       >
-        Exam Information
+        Material Information
       </h6>
     </div>
     <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
@@ -20,22 +20,22 @@
           <h6
             class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-3"
           >
-            Exam Details
+            Material Details
           </h6>
           <div class="flex flex-col gap-12">
-            <div>{{ template "examForm" . }}</div>
+            <div>{{ template "materialForm" . }}</div>
           </div>
         </div>
         <button
           class="bg-red"
-          hx-delete="/courses/{{.Exam.CourseId}}/exams/{{.Exam.ID}}"
+          hx-delete="/courses/{{.Material.CourseId}}/materials/{{.Material.ID}}"
           hx-select=".view"
           hx-target=".view"
           hx-swap="outerHTML"
           hx-push-url="true"
-          hx-confirm="You want to delete this exam?"
+          hx-confirm="You want to delete this material?"
         >
-          Delete Exam
+          Delete Material
         </button>
       </div>
     </div>

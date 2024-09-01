@@ -18,7 +18,8 @@ type Material struct {
 	CourseId string `firestore:"-"`
 	Title    string `firestore:"title"`
 	Order    int    `firestore:"order"`
-	URL      string `firestore:"-"`
+	URL      string `firestore:"url"`
+	FilePath string `firestore:"file_path"`
 }
 
 type MaterialModel struct {
@@ -65,14 +66,34 @@ func (m *MaterialModel) GetAll(ctx context.Context, courseId string) (*[]Materia
 		}
 		mat.ID = doc.Ref.ID
 		mat.CourseId = courseId
-		url, err := m.GetMaterialUrl(courseId, mat.ID)
-		if err != nil {
-			return nil, err
-		}
-		mat.URL = url
 		mats = append(mats, mat)
 	}
 	return &mats, nil
+}
+
+func (m *MaterialModel) Create(ctx context.Context, courseId string, material *Material) (string, error) {
+	doc, _, err := m.DB.Collection("courses").Doc(courseId).Collection("materials").Add(ctx, material)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
+}
+
+func (m *MaterialModel) Update(ctx context.Context, courseId, materialId string, updates []firestore.Update) error {
+	_, err := m.DB.Collection("courses").Doc(courseId).Collection("materials").Doc(materialId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *MaterialModel) Delete(ctx context.Context, courseId, materialId string) error {
+	_, err := m.DB.Collection("courses").Doc(courseId).Collection("materials").Doc(materialId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (m *MaterialModel) GetMaterialUrl(courseId, matId string) (string, error) {

@@ -15,7 +15,7 @@
 
   <body class="bg-gray-200">
     <div class="min-h-screen bg-gray-50/50">
-      {{ template "navAside" . }}
+      {{ if .IsAdmin }} {{ template "navAside" . }} {{ end }}
       <div class="p-4 xl:ml-80">
         {{ template "nav" . }} {{ template "settingsAside" . }}
         <main>{{ template "main" . }}</main>

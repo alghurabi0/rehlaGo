@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -34,6 +35,7 @@ func (app *application) notFound(w http.ResponseWriter) {
 func (app *application) newTemplateData(r *http.Request) *templateData {
 	return &templateData{
 		IsLoggedIn: app.isLoggedInCheck(r),
+		IsAdmin:    app.isAdminCheck(r),
 	}
 }
 
@@ -43,6 +45,14 @@ func (app *application) isLoggedInCheck(r *http.Request) bool {
 		return false
 	}
 	return isLoggedIn
+}
+
+func (app *application) isAdminCheck(r *http.Request) bool {
+	isAdmin, ok := r.Context().Value(isAdminContextKey).(bool)
+	if !ok {
+		return false
+	}
+	return isAdmin
 }
 
 // func (app *application) getUserId(r *http.Request) (string, error) {
@@ -127,6 +137,12 @@ func (app *application) createExamUpdateArr(exam *models.Exam) []firestore.Updat
 			Value: exam.URL,
 		})
 	}
+	if exam.FilePath != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "file_path",
+			Value: exam.FilePath,
+		})
+	}
 	if exam.Order != 0 {
 		updates = append(updates, firestore.Update{
 			Path:  "order",
@@ -160,4 +176,47 @@ func (app *application) createLecUpdateArr(lec *models.Lec) []firestore.Update {
 	}
 
 	return updates
+}
+
+func (app *application) createMaterialUpdateArr(material *models.Material) []firestore.Update {
+	var updates []firestore.Update
+
+	if material.Title != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "title",
+			Value: material.Title,
+		})
+	}
+	if material.URL != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "url",
+			Value: material.URL,
+		})
+	}
+	if material.FilePath != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "file_path",
+			Value: material.FilePath,
+		})
+	}
+	if material.Order != 0 {
+		updates = append(updates, firestore.Update{
+			Path:  "order",
+			Value: material.Order,
+		})
+	}
+
+	return updates
+}
+
+func (app *application) getCorrectorCourses(courseIds []string) (*[]*models.Course, error) {
+	courses := &[]models.Course{}
+	ctx := context.Background()
+	for _, courseId := range courseIds {
+		course, err := app.course.Get(ctx, courseId)
+		if err != nil {
+			return *courses, fmt.Errorf("couldn't get a corretor course, courseId: %s, error: %v", courseId, err)
+		}
+
+	}
 }

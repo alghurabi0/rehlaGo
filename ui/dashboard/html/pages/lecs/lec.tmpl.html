@@ -20,12 +20,23 @@
           <h6
             class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-3"
           >
-          Lecture Details
+            Lecture Details
           </h6>
           <div class="flex flex-col gap-12">
             <div>{{ template "lecForm" . }}</div>
           </div>
         </div>
+        <button
+          class="bg-red"
+          hx-delete="/courses/{{.Lec.CourseId}}/lecs/{{.Lec.ID}}"
+          hx-select=".view"
+          hx-target=".view"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          hx-confirm="You want to delete this lecture?"
+        >
+          Delete Lecture
+        </button>
       </div>
     </div>
   </div>

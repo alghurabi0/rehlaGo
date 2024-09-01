@@ -20,7 +20,7 @@
           <h6
             class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-3"
           >
-          Course Details
+            Course Details
           </h6>
           <div class="flex flex-col gap-12">
             <div>{{ template "courseForm" . }}</div>
@@ -56,6 +56,27 @@
               hx-push-url="true"
             >
               Exams
+            </button>
+            <button
+              hx-get="/courses/{{.Course.ID}}/materials"
+              hx-select=".view"
+              hx-target=".view"
+              hx-swap="outerHTML"
+              hx-push-url="true"
+            >
+              Materials
+            </button>
+            <hr class="my-8 border-blue-gray-50" />
+            <button
+              class="bg-red"
+              hx-delete="/courses/{{.Course.ID}}"
+              hx-select=".view"
+              hx-target=".view"
+              hx-swap="outerHTML"
+              hx-push-url="true"
+              hx-confirm="You want to delete the course and all it's lectures, exams, and materials?"
+            >
+              Delete Course
             </button>
           </div>
         </div>

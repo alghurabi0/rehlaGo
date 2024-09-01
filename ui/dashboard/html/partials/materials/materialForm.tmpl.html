@@ -1,4 +1,4 @@
-{{ define "examForm" }}
+{{ define "materialForm" }}
 <form
   class="flex flex-col gap-6"
   hx-{{.HxMethod}}="{{.HxRoute}}"
@@ -17,21 +17,21 @@
   </label>
   <input
     type="text"
-    placeholder="{{ if .Exam.Title }}{{.Exam.Title}}{{ end }}"
+    placeholder="{{ if .Material.Title }}{{.Material.Title}}{{ end }}"
     name="title"
     id="title"
   />
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
-    for="exam_file"
+    for="material_file"
   >
-    Exam File
+    Material File
   </label>
   <input
     type="file"
-    placeholder="{{if .Exam.URL}}{{.Exam.URL}}{{ end }}"
-    name="exam_file"
-    id="exam_file"
+    placeholder="{{if .Material.URL}}{{.Material.URL}}{{ end }}"
+    name="material_file"
+    id="material_file"
   />
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
@@ -41,7 +41,7 @@
   </label>
   <input
     type="number"
-    placeholder="{{ if .Exam.Order}}{{.Exam.Order}}{{ end }}"
+    placeholder="{{ if .Material.Order}}{{.Material.Order}}{{ end }}"
     name="order"
     id="order"
   />

@@ -15,7 +15,10 @@ type templateData struct {
 	Lecs          *[]models.Lec
 	Exam          *models.Exam
 	Exams         *[]models.Exam
+	Material      *models.Material
+	Materials     *[]models.Material
 	IsLoggedIn    bool
+	IsAdmin       bool
 	TemplateTitle string
 	HxMethod      string
 	HxRoute       string

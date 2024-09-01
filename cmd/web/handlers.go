@@ -5,6 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -118,20 +121,42 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	info.userId = userId
-	err := r.ParseForm()
+
+	ctx := context.Background()
+	exam, err := app.exam.Get(ctx, info.courseId, info.examId)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	info.filename = r.PostFormValue("filename")
-	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, info.courseId, info.examId)
+
+	err = r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	file, handler, err := r.FormFile("answer_file")
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", info.courseId, info.examId, info.userId)
+	url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	err = app.answer.Set(ctx, info.userId, info.courseId, info.examId, exam.Title, info.filename)
+
+	answer := &models.Answer{
+		CourseId:         info.courseId,
+		ExamId:           info.examId,
+		ExamTitle:        exam.Title,
+		URL:              url,
+		Corrected:        false,
+		DateOfSubmission: time.Now(),
+	}
+	err = app.answer.Create(ctx, answer, userId)
 	if err != nil {
+		object.Delete(ctx)
 		app.serverError(w, err)
 		return
 	}

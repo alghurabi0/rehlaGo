@@ -66,3 +66,23 @@ func (app *application) isAdmin(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func (app *application) isCorrector(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+
+		if user.Role == "corrector" {
+			next.ServeHTTP(w, r)
+		} else if user.Role == "admin" {
+			ctx := context.WithValue(r.Context(), isAdminContextKey, true)
+			r = r.WithContext(ctx)
+			next.ServeHTTP(w, r)
+		}
+		app.clientError(w, http.StatusUnauthorized)
+		return
+	})
+}

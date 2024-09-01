@@ -16,13 +16,15 @@ import (
 type Answer struct {
 	ID               string    `firestore:"-"`
 	CourseId         string    `firestore:"course_id"`
+	ExamId           string    `firestore:"exam_id"`
 	ExamTitle        string    `firestore:"exam_title"`
 	StoragePath      string    `firestore:"storage_path"`
-	Grade            int       `firestore:"mark"`
-	OutOf            int       `firestore:"out_of"`
+	Grade            int       `firestore:"grade"`
 	Notes            string    `firestore:"notes"`
 	DateOfSubmission time.Time `firestore:"date_of_submission"`
-	URL              string    `firestore:"-"`
+	URL              string    `firestore:"url"`
+	Corrected        bool      `firestore:"corrected"`
+	Corrector        string    `firestore:"corrector"`
 }
 
 type AnswerModel struct {
@@ -70,13 +72,8 @@ func (s *AnswerModel) GetAll(ctx context.Context, userId, courseId string) (*[]A
 	return &answers, nil
 }
 
-func (s *AnswerModel) Set(ctx context.Context, userId, courseId, examId, examTitle, filename string) error {
-	answer := Answer{
-		CourseId:    courseId,
-		ExamTitle:   examTitle,
-		StoragePath: filename,
-	}
-	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(courseId).Collection("answers").Doc(examId).Set(ctx, answer)
+func (s *AnswerModel) Create(ctx context.Context, answer *Answer, userId string) error {
+	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(answer.CourseId).Collection("answers").Doc(answer.ExamId).Set(ctx, answer)
 	if err != nil {
 		return err
 	}

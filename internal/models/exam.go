@@ -65,13 +65,13 @@ func (e *ExamModel) GetAll(ctx context.Context, courseId string) (*[]Exam, error
 	return &exams, nil
 }
 
-func (e *ExamModel) Create(ctx context.Context, courseId string, exam *Exam) (string, error) {
-	doc, _, err := e.DB.Collection("courses").Doc(courseId).Collection("exams").Add(ctx, exam)
+func (e *ExamModel) Create(ctx context.Context, courseId, examId string, exam *Exam) (string, error) {
+	_, err := e.DB.Collection("courses").Doc(courseId).Collection("exams").Doc(examId).Set(ctx, exam)
 	if err != nil {
 		return "", err
 	}
 
-	return doc.ID, nil
+	return examId, nil
 }
 
 func (e *ExamModel) Update(ctx context.Context, courseId, examId string, updates []firestore.Update) error {

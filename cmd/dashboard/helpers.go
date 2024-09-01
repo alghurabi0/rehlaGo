@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"net/http"
@@ -209,14 +210,29 @@ func (app *application) createMaterialUpdateArr(material *models.Material) []fir
 	return updates
 }
 
-func (app *application) getCorrectorCourses(courseIds []string) (*[]*models.Course, error) {
-	courses := &[]models.Course{}
+func (app *application) getCorrectorCourses(courseIds []string) (*[]models.Course, error) {
+	var courses []models.Course
 	ctx := context.Background()
 	for _, courseId := range courseIds {
 		course, err := app.course.Get(ctx, courseId)
 		if err != nil {
-			return *courses, fmt.Errorf("couldn't get a corretor course, courseId: %s, error: %v", courseId, err)
+			return &[]models.Course{}, fmt.Errorf("couldn't get a corretor course, courseId: %s, error: %v", courseId, err)
 		}
-
+		if course.Active {
+			courses = append(courses, *course)
+		}
 	}
+	return &courses, nil
+}
+
+func (app *application) GenerateRandomID() string {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+
+	id := fmt.Sprintf("%x", b)
+	return id
 }

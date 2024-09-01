@@ -1,0 +1,58 @@
+{{ define "answerForm" }}
+<form
+  class="flex flex-col gap-6"
+  hx-{{.HxMethod}}="{{.HxRoute}}"
+  hx-trigger="submit"
+  hx-select=".view"
+  hx-target=".view"
+  hx-swap="outerHTML"
+  hx-push-url="true"
+>
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="student"
+  >
+    Student
+  </label>
+  <h3 id="student">{{.User.Firstname}} {{.User.Lastname}}</h3>
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="exam_title"
+  >
+    Exam Title
+  </label>
+  <h3 id="exam_title">{{.Answer.ExamTitle}}</h3>
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="url"
+  >
+    Answer File URL
+  </label>
+  <a id="url" href="{{.Answer.URL}}" target="_blank">View File</a>
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="grade"
+  >
+    Grade
+  </label>
+  <input
+    type="number"
+    placeholder="{{ if .Answer.Grade}}{{.Answer.Grade}}{{ end }}"
+    name="grade"
+    id="grade"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="notes"
+  >
+    Notes
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Answer.Notes}}{{.Answer.Notes}}{{ end }}"
+    name="notes"
+    id="notes"
+  />
+  <button type="submit">Save</button>
+</form>
+{{ end }}

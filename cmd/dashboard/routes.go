@@ -49,6 +49,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /correct/{courseId}", isCorrector.ThenFunc(app.correctExams))
 	mux.Handle("GET /correct/{courseId}/{examId}", isCorrector.ThenFunc(app.correctAnswers))
 	mux.Handle("GET /correct/{courseId}/{examId}/{userId}", isCorrector.ThenFunc(app.correctAnswer))
+	mux.Handle("PATCH /correct/{courseId}/{examId}/{userId}", isCorrector.ThenFunc(app.editAnswer))
 
 	mux.HandleFunc("GET /login", app.loginPage)
 	mux.HandleFunc("POST /login", app.login)

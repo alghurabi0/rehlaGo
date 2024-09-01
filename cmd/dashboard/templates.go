@@ -17,8 +17,10 @@ type templateData struct {
 	Exams              *[]models.Exam
 	Material           *models.Material
 	Materials          *[]models.Material
+	Answer             *models.Answer
 	UncorrectedAnswers *[]models.Answer
 	CorrectedAnswers   *[]models.Answer
+	User               *models.User
 	IsLoggedIn         bool
 	IsAdmin            bool
 	TemplateTitle      string

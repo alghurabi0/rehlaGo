@@ -8,21 +8,23 @@ import (
 )
 
 type templateData struct {
-	ContactInfo   *models.ContactInfo
-	Course        *models.Course
-	Courses       *[]models.Course
-	Lec           *models.Lec
-	Lecs          *[]models.Lec
-	Exam          *models.Exam
-	Exams         *[]models.Exam
-	Material      *models.Material
-	Materials     *[]models.Material
-	IsLoggedIn    bool
-	IsAdmin       bool
-	TemplateTitle string
-	HxMethod      string
-	HxRoute       string
-	WistiaToken   string
+	ContactInfo        *models.ContactInfo
+	Course             *models.Course
+	Courses            *[]models.Course
+	Lec                *models.Lec
+	Lecs               *[]models.Lec
+	Exam               *models.Exam
+	Exams              *[]models.Exam
+	Material           *models.Material
+	Materials          *[]models.Material
+	UncorrectedAnswers *[]models.Answer
+	CorrectedAnswers   *[]models.Answer
+	IsLoggedIn         bool
+	IsAdmin            bool
+	TemplateTitle      string
+	HxMethod           string
+	HxRoute            string
+	WistiaToken        string
 }
 
 var functions = template.FuncMap{}

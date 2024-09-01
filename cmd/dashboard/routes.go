@@ -47,6 +47,8 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /courses/{courseId}/material", isAdmin.ThenFunc(app.createMaterialPage))
 
 	mux.Handle("GET /correct/{courseId}", isCorrector.ThenFunc(app.correctExams))
+	mux.Handle("GET /correct/{courseId}/{examId}", isCorrector.ThenFunc(app.correctAnswers))
+	mux.Handle("GET /correct/{courseId}/{examId}/{userId}", isCorrector.ThenFunc(app.correctAnswer))
 
 	mux.HandleFunc("GET /login", app.loginPage)
 	mux.HandleFunc("POST /login", app.login)

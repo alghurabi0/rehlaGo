@@ -1,0 +1,93 @@
+{{ define "title" }}Answers{{ end }} {{ define "main" }}
+<div class="mt-12 mb-8 flex flex-col gap-12 view">
+  <div
+    class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
+  >
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        Uncorrected Answers
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <table class="w-full min-w-[640px] table-auto">
+        <thead>
+          <tr>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Status
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Grade
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                File
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              ></p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .UncorrectedAnswers}} {{ template "answerRow" . }} {{ end }}
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        Corrected Answers
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <table class="w-full min-w-[640px] table-auto">
+        <thead>
+          <tr>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Student
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                File
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              ></p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .CorrectedAnswers}} {{ template "answerRow" . }} {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{{ end }}

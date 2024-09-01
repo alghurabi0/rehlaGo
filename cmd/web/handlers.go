@@ -147,10 +147,12 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	answer := &models.Answer{
+		UserId:           info.userId,
 		CourseId:         info.courseId,
 		ExamId:           info.examId,
 		ExamTitle:        exam.Title,
 		URL:              url,
+		StoragePath:      path,
 		Corrected:        false,
 		DateOfSubmission: time.Now(),
 	}

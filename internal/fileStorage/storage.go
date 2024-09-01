@@ -7,10 +7,12 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"strings"
 	"time"
 
 	gcloud "cloud.google.com/go/storage"
 	"firebase.google.com/go/storage"
+	"google.golang.org/api/iterator"
 )
 
 type StorageModel struct {
@@ -61,4 +63,32 @@ func (s *StorageModel) DeleteFile(ctx context.Context, path string) error {
 	}
 
 	return nil
+}
+
+func (s *StorageModel) GetAnswers(ctx context.Context, courseId, examId string) ([]string, error) {
+	bkt, err := s.ST.DefaultBucket()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get default bucket: %v", err)
+	}
+	path := fmt.Sprintf("courses/%s/exams/%s/answers/", courseId, examId)
+
+	query := &gcloud.Query{
+		Prefix: path,
+	}
+	objectsIter := bkt.Objects(ctx, query)
+
+	var answers []string
+	for {
+		obj, err := objectsIter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, fmt.Errorf("couldn't iterate over objects, error: %v", err)
+		}
+		objName := strings.TrimPrefix(obj.Name, path)
+		answers = append(answers, objName)
+	}
+
+	return answers, nil
 }

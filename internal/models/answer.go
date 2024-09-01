@@ -15,6 +15,7 @@ import (
 
 type Answer struct {
 	ID               string    `firestore:"-"`
+	UserId           string    `firestore:"user_id"`
 	CourseId         string    `firestore:"course_id"`
 	ExamId           string    `firestore:"exam_id"`
 	ExamTitle        string    `firestore:"exam_title"`

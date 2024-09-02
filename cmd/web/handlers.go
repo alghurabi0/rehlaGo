@@ -156,7 +156,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		Corrected:        false,
 		DateOfSubmission: time.Now(),
 	}
-	err = app.answer.Create(ctx, answer, userId)
+	err = app.answer.Create(ctx, answer)
 	if err != nil {
 		object.Delete(ctx)
 		app.serverError(w, err)

@@ -75,14 +75,15 @@ func (app *application) isCorrector(next http.Handler) http.Handler {
 			return
 		}
 
-		if user.Role == "corrector" {
+		switch user.Role {
+		case "corrector":
 			next.ServeHTTP(w, r)
-		} else if user.Role == "admin" {
+		case "admin":
 			ctx := context.WithValue(r.Context(), isAdminContextKey, true)
 			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
 		}
+
 		app.clientError(w, http.StatusUnauthorized)
-		return
 	})
 }

@@ -73,8 +73,16 @@ func (s *AnswerModel) GetAll(ctx context.Context, userId, courseId string) (*[]A
 	return &answers, nil
 }
 
-func (s *AnswerModel) Create(ctx context.Context, answer *Answer, userId string) error {
-	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(answer.CourseId).Collection("answers").Doc(answer.ExamId).Set(ctx, answer)
+func (s *AnswerModel) Create(ctx context.Context, answer *Answer) error {
+	_, err := s.DB.Collection("users").Doc(answer.UserId).Collection("subs").Doc(answer.CourseId).Collection("answers").Doc(answer.ExamId).Set(ctx, answer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *AnswerModel) Update(ctx context.Context, userId, courseId, examId string, updates []firestore.Update) error {
+	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(courseId).Collection("answers").Doc(examId).Update(ctx, updates)
 	if err != nil {
 		return err
 	}

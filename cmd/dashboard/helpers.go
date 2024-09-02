@@ -210,6 +210,31 @@ func (app *application) createMaterialUpdateArr(material *models.Material) []fir
 	return updates
 }
 
+func (app *application) createAnswerUpdateArr(answer *models.Answer) []firestore.Update {
+	var updates []firestore.Update
+
+	if answer.Grade != 0 {
+		updates = append(updates, firestore.Update{
+			Path:  "grade",
+			Value: answer.Grade,
+		})
+	}
+	if answer.Notes != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "notes",
+			Value: answer.Notes,
+		})
+	}
+	if answer.Corrector != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "corrector",
+			Value: answer.Corrector,
+		})
+	}
+
+	return updates
+}
+
 func (app *application) getCorrectorCourses(courseIds []string) (*[]models.Course, error) {
 	var courses []models.Course
 	ctx := context.Background()

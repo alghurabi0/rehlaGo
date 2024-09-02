@@ -1,0 +1,44 @@
+{{ define "title" }}User Informations{{ end }} {{ define "main" }}
+<div class="mt-12 mb-8 flex flex-col gap-12 view">
+  <div
+    class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
+  >
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        User Information
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <div
+        class="grid-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3"
+      >
+        <div>
+          <h6
+            class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 mb-3"
+          >
+            User Details
+          </h6>
+          <div class="flex flex-col gap-12">
+            <div>{{ template "userForm" . }}</div>
+          </div>
+        </div>
+        <button
+          class="bg-red"
+          hx-delete="/users/{{.User.ID}}"
+          hx-select=".view"
+          hx-target=".view"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          hx-confirm="You want to delete this user?"
+        >
+          Delete User
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

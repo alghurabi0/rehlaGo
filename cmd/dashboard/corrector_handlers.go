@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/alghurabi0/rehla/internal/models"
 )
@@ -114,5 +115,50 @@ func (app *application) editAnswer(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/correct/%s/%s/%s", courseId, examId, userId), http.StatusSeeOther)
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	ctx := context.Background()
+	_, err = app.answer.Get(ctx, userId, courseId, examId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Print(err)
+		return
+	}
+	err = r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ans := &models.Answer{}
+	gradeStr := r.FormValue("grade")
+	if gradeStr != "" {
+		grade, err := strconv.Atoi(gradeStr)
+		if err != nil {
+			http.Error(w, "invalid grade number format", http.StatusBadRequest)
+			return
+		}
+		if grade < 0 {
+			http.Error(w, "grade can't be smaller than 0", http.StatusBadRequest)
+			return
+		}
+		ans.Grade = grade
+	}
+	notes := r.FormValue("notes")
+	if notes != "" {
+		ans.Notes = notes
+	}
+	ans.Corrected = true
+	ans.Corrector = user.Username
+
+	updates := app.createAnswerUpdateArr(ans)
+	err = app.answer.Update(ctx, userId, courseId, examId, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/correct/%s/%s", courseId, examId), http.StatusSeeOther)
 }

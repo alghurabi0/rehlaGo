@@ -19,6 +19,8 @@ type User struct {
 	ParentPhoneNumber string   `firestore:"parent_phone_number"`
 	Pwd               string   `firestore:"pwd"`
 	Subscriptions     []string `firestore:"Subscriptions"`
+	ImgURL            string   `firestore:"img_url"`
+	NumSubs           int      `firestore:"-"`
 }
 
 type UserModel struct {
@@ -38,7 +40,30 @@ func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {
 		return &User{}, err
 	}
 	user.ID = userDoc.Ref.ID
+	user.NumSubs = len(user.Subscriptions)
 	return &user, nil
+}
+
+func (u *UserModel) GetAll(ctx context.Context, offset int) (*[]User, error) {
+	usersIter := u.DB.Collection("users").Offset(offset).Documents(ctx)
+	var users []User
+	for {
+		doc, err := usersIter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var user User
+		if err := doc.DataTo(&user); err != nil {
+			return nil, err
+		}
+		user.ID = doc.Ref.ID
+		user.NumSubs = len(user.Subscriptions)
+		users = append(users, user)
+	}
+	return &users, nil
 }
 
 //func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {

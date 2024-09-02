@@ -266,32 +266,30 @@ func (app *application) deleteCourse(w http.ResponseWriter, r *http.Request) {
 
 	}
 	// TODO - delete wistia folder
-	//for _, exam := range *exams {
-	//err := app.storage.DeleteFile(ctx, exam.FilePath)
-	//if err != nil {
-	//app.serverError(w, fmt.Errorf("error while deleting storage file, exam: %v, error: %v", exam, err))
-	//return
-	//}
-	//err = app.exam.Delete(ctx, id, exam.ID)
-	//if err != nil {
-	//app.serverError(w, fmt.Errorf("error while deleting exam from firestore, exam: %v, error: %v", exam, err))
-	//return
-	//}
-	//
-	//}
-	//for _, material := range *materials {
-	//err := app.storage.DeleteFile(ctx, material.FilePath)
-	//if err != nil {
-	//app.serverError(w, fmt.Errorf("error while deleting storage file, material: %v, error: %v", material, err))
-	//return
-	//}
-	//err = app.material.Delete(ctx, id, material.ID)
-	//if err != nil {
-	//app.serverError(w, fmt.Errorf("error while deleting material from firestore, material: %v, error: %v", material, err))
-	//return
-	//}
-	//
-	//}
+	for _, exam := range *exams {
+		//err := app.storage.DeleteFile(ctx, exam.FilePath)
+		//if err != nil {
+		//app.serverError(w, fmt.Errorf("error while deleting storage file, exam: %v, error: %v", exam, err))
+		//return
+		//}
+		err = app.exam.Delete(ctx, id, exam.ID)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting exam from firestore, exam: %v, error: %v", exam, err))
+			return
+		}
+	}
+	for _, material := range *materials {
+		//err := app.storage.DeleteFile(ctx, material.FilePath)
+		//if err != nil {
+		//app.serverError(w, fmt.Errorf("error while deleting storage file, material: %v, error: %v", material, err))
+		//return
+		//}
+		err = app.material.Delete(ctx, id, material.ID)
+		if err != nil {
+			app.serverError(w, fmt.Errorf("error while deleting material from firestore, material: %v, error: %v", material, err))
+			return
+		}
+	}
 
 	err = app.storage.DeleteFile(ctx, course.FilePath)
 	if err != nil {

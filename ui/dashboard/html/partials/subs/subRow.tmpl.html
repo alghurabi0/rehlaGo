@@ -1,0 +1,30 @@
+{{ define "subRow" }}
+<tr>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <p
+      class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold"
+    >
+      <bdi>{{.CourseTitle}}</bdi>
+    </p>
+  </td>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <p
+      class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
+    >
+      {{if .Active}}Active{{else}}Not Active{{end}}
+    </p>
+  </td>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <button
+      class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
+      hx-get="/users/{{.userId}}/{{.ID}}"
+      hx-select=".view"
+      hx-target=".view"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+    >
+      View
+    </button>
+  </td>
+</tr>
+{{ end }}

@@ -22,6 +22,10 @@ type templateData struct {
 	CorrectedAnswers   *[]models.Answer
 	User               *models.User
 	Users              *[]models.User
+	Sub                *models.Subscription
+	Subs               *[]models.Subscription
+	Payment            *models.Payment
+	Payments           *[]models.Payment
 	IsLoggedIn         bool
 	IsAdmin            bool
 	TemplateTitle      string

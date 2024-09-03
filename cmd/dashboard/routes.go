@@ -53,6 +53,10 @@ func (app *application) routes() http.Handler {
 	mux.Handle("DELETE /users/{userId}", isAdmin.ThenFunc(app.deleteUser))
 	mux.Handle("GET /user", isAdmin.ThenFunc(app.createUserPage))
 
+	mux.Handle("GET /users/{userId}/{subId}", isAdmin.ThenFunc(app.subPage))
+	mux.Handle("POST /users/{userId}/{subId}", isAdmin.ThenFunc(app.createPayment))
+	mux.Handle("DELETE /users/{userId}/{subId}", isAdmin.ThenFunc(app.deletePayment))
+
 	mux.Handle("GET /correct/{courseId}", isCorrector.ThenFunc(app.correctExams))
 	mux.Handle("GET /correct/{courseId}/{examId}", isCorrector.ThenFunc(app.correctAnswers))
 	mux.Handle("GET /correct/{courseId}/{examId}/{userId}", isCorrector.ThenFunc(app.correctAnswer))

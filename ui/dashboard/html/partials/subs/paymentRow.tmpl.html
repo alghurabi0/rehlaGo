@@ -1,0 +1,36 @@
+{{ define "paymentRow" }}
+<tr>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <p
+      class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold"
+    >
+      {{.AmountPaid}}
+    </p>
+  </td>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <p
+      class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
+    >
+      {{.DateOfPayment}}
+    </p>
+  </td>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <p
+      class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
+    >
+      {{.ValidUntil}}
+    </p>
+  </td>
+  <td class="py-3 px-5 border-b border-blue-gray-50">
+    <button
+      class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
+      hx-delete="/users/{{.UserId}}/{{.SubId}}/{{.ID}}"
+      hx-target="closest tr"
+      hx-swap="outerHTML"
+      hx-confirm="You want to delete this payment?"
+    >
+      Delete
+    </button>
+  </td>
+</tr>
+{{ end }}

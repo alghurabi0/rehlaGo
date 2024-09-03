@@ -11,6 +11,8 @@ import (
 
 type Payment struct {
 	ID            string    `firestore:"-"`
+	UserId        string    `firestore:"-"`
+	SubId         string    `firestore:"-"`
 	AmountPaid    int       `firestore:"amount_paid"`
 	DateOfPayment time.Time `firestore:"date_of_payment"`
 	ValidUntil    time.Time `firestore:"valid_until"`
@@ -31,6 +33,8 @@ func (p *PaymentModel) Get(ctx context.Context, userId, subId, payId string) (*P
 		return &Payment{}, err
 	}
 	payment.ID = payDoc.Ref.ID
+	payment.UserId = userId
+	payment.SubId = subId
 	return &payment, nil
 }
 
@@ -50,6 +54,8 @@ func (p *PaymentModel) GetAll(ctx context.Context, userId, subId string) (*[]Pay
 			return nil, err
 		}
 		payment.ID = doc.Ref.ID
+		payment.UserId = userId
+		payment.SubId = subId
 		payments = append(payments, payment)
 	}
 	sort.Slice(payments, func(i, j int) bool {

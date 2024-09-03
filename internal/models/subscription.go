@@ -8,9 +8,10 @@ import (
 )
 
 type Subscription struct {
-	ID      string    `firestore:"-"`
-	Active  bool      `firestore:"active"`
-	Answers *[]Answer `firestore:"-"`
+	ID          string    `firestore:"-"`
+	CourseTitle string    `firestore:"course_title"`
+	Active      bool      `firestore:"active"`
+	Answers     *[]Answer `firestore:"-"`
 }
 
 type SubscriptionModel struct {

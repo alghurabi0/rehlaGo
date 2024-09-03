@@ -48,11 +48,17 @@ func (app *application) userPage(w http.ResponseWriter, r *http.Request) {
 		app.errorLog.Print(err)
 		return
 	}
+	subs, err := app.sub.GetAll(ctx, user.ID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
 	data := app.newTemplateData(r)
 	data.User = user
 	data.HxMethod = "patch"
 	data.HxRoute = fmt.Sprintf("/users/%s", user.ID)
+	data.Subs = subs
 	app.render(w, http.StatusOK, "user.tmpl.html", data)
 }
 
@@ -219,7 +225,44 @@ func (app *application) createUserPage(w http.ResponseWriter, r *http.Request) {
 	user := &models.User{}
 	data := app.newTemplateData(r)
 	data.HxMethod = "post"
-	data.HxRoute = fmt.Sprintf("/users")
+	data.HxRoute = "/users"
 	data.User = user
 	app.render(w, http.StatusOK, "createUserPage.tmpl.html", data)
+}
+
+func (app *application) subPage(w http.ResponseWriter, r *http.Request) {
+	userId := r.PathValue("userId")
+	if userId == "" {
+		app.notFound(w)
+		return
+	}
+	ctx := context.Background()
+	user, err := app.user.Get(ctx, userId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Println(err)
+		return
+	}
+	subId := r.PathValue("subId")
+	if subId == "" {
+		app.notFound(w)
+		return
+	}
+	sub, err := app.sub.Get(ctx, user.ID, subId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Println(err)
+		return
+	}
+	payments, err := app.payment.GetAll(ctx, user.ID, subId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.User = user
+	data.Sub = sub
+	data.Payments = payments
+	app.render(w, http.StatusOK, "sub.tmpl.html", data)
 }

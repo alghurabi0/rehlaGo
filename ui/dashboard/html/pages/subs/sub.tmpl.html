@@ -1,0 +1,61 @@
+{{ define "title" }}Subscription{{ end }} {{ define "main" }}
+<div class="mt-12 mb-8 flex flex-col gap-12 view">
+  <div
+    class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
+  >
+    <div>
+      <h1>Course Title</h1>
+      <h1>{{.Sub.CourseTitle}}</h1>
+      <h1>Status</h1>
+      <h1>{{if .Sub.Active}}Active{{else}}Not Active{{end}}</h1>
+    </div>
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        Payments
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <table class="w-full min-w-[640px] table-auto">
+        <thead>
+          <tr>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Amount Paid
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Date of payment
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Valid Until
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              ></p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Exams}} {{ template "paymentRow" . }} {{ end }}
+        </tbody>
+      </table>
+      {{ template "paymentForm" . }}
+    </div>
+  </div>
+</div>
+{{ end }}

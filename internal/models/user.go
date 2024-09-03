@@ -20,6 +20,7 @@ type User struct {
 	Pwd               string   `firestore:"pwd"`
 	Subscriptions     []string `firestore:"Subscriptions"`
 	ImgURL            string   `firestore:"img_url"`
+	ImgPath           string   `firestore:"img_path"`
 	NumSubs           int      `firestore:"-"`
 }
 
@@ -66,28 +67,58 @@ func (u *UserModel) GetAll(ctx context.Context, offset int) (*[]User, error) {
 	return &users, nil
 }
 
-//func (u *UserModel) CheckUserExists(ctx context.Context, phone string) error {
-//user, err := u.Auth.GetUserByPhoneNumber(ctx, phone)
-//print(user)
-//if err != nil {
-//return nil
-//}
-//return errors.New("user already exists")
-//}
-
-func (u *UserModel) Create(ctx context.Context, firstname, lastname, phone, parentPhone, pwd string) (string, error) {
-	userData := User{
-		Firstname:         firstname,
-		Lastname:          lastname,
-		PhoneNumber:       phone,
-		ParentPhoneNumber: parentPhone,
-		Pwd:               pwd,
-	}
-	doc, _, err := u.DB.Collection("users").Add(ctx, userData)
+func (u *UserModel) Create(ctx context.Context, user *User) (string, error) {
+	doc, _, err := u.DB.Collection("users").Add(ctx, user)
 	if err != nil {
 		return "", err
 	}
 	return doc.ID, nil
+}
+
+func (u *UserModel) Update(ctx context.Context, userId string, updates []firestore.Update) error {
+	_, err := u.DB.Collection("users").Doc(userId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserModel) DeleteAll(ctx context.Context, docRef *firestore.DocumentRef) error {
+	subcollections := docRef.Collections(ctx)
+	for {
+		subcolRef, err := subcollections.Next()
+		if err != nil {
+			if err == iterator.Done {
+				break
+			}
+			return err
+		}
+
+		err = u.DeleteCollection(ctx, subcolRef)
+		if err != nil {
+			return err
+		}
+	}
+	_, err := docRef.Delete(ctx)
+	return err
+}
+
+func (u *UserModel) DeleteCollection(ctx context.Context, colRef *firestore.CollectionRef) error {
+	iter := colRef.Documents(ctx)
+	for {
+		docSnapshot, err := iter.Next()
+		if err != nil {
+			if err == iterator.Done {
+				break
+			}
+			return err
+		}
+		err = u.DeleteAll(ctx, docSnapshot.Ref)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*User, error) {

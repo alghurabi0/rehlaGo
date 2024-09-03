@@ -1,0 +1,9 @@
+{{ define "title" }}Add New User{{ end }} {{ define "main" }}
+<div class="mt-12 mb-8 flex flex-col gap-12 view">
+  <div
+    class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"
+  >
+  {{ template "userForm" . }}
+  </div>
+</div>
+{{ end }}

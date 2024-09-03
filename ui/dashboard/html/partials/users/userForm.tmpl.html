@@ -6,14 +6,13 @@
   hx-select=".view"
   hx-target=".view"
   hx-swap="outerHTML"
-  hx-push-url="true"
   enctype="multipart/form-data"
 >
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="firstname"
   >
-  First Name
+    First Name
   </label>
   <input
     type="text"
@@ -25,7 +24,7 @@
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="lastname"
   >
-  Last Name
+    Last Name
   </label>
   <input
     type="text"
@@ -39,6 +38,9 @@
   >
     User Image
   </label>
+  {{if .User.ImgURL}}
+  <a href="{{.User.ImgURL}}" target="_blank">View Photo</a>
+  {{end}}
   <input
     type="file"
     placeholder="{{if .User.ImgURL}}{{.User.ImgURL}}{{ end }}"
@@ -49,7 +51,7 @@
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="phone_number"
   >
-  Phone Number
+    Phone Number
   </label>
   <input
     type="number"
@@ -61,13 +63,25 @@
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="parent_phone_number"
   >
-  Parent Phone Number
+    Parent Phone Number
   </label>
   <input
     type="number"
     placeholder="{{ if .User.ParentPhoneNumber}}{{.User.ParentPhoneNumber}}{{ end }}"
     name="parent_phone_number"
     id="parent_phone_number"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="pwd"
+  >
+    Password
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .User.Pwd}}{{.User.Pwd}}{{ end }}"
+    name="pwd"
+    id="pwd"
   />
   <button type="submit">Save</button>
 </form>

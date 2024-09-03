@@ -235,6 +235,55 @@ func (app *application) createAnswerUpdateArr(answer *models.Answer) []firestore
 	return updates
 }
 
+func (app *application) createUserUpdateArr(user *models.User) []firestore.Update {
+	var updates []firestore.Update
+
+	if user.Firstname != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "firstname",
+			Value: user.Firstname,
+		})
+	}
+	if user.Lastname != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "lastname",
+			Value: user.Lastname,
+		})
+	}
+	if user.PhoneNumber != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "phone_number",
+			Value: user.PhoneNumber,
+		})
+	}
+	if user.ParentPhoneNumber != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "parent_phone_number",
+			Value: user.ParentPhoneNumber,
+		})
+	}
+	if user.ImgURL != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "img_url",
+			Value: user.ImgURL,
+		})
+	}
+	if user.ImgPath != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "img_path",
+			Value: user.ImgPath,
+		})
+	}
+	if user.Pwd != "" {
+		updates = append(updates, firestore.Update{
+			Path:  "pwd",
+			Value: user.Pwd,
+		})
+	}
+
+	return updates
+}
+
 func (app *application) getCorrectorCourses(courseIds []string) (*[]models.Course, error) {
 	var courses []models.Course
 	ctx := context.Background()

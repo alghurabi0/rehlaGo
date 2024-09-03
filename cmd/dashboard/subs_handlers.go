@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
 )
 
@@ -40,11 +41,17 @@ func (app *application) subPage(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	answers, err := app.answer.GetAll(ctx, user.ID, sub.ID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
 	data := app.newTemplateData(r)
 	data.User = user
 	data.Sub = sub
 	data.Payments = payments
+	data.Answers = answers
 	app.render(w, http.StatusOK, "sub.tmpl.html", data)
 }
 
@@ -86,13 +93,96 @@ func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 	} else {
 		sub.Active = false
 	}
-	id, err := app.sub.Create(ctx, user.ID, sub)
+	id, err := app.sub.Create(ctx, user.ID, courseId, sub)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 	if id == "" {
 		app.serverError(w, errors.New("empty id"))
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/users/%s", user.ID), http.StatusSeeOther)
+}
+
+func (app *application) editSub(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	userId := r.PathValue("userId")
+	if userId == "" {
+		app.notFound(w)
+		return
+	}
+	user, err := app.user.Get(ctx, userId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	subId := r.PathValue("subId")
+	if subId == "" {
+		app.notFound(w)
+		return
+	}
+	sub, err := app.sub.Get(ctx, user.ID, subId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Println(err)
+		return
+	}
+	err = r.ParseForm()
+	if err != nil {
+		app.errorLog.Println(err)
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	var updates []firestore.Update
+	status := r.FormValue("status")
+	if status == "active" {
+		updates = append(updates, firestore.Update{
+			Path:  "active",
+			Value: true,
+		})
+	} else {
+		updates = append(updates, firestore.Update{
+			Path:  "active",
+			Value: false,
+		})
+	}
+	err = app.sub.Update(ctx, user.ID, sub.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/users/%s/%s", user.ID, sub.ID), http.StatusSeeOther)
+}
+
+func (app *application) deleteSub(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	userId := r.PathValue("userId")
+	if userId == "" {
+		app.notFound(w)
+		return
+	}
+	user, err := app.user.Get(ctx, userId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Println(err)
+		return
+	}
+	subId := r.PathValue("subId")
+	if subId == "" {
+		app.notFound(w)
+		return
+	}
+	sub, err := app.sub.Get(ctx, user.ID, subId)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		app.errorLog.Println(err)
+		return
+	}
+	subDocRef := app.sub.DB.Collection("users").Doc(user.ID).Collection("subs").Doc(sub.ID)
+	err = models.DeleteAll(ctx, subDocRef)
+	if err != nil {
+		app.serverError(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/users/%s", user.ID), http.StatusSeeOther)

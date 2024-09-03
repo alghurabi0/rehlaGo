@@ -546,26 +546,20 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	// get values from json object
-	formData := struct {
-		Firstname   string
-		Lastname    string
-		Phone       string
-		ParentPhone string
-		Pwd         string
-	}{}
+	formData := &models.User{}
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	formData.Phone = r.PostFormValue("phone_number")
+	formData.PhoneNumber = r.PostFormValue("phone_number")
 	formData.Pwd = r.PostFormValue("password")
-	formData.ParentPhone = r.PostFormValue("parent_phone_number")
+	formData.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
 	formData.Firstname = r.PostFormValue("firstname")
 	formData.Lastname = r.PostFormValue("lastname")
 	// create the user
 	ctx := context.Background()
-	userId, err := app.user.Create(ctx, formData.Firstname, formData.Lastname, formData.Phone, formData.ParentPhone, formData.Pwd)
+	userId, err := app.user.Create(ctx, formData)
 	if err != nil {
 		app.serverError(w, err)
 		return

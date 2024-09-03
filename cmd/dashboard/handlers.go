@@ -23,6 +23,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	switch user.Role {
 	case "admin":
+		data.IsAdmin = true
 		app.render(w, http.StatusOK, "home.tmpl.html", data)
 	case "corrector":
 		user, err := app.getUser(r)

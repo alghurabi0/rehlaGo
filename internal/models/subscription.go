@@ -9,6 +9,7 @@ import (
 
 type Subscription struct {
 	ID          string    `firestore:"-"`
+	UserId      string    `firestore:"-"`
 	CourseTitle string    `firestore:"course_title"`
 	Active      bool      `firestore:"active"`
 	Answers     *[]Answer `firestore:"-"`
@@ -29,6 +30,7 @@ func (s *SubscriptionModel) Get(ctx context.Context, userId, subId string) (*Sub
 		return &Subscription{}, err
 	}
 	sub.ID = subDoc.Ref.ID
+	sub.UserId = userId
 	return &sub, nil
 }
 
@@ -48,18 +50,27 @@ func (s *SubscriptionModel) GetAll(ctx context.Context, userId string) (*[]Subsc
 			return nil, err
 		}
 		sub.ID = doc.Ref.ID
+		sub.UserId = userId
 		subs = append(subs, sub)
 	}
 	return &subs, nil
 }
 
-func (s *SubscriptionModel) Create(ctx context.Context, userId string, sub *Subscription) (string, error) {
-	doc, _, err := s.DB.Collection("users").Doc(userId).Collection("subs").Add(ctx, sub)
+func (s *SubscriptionModel) Create(ctx context.Context, userId, courseId string, sub *Subscription) (string, error) {
+	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(courseId).Set(ctx, sub)
 	if err != nil {
 		return "", err
 	}
 
-	return doc.ID, nil
+	return courseId, nil
+}
+
+func (s *SubscriptionModel) Update(ctx context.Context, userId, subId string, updates []firestore.Update) error {
+	_, err := s.DB.Collection("users").Doc(userId).Collection("subs").Doc(subId).Update(ctx, updates)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *SubscriptionModel) IsActive(ctx context.Context, userId, subId string) bool {

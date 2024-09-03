@@ -83,7 +83,7 @@ func (u *UserModel) Update(ctx context.Context, userId string, updates []firesto
 	return nil
 }
 
-func (u *UserModel) DeleteAll(ctx context.Context, docRef *firestore.DocumentRef) error {
+func DeleteAll(ctx context.Context, docRef *firestore.DocumentRef) error {
 	subcollections := docRef.Collections(ctx)
 	for {
 		subcolRef, err := subcollections.Next()
@@ -94,7 +94,7 @@ func (u *UserModel) DeleteAll(ctx context.Context, docRef *firestore.DocumentRef
 			return err
 		}
 
-		err = u.DeleteCollection(ctx, subcolRef)
+		err = DeleteCollection(ctx, subcolRef)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func (u *UserModel) DeleteAll(ctx context.Context, docRef *firestore.DocumentRef
 	return err
 }
 
-func (u *UserModel) DeleteCollection(ctx context.Context, colRef *firestore.CollectionRef) error {
+func DeleteCollection(ctx context.Context, colRef *firestore.CollectionRef) error {
 	iter := colRef.Documents(ctx)
 	for {
 		docSnapshot, err := iter.Next()
@@ -113,7 +113,7 @@ func (u *UserModel) DeleteCollection(ctx context.Context, colRef *firestore.Coll
 			}
 			return err
 		}
-		err = u.DeleteAll(ctx, docSnapshot.Ref)
+		err = DeleteAll(ctx, docSnapshot.Ref)
 		if err != nil {
 			return err
 		}

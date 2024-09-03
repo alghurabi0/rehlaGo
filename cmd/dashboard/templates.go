@@ -18,6 +18,7 @@ type templateData struct {
 	Material           *models.Material
 	Materials          *[]models.Material
 	Answer             *models.Answer
+	Answers            *[]models.Answer
 	UncorrectedAnswers *[]models.Answer
 	CorrectedAnswers   *[]models.Answer
 	User               *models.User

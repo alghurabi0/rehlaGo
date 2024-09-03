@@ -6,8 +6,23 @@
     <div>
       <h1>Course Title</h1>
       <h1>{{.Sub.CourseTitle}}</h1>
-      <h1>Status</h1>
-      <h1>{{if .Sub.Active}}Active{{else}}Not Active{{end}}</h1>
+      <form
+        hx-patch="/users/{{.User.ID}}/{{.Sub.ID}}"
+        hx-select=".view"
+        hx-target=".view"
+        hx-swap="outerHTML"
+        hx-trigger="submit"
+      >
+        <input
+          type="checkbox"
+          name="status"
+          value="active"
+          {{if
+          .Sub.Active}}checked{{end}}
+        />
+        <label for="status">Active</label>
+        <button type="submit">Save</button>
+      </form>
     </div>
     <div
       class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
@@ -51,10 +66,67 @@
           </tr>
         </thead>
         <tbody>
-          {{ range .Exams}} {{ template "paymentRow" . }} {{ end }}
+          {{ range .Payments}} {{ template "paymentRow" . }} {{ end }}
         </tbody>
       </table>
       {{ template "paymentForm" . }}
+    </div>
+    <button
+      class="bg-red"
+      hx-delete="/users/{{.User.ID}}/{{.Sub.ID}}"
+      hx-select=".view"
+      hx-target=".view"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+      hx-confirm="You want to delete this subscription?"
+    >
+      Delete Subscription
+    </button>
+    <div
+      class="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-8 p-6"
+    >
+      <h6
+        class="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white"
+      >
+        Answers
+      </h6>
+    </div>
+    <div class="p-6 overflow-x-scroll px-0 pt-0 pb-2">
+      <table class="w-full min-w-[640px] table-auto">
+        <thead>
+          <tr>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Status
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                Grade
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              >
+                View File
+              </p>
+            </th>
+            <th class="border-b border-blue-gray-50 py-3 px-5 text-left">
+              <p
+                class="block antialiased font-sans text-[11px] font-bold uppercase text-blue-gray-400"
+              ></p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Answers }} {{ template "answerRow" . }} {{ end }}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

@@ -215,7 +215,7 @@ func (app *application) deleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userDocRef := app.user.DB.Collection("users").Doc(user.ID)
-	err = app.user.DeleteAll(ctx, userDocRef)
+	err = models.DeleteAll(ctx, userDocRef)
 	if err != nil {
 		app.serverError(w, err)
 		return

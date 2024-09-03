@@ -55,8 +55,8 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /users/{userId}/{subId}", isAdmin.ThenFunc(app.subPage))
 	mux.Handle("POST /users/{userId}", isAdmin.ThenFunc(app.createSub))
-	mux.Handle("PATCH /users/{userId}", isAdmin.ThenFunc(app.editSub))
-	mux.Handle("DELETE /users/{userId}", isAdmin.ThenFunc(app.deleteSub))
+	mux.Handle("PATCH /users/{userId}/{subId}", isAdmin.ThenFunc(app.editSub))
+	mux.Handle("DELETE /users/{userId}/{subId}", isAdmin.ThenFunc(app.deleteSub))
 	mux.Handle("POST /users/{userId}/{subId}", isAdmin.ThenFunc(app.createPayment))
 	mux.Handle("DELETE /users/{userId}/{subId}/{paymentId}", isAdmin.ThenFunc(app.deletePayment))
 

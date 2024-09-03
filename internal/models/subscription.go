@@ -53,6 +53,15 @@ func (s *SubscriptionModel) GetAll(ctx context.Context, userId string) (*[]Subsc
 	return &subs, nil
 }
 
+func (s *SubscriptionModel) Create(ctx context.Context, userId string, sub *Subscription) (string, error) {
+	doc, _, err := s.DB.Collection("users").Doc(userId).Collection("subs").Add(ctx, sub)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
+}
+
 func (s *SubscriptionModel) IsActive(ctx context.Context, userId, subId string) bool {
 	sub, err := s.Get(ctx, userId, subId)
 	if err != nil {

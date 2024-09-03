@@ -76,6 +76,29 @@ func (c *CourseModel) GetAll(ctx context.Context) (*[]Course, error) {
 	return &courses, nil
 }
 
+func (c *CourseModel) GetAllActive(ctx context.Context) (*[]Course, error) {
+	coursesIter := c.DB.Collection("courses").Documents(ctx)
+	var courses []Course
+	for {
+		doc, err := coursesIter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var course Course
+		if err := doc.DataTo(&course); err != nil {
+			return nil, err
+		}
+		if course.Active {
+			course.ID = doc.Ref.ID
+			courses = append(courses, course)
+		}
+	}
+	return &courses, nil
+}
+
 func (c *CourseModel) Update(ctx context.Context, courseId string, updates []firestore.Update) error {
 	_, err := c.DB.Collection("courses").Doc(courseId).Update(ctx, updates)
 	if err != nil {

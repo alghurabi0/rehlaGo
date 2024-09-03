@@ -25,7 +25,8 @@
     <button
       class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
       hx-delete="/users/{{.UserId}}/{{.SubId}}/{{.ID}}"
-      hx-target="closest tr"
+      hx-select=".view"
+      hx-target=".view"
       hx-swap="outerHTML"
       hx-confirm="You want to delete this payment?"
     >

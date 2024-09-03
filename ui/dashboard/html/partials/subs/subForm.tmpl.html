@@ -1,4 +1,20 @@
 {{ define "subForm" }}
-<form>
+<form
+  hx-post="/users/{{.User.ID}}"
+  hx-select=".view"
+  hx-target=".view"
+  hx-swap="outerHTML"
+  hx-trigger="submit"
+>
+  <label for="course">Course</label>
+  <select id="course" name="courseId">
+    {{ range .Courses }}
+    <option value="{{.ID}}">{{.Title}}</option>
+    {{ end }}
+  </select>
+  <input type="checkbox" name="status" value="active" />
+  <label for="status">Active</label>
+  <br />
+  <button type="submit">Create new subscription</button>
 </form>
 {{ end }}

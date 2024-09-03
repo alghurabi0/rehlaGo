@@ -63,3 +63,20 @@ func (p *PaymentModel) GetAll(ctx context.Context, userId, subId string) (*[]Pay
 	})
 	return &payments, nil
 }
+
+func (p *PaymentModel) Create(ctx context.Context, userId, subId string, payment *Payment) (string, error) {
+	doc, _, err := p.DB.Collection("users").Doc(userId).Collection("subs").Doc(subId).Collection("payments").Add(ctx, payment)
+	if err != nil {
+		return "", err
+	}
+
+	return doc.ID, nil
+}
+
+func (p *PaymentModel) Delete(ctx context.Context, userId, subId, paymentId string) error {
+	_, err := p.DB.Collection("users").Doc(userId).Collection("subs").Doc(subId).Collection("payments").Doc(paymentId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return err
+}

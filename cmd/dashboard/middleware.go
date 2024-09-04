@@ -82,6 +82,7 @@ func (app *application) isCorrector(next http.Handler) http.Handler {
 			ctx := context.WithValue(r.Context(), isAdminContextKey, true)
 			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
+			return
 		}
 
 		app.clientError(w, http.StatusUnauthorized)

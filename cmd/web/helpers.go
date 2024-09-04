@@ -109,7 +109,7 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 }
 
 func (app *application) getUserId(r *http.Request) string {
-	user, ok := r.Context().Value(userModelContextKey).(models.User)
+	user, ok := r.Context().Value(userModelContextKey).(*models.User)
 	if !ok {
 		return ""
 	}
@@ -117,8 +117,6 @@ func (app *application) getUserId(r *http.Request) string {
 }
 
 func (app *application) getUser(r *http.Request) (*models.User, error) {
-	print("helper\n")
-	fmt.Printf("%v", r.Context().Value(userModelContextKey))
 	user, ok := r.Context().Value(userModelContextKey).(*models.User)
 	if !ok {
 		return &models.User{}, errors.New("can't get user object from context")

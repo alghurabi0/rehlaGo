@@ -22,6 +22,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 	mux.Handle("GET /courses/{id}", isLoggedIn.ThenFunc(app.coursePage))
 	mux.Handle("GET /courses/{courseId}/lec/{lecId}", isLoggedIn.ThenFunc(app.lecPage))
+
 	mux.Handle("GET /courses/{courseId}/exam/{examId}", isSubscribed.ThenFunc(app.examPage))
 	mux.Handle("POST /answers/{courseId}/{examId}", isSubscribed.ThenFunc(app.createAnswer))
 	mux.Handle("GET /materials", isLoggedIn.ThenFunc(app.materialsPage))
@@ -29,6 +30,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /progress", isLoggedIn.ThenFunc(app.progressPage))
 	mux.Handle("GET /progress/{courseId}", isSubscribed.ThenFunc(app.gradesPage))
 	mux.Handle("GET /progress/{courseId}/{examId}", isSubscribed.ThenFunc(app.answerPage))
+
 	mux.Handle("GET /payments", isLoggedIn.ThenFunc(app.paymentsPage))
 	mux.Handle("GET /payments/{courseId}", isLoggedIn.ThenFunc(app.paymentHistory))
 	mux.Handle("GET /mycourses", isLoggedIn.ThenFunc(app.myCoursesPage))
@@ -45,7 +47,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
 
-	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+	standard := alice.New(app.middleware.RecoverPanic, app.middleware.LogRequest, secureHeaders)
 
 	return standard.Then(mux)
 }

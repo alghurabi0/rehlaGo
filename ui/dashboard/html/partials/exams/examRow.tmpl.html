@@ -26,24 +26,13 @@
   <td class="py-3 px-5 border-b border-blue-gray-50">
     <button
       class="block antialiased font-sans text-xs font-semibold text-blue-gray-600"
-      {{
-      if
-      .IsAdmin
-      }}
       hx-get="/courses/{{ .CourseId }}/exams/{{ .ID }}"
-      {{
-      else
-      }}
-      hx-get="/correct/{{ .CourseId }}/{{ .ID }}"
-      {{
-      end
-      }}
       hx-select=".view"
       hx-target=".view"
       hx-swap="outerHTML"
       hx-push-url="true"
     >
-      {{ if .IsAdmin }}Edit{{ else }}Answers{{ end }}
+      Edit
     </button>
   </td>
 </tr>

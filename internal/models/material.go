@@ -40,12 +40,6 @@ func (m *MaterialModel) Get(ctx context.Context, courseId, matId string) (*Mater
 	mat.ID = matDoc.Ref.ID
 	mat.CourseId = courseId
 
-	url, err := m.GetMaterialUrl(courseId, matId)
-	if err != nil {
-		return &Material{}, err
-	}
-	mat.URL = url
-
 	return &mat, nil
 }
 

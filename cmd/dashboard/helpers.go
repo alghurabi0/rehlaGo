@@ -231,6 +231,10 @@ func (app *application) createAnswerUpdateArr(answer *models.Answer) []firestore
 			Value: answer.Corrector,
 		})
 	}
+	updates = append(updates, firestore.Update{
+		Path:  "corrected",
+		Value: true,
+	})
 
 	return updates
 }

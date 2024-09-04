@@ -13,12 +13,6 @@
       data-courseId="{{ .Exam.CourseId }}"
       data-examId="{{ .Exam.ID }}"
       class="text-center text-lg font-bold"
-      hx-post="/answers/{{ .Exam.CourseId }}/{{ .Exam.ID }}"
-      hx-trigger="successfulUpload"
-      hx-select=".view"
-      hx-target=".view"
-      hx-swap="outerHTML"
-      hx-vals="js:{filename: event.detail.filename}"
     >
       {{ .Exam.Title }}
     </h1>
@@ -39,7 +33,7 @@
     </a>
 
     <form
-      hx-post="/answers/{{ .Exam.CourseId}}/{{ .Exam.ID}}"
+      hx-post="/answers/{{.Exam.CourseId}}/{{.Exam.ID}}"
       hx-swap="none"
       hx-trigger="submit"
       enctype="multipart/form-data"

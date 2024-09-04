@@ -99,6 +99,15 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "must provide pwd", http.StatusBadRequest)
 		return
 	}
+	gender := r.FormValue("gender")
+	if gender == "" {
+		http.Error(w, "must provide gender", http.StatusBadRequest)
+		return
+	}
+	if gender != "male" && gender != "female" {
+		http.Error(w, "gender has to be male or female", http.StatusBadRequest)
+		return
+	}
 
 	user := &models.User{
 		Firstname:         firstname,
@@ -106,6 +115,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		Pwd:               pwd,
 		PhoneNumber:       phone_number,
 		ParentPhoneNumber: parent_phone_number,
+		Gender:            gender,
 	}
 	ctx := context.Background()
 	id, err := app.user.Create(ctx, user)

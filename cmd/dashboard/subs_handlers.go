@@ -102,6 +102,18 @@ func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, errors.New("empty id"))
 		return
 	}
+	user.Subscriptions = append(user.Subscriptions, id)
+	var updates []firestore.Update
+	updates = append(updates, firestore.Update{
+		Path:  "subscriptions",
+		Value: user.Subscriptions,
+	})
+	err = app.user.Update(ctx, user.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	http.Redirect(w, r, fmt.Sprintf("/users/%s", user.ID), http.StatusSeeOther)
 }
 

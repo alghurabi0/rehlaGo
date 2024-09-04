@@ -27,11 +27,16 @@
 {{ end }}
 {{ define "gradeCard" }}
 <div class="grid grid-cols-5 w-full font-medium justify-items-center gap-x-3 border-b-4 border-r-4 py-4">
-    <h2 class="text-center col-span-1">جيد</h2>
+    <button hx-get="/progress/{{.CourseId}}/{{.ExamId}}" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true">Details</button>
+    {{ if .Notes}}
+    <h2 class="text-center col-span-1">{{ .Notes }}</h2>
+    {{ else }}
+    <h2 class="text-center col-span-1">__</h2>
+    {{ end }}
     {{ if .Grade }}
     <h2 class="text-center col-span-1">{{ .Grade }}</h2>
     {{ else }}
-    <button class="text-center col-span-1 rounded-full bg-[#A490BB]">Details</button>
+    <h2 class="text-center col-span-1">__</h2>
     {{ end }}
     <h2 class="text-center col-span-1">{{ .DateOfSubmission }}</h2>
     <h2 class="text-center col-span-2">{{ .ExamTitle }}</h2>

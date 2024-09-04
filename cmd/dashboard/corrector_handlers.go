@@ -64,8 +64,15 @@ func (app *application) correctAnswers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) correctAnswer(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
 	courseId := r.PathValue("courseId")
 	if courseId == "" {
+		app.notFound(w)
+		return
+	}
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.errorLog.Println(err)
 		app.notFound(w)
 		return
 	}
@@ -74,18 +81,24 @@ func (app *application) correctAnswer(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+	exam, err := app.exam.Get(ctx, course.ID, examId)
+	if err != nil {
+		app.errorLog.Println(err)
+		app.notFound(w)
+		return
+	}
 	userId := r.PathValue("userId")
 	if userId == "" {
 		app.notFound(w)
 		return
 	}
-	ctx := context.Background()
-	answer, err := app.answer.Get(ctx, userId, courseId, examId)
+	user, err := app.user.Get(ctx, userId)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+		app.errorLog.Println(err)
+		app.notFound(w)
 		return
 	}
-	user, err := app.user.Get(ctx, userId)
+	answer, err := app.answer.Get(ctx, user.ID, course.ID, exam.ID)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
@@ -120,6 +133,7 @@ func (app *application) editAnswer(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	fmt.Println(user)
 	ctx := context.Background()
 	_, err = app.answer.Get(ctx, userId, courseId, examId)
 	if err != nil {

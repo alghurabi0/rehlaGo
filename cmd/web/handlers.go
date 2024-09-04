@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
 )
 
@@ -107,23 +108,24 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		app.unauthorized(w, "subRequired")
 		return
 	}
-	var info struct {
-		courseId string
-		examId   string
-		userId   string
-		filename string
+	courseId := r.PathValue("courseId")
+	if courseId == "" {
+		app.notFound(w)
+		return
 	}
-	info.courseId = r.PathValue("courseId")
-	info.examId = r.PathValue("examId")
+	examId := r.PathValue("examId")
+	if examId == "" {
+		app.notFound(w)
+		return
+	}
 	userId := app.getUserId(r)
 	if userId == "" {
 		app.serverError(w, errors.New("user id is empty string"))
 		return
 	}
-	info.userId = userId
 
 	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, info.courseId, info.examId)
+	exam, err := app.exam.Get(ctx, courseId, examId)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
@@ -139,7 +141,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", info.courseId, info.examId, info.userId)
+	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", courseId, examId, userId)
 	url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
 	if err != nil {
 		app.serverError(w, err)
@@ -147,9 +149,9 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	answer := &models.Answer{
-		UserId:           info.userId,
-		CourseId:         info.courseId,
-		ExamId:           info.examId,
+		UserId:           userId,
+		CourseId:         courseId,
+		ExamId:           examId,
 		ExamTitle:        exam.Title,
 		URL:              url,
 		StoragePath:      path,
@@ -162,7 +164,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	fmt.Fprintf(w, "success")
+	w.WriteHeader(http.StatusOK)
 }
 
 func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
@@ -248,12 +250,12 @@ func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Answer = answer
-	examUrl, err := app.exam.GetExamUrl(courseId, examId)
+	exam, err := app.exam.Get(ctx, courseId, examId)
 	if err != nil {
 		app.serverError(w, errors.New("can't get exam url"))
 		return
 	}
-	data.ExamURL = examUrl
+	data.ExamURL = exam.URL
 	app.renderFull(w, http.StatusOK, "answer.tmpl.html", data)
 }
 
@@ -499,15 +501,42 @@ func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
 		app.unauthorized(w, "loginRequired")
 		return
 	}
-	err := r.ParseForm()
+	user, err := app.getUser(r)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	//currect_password := r.PostFormValue("current_password")
-	//new_password := r.PostFormValue("new_password")
-	//confirm := r.PostFormValue("confirm_new_password")
-	// TODO - validate
+
+	err = r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	currect_password := r.PostFormValue("current_password")
+	new_password := r.PostFormValue("new_password")
+	confirm := r.PostFormValue("confirm_new_password")
+	if new_password != confirm {
+		http.Error(w, "new password doesn't match confirm password", http.StatusBadRequest)
+		return
+	}
+	if currect_password != user.Pwd {
+		fmt.Println(currect_password)
+		fmt.Println(user.Pwd)
+		http.Error(w, "current password is wrong", http.StatusBadRequest)
+		return
+	}
+	var updates []firestore.Update
+	updates = append(updates, firestore.Update{
+		Path:  "pwd",
+		Value: new_password,
+	})
+	ctx := context.Background()
+	err = app.user.Update(ctx, user.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
 

@@ -45,7 +45,9 @@
           </tr>
         </thead>
         <tbody>
-          {{ range .Exams}} {{ template "examRow" . }} {{ end }}
+          {{ if .IsAdmin }} {{ range .Exams}} {{ template "examRow" . }} {{ end
+          }} {{ else }} {{ range .Exams }} {{ template "correctorExamRow" . }}
+          {{ end }} {{ end }}
         </tbody>
       </table>
       {{ if .IsAdmin }}

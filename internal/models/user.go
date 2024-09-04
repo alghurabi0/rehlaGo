@@ -18,7 +18,8 @@ type User struct {
 	PhoneNumber       string   `firestore:"phone_number"`
 	ParentPhoneNumber string   `firestore:"parent_phone_number"`
 	Pwd               string   `firestore:"pwd"`
-	Subscriptions     []string `firestore:"Subscriptions"`
+	Gender            string   `firestore:"gender"`
+	Subscriptions     []string `firestore:"subscriptions"`
 	ImgURL            string   `firestore:"img_url"`
 	ImgPath           string   `firestore:"img_path"`
 	NumSubs           int      `firestore:"-"`

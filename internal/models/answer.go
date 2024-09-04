@@ -44,11 +44,6 @@ func (s *AnswerModel) Get(ctx context.Context, userId, courseId, ansId string) (
 		return &Answer{}, err
 	}
 	ans.ID = ansDoc.Ref.ID
-	url, err := s.GetAnswerUrl(userId, courseId, ansId)
-	if err == nil {
-		return &Answer{}, err
-	}
-	ans.URL = url
 	return &ans, nil
 }
 

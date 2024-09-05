@@ -183,7 +183,7 @@ func (app *application) editExam(w http.ResponseWriter, r *http.Request) {
 		exam.FilePath = path
 	}
 
-	updates := app.createExamUpdateArr(exam)
+	updates := app.createFirestoreUpdateArr(exam, true)
 	ctx := context.Background()
 	err = app.exam.Update(ctx, courseId, examId, updates)
 	if err != nil {

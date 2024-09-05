@@ -216,7 +216,7 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 		course.Price = price
 	}
 
-	updates := app.createFsUpdateArr(course)
+	updates := app.createFirestoreUpdateArr(course, true)
 	ctx := context.Background()
 	err = app.course.Update(ctx, courseId, updates)
 	if err != nil {

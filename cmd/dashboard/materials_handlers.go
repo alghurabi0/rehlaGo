@@ -182,7 +182,7 @@ func (app *application) editMaterial(w http.ResponseWriter, r *http.Request) {
 		material.FilePath = path
 	}
 
-	updates := app.createMaterialUpdateArr(material)
+	updates := app.createFirestoreUpdateArr(material, true)
 	ctx := context.Background()
 	err = app.material.Update(ctx, courseId, materialId, updates)
 	if err != nil {

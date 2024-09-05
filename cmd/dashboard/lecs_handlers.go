@@ -147,7 +147,7 @@ func (app *application) editLec(w http.ResponseWriter, r *http.Request) {
 		lec.Order = order
 	}
 
-	updates := app.createLecUpdateArr(lec)
+	updates := app.createFirestoreUpdateArr(lec, true)
 	ctx := context.Background()
 	err = app.lec.Update(ctx, courseId, lecId, updates)
 	if err != nil {

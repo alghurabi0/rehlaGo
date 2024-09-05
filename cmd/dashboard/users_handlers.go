@@ -196,7 +196,7 @@ func (app *application) editUser(w http.ResponseWriter, r *http.Request) {
 		userUpdates.ImgPath = path
 	}
 
-	updates := app.createUserUpdateArr(userUpdates)
+	updates := app.createFirestoreUpdateArr(userUpdates, true)
 	err = app.user.Update(ctx, userId, updates)
 	if err != nil {
 		object.Delete(ctx)

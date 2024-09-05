@@ -47,7 +47,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
 
-	standard := alice.New(app.middleware.RecoverPanic, app.middleware.LogRequest, secureHeaders)
+	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 
 	return standard.Then(mux)
 }

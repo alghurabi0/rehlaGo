@@ -17,7 +17,6 @@ import (
 	scsfs "github.com/alexedwards/scs/firestore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/alghurabi0/rehla/internal/fileStorage"
-	"github.com/alghurabi0/rehla/internal/fileStorage/shared"
 	"github.com/alghurabi0/rehla/internal/models"
 	"google.golang.org/api/option"
 )
@@ -37,7 +36,6 @@ type application struct {
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
 	storage       *fileStorage.StorageModel
-	middleware    *shared.Middleware
 }
 
 var version string
@@ -89,7 +87,6 @@ func main() {
 		contact:       &models.ContactModel{DB: db},
 		session:       session,
 		storage:       &fileStorage.StorageModel{ST: strg},
-		middleware:    &shared.Middleware{},
 	}
 	/*
 		tlsConfig := &tls.Config{

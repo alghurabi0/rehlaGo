@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"runtime/debug"
 
 	"cloud.google.com/go/firestore"
@@ -86,206 +87,33 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	buf.WriteTo(w)
 }
 
-func (app *application) createFsUpdateArr(course *models.Course) []firestore.Update {
+func (app *application) createFirestoreUpdateArr(data interface{}, excludeZeroValues bool) []firestore.Update {
 	var updates []firestore.Update
+	val := reflect.ValueOf(data).Elem()
+	typ := val.Type()
 
-	if course.Title != "" {
+	for i := 0; i < val.NumField(); i++ {
+		fieldVal := val.Field(i)
+		fieldType := typ.Field(i)
+
+		// Skip if the field is zero and excludeZeroValues is true
+		if excludeZeroValues && isZeroValue(fieldVal) {
+			continue
+		}
+
+		// Append update only if the value is non-zero
 		updates = append(updates, firestore.Update{
-			Path:  "title",
-			Value: course.Title,
-		})
-	}
-	if course.Description != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "description",
-			Value: course.Description,
-		})
-	}
-	if course.Teacher != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "teacher",
-			Value: course.Teacher,
-		})
-	}
-	if course.TeacherImg != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "teacher_img",
-			Value: course.TeacherImg,
-		})
-	}
-	if course.Price != 0 {
-		updates = append(updates, firestore.Update{
-			Path:  "price",
-			Value: course.Price,
+			Path:  fieldType.Tag.Get("firestore"), // Use struct tags for field names
+			Value: fieldVal.Interface(),
 		})
 	}
 
 	return updates
 }
 
-func (app *application) createExamUpdateArr(exam *models.Exam) []firestore.Update {
-	var updates []firestore.Update
-
-	if exam.Title != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "title",
-			Value: exam.Title,
-		})
-	}
-	if exam.URL != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "url",
-			Value: exam.URL,
-		})
-	}
-	if exam.FilePath != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "file_path",
-			Value: exam.FilePath,
-		})
-	}
-	if exam.Order != 0 {
-		updates = append(updates, firestore.Update{
-			Path:  "order",
-			Value: exam.Order,
-		})
-	}
-
-	return updates
-}
-
-func (app *application) createLecUpdateArr(lec *models.Lec) []firestore.Update {
-	var updates []firestore.Update
-
-	if lec.Title != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "title",
-			Value: lec.Title,
-		})
-	}
-	if lec.Description != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "description",
-			Value: lec.Description,
-		})
-	}
-	if lec.Order != 0 {
-		updates = append(updates, firestore.Update{
-			Path:  "order",
-			Value: lec.Order,
-		})
-	}
-
-	return updates
-}
-
-func (app *application) createMaterialUpdateArr(material *models.Material) []firestore.Update {
-	var updates []firestore.Update
-
-	if material.Title != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "title",
-			Value: material.Title,
-		})
-	}
-	if material.URL != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "url",
-			Value: material.URL,
-		})
-	}
-	if material.FilePath != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "file_path",
-			Value: material.FilePath,
-		})
-	}
-	if material.Order != 0 {
-		updates = append(updates, firestore.Update{
-			Path:  "order",
-			Value: material.Order,
-		})
-	}
-
-	return updates
-}
-
-func (app *application) createAnswerUpdateArr(answer *models.Answer) []firestore.Update {
-	var updates []firestore.Update
-
-	if answer.Grade != 0 {
-		updates = append(updates, firestore.Update{
-			Path:  "grade",
-			Value: answer.Grade,
-		})
-	}
-	if answer.Notes != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "notes",
-			Value: answer.Notes,
-		})
-	}
-	if answer.Corrector != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "corrector",
-			Value: answer.Corrector,
-		})
-	}
-	updates = append(updates, firestore.Update{
-		Path:  "corrected",
-		Value: true,
-	})
-
-	return updates
-}
-
-func (app *application) createUserUpdateArr(user *models.User) []firestore.Update {
-	var updates []firestore.Update
-
-	if user.Firstname != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "firstname",
-			Value: user.Firstname,
-		})
-	}
-	if user.Lastname != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "lastname",
-			Value: user.Lastname,
-		})
-	}
-	if user.PhoneNumber != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "phone_number",
-			Value: user.PhoneNumber,
-		})
-	}
-	if user.ParentPhoneNumber != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "parent_phone_number",
-			Value: user.ParentPhoneNumber,
-		})
-	}
-	if user.ImgURL != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "img_url",
-			Value: user.ImgURL,
-		})
-	}
-	if user.ImgPath != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "img_path",
-			Value: user.ImgPath,
-		})
-	}
-	if user.Pwd != "" {
-		updates = append(updates, firestore.Update{
-			Path:  "pwd",
-			Value: user.Pwd,
-		})
-	}
-
-	return updates
+// Helper function to check if a value is a zero value
+func isZeroValue(v reflect.Value) bool {
+	return reflect.DeepEqual(v.Interface(), reflect.Zero(v.Type()).Interface())
 }
 
 func (app *application) getCorrectorCourses(courseIds []string) (*[]models.Course, error) {

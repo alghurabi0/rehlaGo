@@ -167,7 +167,7 @@ func (app *application) editAnswer(w http.ResponseWriter, r *http.Request) {
 	ans.Corrected = true
 	ans.Corrector = user.Username
 
-	updates := app.createAnswerUpdateArr(ans)
+	updates := app.createFirestoreUpdateArr(ans, true)
 	err = app.answer.Update(ctx, userId, courseId, examId, updates)
 	if err != nil {
 		app.serverError(w, err)

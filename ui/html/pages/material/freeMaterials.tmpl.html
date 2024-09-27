@@ -13,3 +13,10 @@
     </div>
 </div>
 {{ end }}
+{{ define "materialCard" }}
+<a href="{{ .URL }}" download target="_blank"
+    class="flex h-[50px] w-full flex-row items-center justify-center rounded-xl border-2 border-black shadow-black shadow">
+    <img src="https://placehold.co/25x25" class="mr-4" />
+    <h2 class="text-xl font-bold">{{ .Title }}</h2>
+</a>
+{{ end }}

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-tmux new-window -n "dashboard" -c "./cmd/dashboard"
 tmux new-window -n "web" -c "./cmd/web"
-tmux new-window -n "templates" -c "./ui/dashboard/html"
+tmux new-window -n "dashboard" -c "./cmd/dashboard"
+tmux new-window -n "web html" -c "./ui/html"
+tmux new-window -n "dash html" -c "./ui/dashboard/html"
 tmux new-window -n "models" -c "./internal"
 tmux new-window -n "services" -c "./internal/fileStorage"
-tmux new-window -n "etc" -c "~/.config/nvim"
+tmux new-window -n "etc" -c "./"

@@ -1,7 +1,9 @@
-- offer free materials
+x offer free materials
 - finish up dashboard/correctors dashboard
+- implement auth
 - implement tests
 - clean up node modules? execcive javascript?
 - ui, frontend !
 - implement a proper web worker
 - security, rate limiting..
+- log to a file

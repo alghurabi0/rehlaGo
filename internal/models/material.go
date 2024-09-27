@@ -2,13 +2,8 @@ package models
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"net/http"
-	"time"
 
 	"cloud.google.com/go/firestore"
-	gcloud "cloud.google.com/go/storage"
 	"firebase.google.com/go/storage"
 	"google.golang.org/api/iterator"
 )
@@ -90,24 +85,55 @@ func (m *MaterialModel) Delete(ctx context.Context, courseId, materialId string)
 	return nil
 }
 
-func (m *MaterialModel) GetMaterialUrl(courseId, matId string) (string, error) {
-	matPath := fmt.Sprintf("courses/%s/materials/%s.pdf", courseId, matId)
-	bkt, err := m.ST.DefaultBucket()
+func (m *MaterialModel) GetFree(ctx context.Context) (*[]Material, error) {
+	matsIter := m.DB.Collection("free_materials").Documents(ctx)
+	var mats []Material
+	for {
+		doc, err := matsIter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var mat Material
+		if err := doc.DataTo(&mat); err != nil {
+			return nil, err
+		}
+		mat.ID = doc.Ref.ID
+		mats = append(mats, mat)
+	}
+	return &mats, nil
+}
+
+func (m *MaterialModel) GetFreeOne(ctx context.Context, matId string) (*Material, error) {
+	matDoc, err := m.DB.Collection("free_materials").Doc(matId).Get(ctx)
+	if err != nil {
+		return &Material{}, err
+	}
+	var mat Material
+	err = matDoc.DataTo(&mat)
+	if err != nil {
+		return &Material{}, err
+	}
+	mat.ID = matDoc.Ref.ID
+
+	return &mat, nil
+}
+
+func (m *MaterialModel) DeleteFree(ctx context.Context, materialId string) error {
+	_, err := m.DB.Collection("free_materials").Doc(materialId).Delete(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *MaterialModel) CreateFree(ctx context.Context, material *Material) (string, error) {
+	doc, _, err := m.DB.Collection("free_materials").Add(ctx, material)
 	if err != nil {
 		return "", err
 	}
-	// send expiration as an arg to this func
-	expiration := time.Now().Add(time.Hour)
-	opts := &gcloud.SignedURLOptions{
-		Expires: expiration,
-		Method:  http.MethodGet,
-	}
-	url, err := bkt.SignedURL(matPath, opts)
-	if err != nil {
-		return "", err
-	}
-	if url == "" {
-		return "", errors.New("empty material file url")
-	}
-	return url, nil
+
+	return doc.ID, nil
 }

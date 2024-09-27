@@ -29,6 +29,20 @@ func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
 	app.render(w, http.StatusOK, "materials.tmpl.html", data)
 }
 
+func (app *application) freeMaterials(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	materials, err := app.material.GetFree(ctx)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Materials = materials
+	data.HxRoute = "/free_material"
+	app.render(w, http.StatusOK, "freeMaterials.tmpl.html", data)
+}
+
 func (app *application) materialPage(w http.ResponseWriter, r *http.Request) {
 	courseId := r.PathValue("courseId")
 	if courseId == "" {
@@ -121,6 +135,57 @@ func (app *application) createMaterial(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/materials/%s", courseId, id), http.StatusSeeOther)
+}
+
+func (app *application) createFreeMaterial(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
+		return
+	}
+	title := r.FormValue("title")
+	if title == "" {
+		http.Error(w, "must provide title", http.StatusBadRequest)
+		return
+	}
+	file, handler, err := r.FormFile("material_file")
+	if err != nil {
+		if err == http.ErrMissingFile {
+			http.Error(w, "must provide material file", http.StatusBadRequest)
+			return
+		}
+		app.errorLog.Printf("%v\n", err)
+		http.Error(w, "error with getting file from form", http.StatusBadRequest)
+		return
+	}
+
+	defer file.Close()
+	path := fmt.Sprintf("free_materials/%s", handler.Filename)
+	ctx := context.Background()
+	file_url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	material := &models.Material{
+		Title:    title,
+		URL:      file_url,
+		FilePath: path,
+	}
+	ctx = context.Background()
+	id, err := app.material.CreateFree(ctx, material)
+	if err != nil {
+		object.Delete(ctx)
+		app.serverError(w, err)
+		return
+	}
+	if id == "" {
+		app.serverError(w, errors.New("got empty material id from firestore"))
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/free_materials/%s", id), http.StatusSeeOther)
 }
 
 func (app *application) editMaterial(w http.ResponseWriter, r *http.Request) {
@@ -224,6 +289,32 @@ func (app *application) deleteMaterial(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/materials", courseId), http.StatusSeeOther)
 }
 
+func (app *application) deleteFreeMaterial(w http.ResponseWriter, r *http.Request) {
+	materialId := r.PathValue("id")
+	if materialId == "" {
+		app.notFound(w)
+	}
+	ctx := context.Background()
+	material, err := app.material.GetFreeOne(ctx, materialId)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("material with id %s doesn't exist", materialId), http.StatusBadRequest)
+		return
+	}
+	err = app.storage.DeleteFile(ctx, material.FilePath)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = app.material.DeleteFree(ctx, materialId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	http.Redirect(w, r, "/free_materials", http.StatusSeeOther)
+}
+
 func (app *application) createMaterialPage(w http.ResponseWriter, r *http.Request) {
 	courseId := r.PathValue("courseId")
 	if courseId == "" {
@@ -233,6 +324,15 @@ func (app *application) createMaterialPage(w http.ResponseWriter, r *http.Reques
 	data := app.newTemplateData(r)
 	data.HxMethod = "post"
 	data.HxRoute = fmt.Sprintf("/courses/%s/materials", courseId)
+	data.Material = material
+	app.render(w, http.StatusOK, "createMaterialPage.tmpl.html", data)
+}
+
+func (app *application) createFreeMaterialPage(w http.ResponseWriter, r *http.Request) {
+	material := &models.Material{}
+	data := app.newTemplateData(r)
+	data.HxMethod = "post"
+	data.HxRoute = "/free_materials"
 	data.Material = material
 	app.render(w, http.StatusOK, "createMaterialPage.tmpl.html", data)
 }

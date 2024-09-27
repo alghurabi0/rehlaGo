@@ -93,13 +93,20 @@ func (app *application) createLec(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := context.Background()
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	lec := &models.Lec{
 		Title:       title,
 		Order:       order,
 		Description: description,
 		VideoUrl:    url,
+		Free:        course.Free,
 	}
-	ctx := context.Background()
 	id, err := app.lec.Create(ctx, courseId, lec)
 	if err != nil {
 		app.serverError(w, err)

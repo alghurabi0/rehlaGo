@@ -7,7 +7,6 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"firebase.google.com/go/auth"
 	"google.golang.org/api/iterator"
 )
 
@@ -26,8 +25,7 @@ type User struct {
 }
 
 type UserModel struct {
-	DB   *firestore.Client
-	Auth *auth.Client
+	DB *firestore.Client
 }
 
 func (u *UserModel) Get(ctx context.Context, userId string) (*User, error) {

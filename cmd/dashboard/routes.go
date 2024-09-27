@@ -18,6 +18,7 @@ func (app *application) routes() http.Handler {
 	isCorrector := alice.New(app.isLoggedIn, app.isCorrector)
 
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
+
 	mux.Handle("GET /courses", isAdmin.ThenFunc(app.courses))
 	mux.Handle("GET /course", isAdmin.ThenFunc(app.createCoursePage))
 	mux.Handle("POST /courses", isAdmin.ThenFunc(app.createCourse))
@@ -45,6 +46,11 @@ func (app *application) routes() http.Handler {
 	mux.Handle("PATCH /courses/{courseId}/materials/{materialId}", isAdmin.ThenFunc(app.editMaterial))
 	mux.Handle("DELETE /courses/{courseId}/materials/{materialId}", isAdmin.ThenFunc(app.deleteMaterial))
 	mux.Handle("GET /courses/{courseId}/material", isAdmin.ThenFunc(app.createMaterialPage))
+
+	mux.Handle("GET /free_materials", isAdmin.ThenFunc(app.freeMaterials))
+	mux.Handle("POST /free_materials", isAdmin.ThenFunc(app.createFreeMaterial))
+	mux.Handle("DELETE /free_materials/{id}", isAdmin.ThenFunc(app.deleteFreeMaterial))
+	mux.Handle("GET /free_material", isAdmin.ThenFunc(app.createFreeMaterialPage))
 
 	mux.Handle("GET /users", isAdmin.ThenFunc(app.usersPage))
 	mux.Handle("POST /users", isAdmin.ThenFunc(app.createUser))

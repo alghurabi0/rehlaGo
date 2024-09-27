@@ -2,23 +2,12 @@ package main
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"net/http"
-	"time"
-
-	"cloud.google.com/go/firestore"
-	"github.com/alghurabi0/rehla/internal/models"
+	"strings"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
-}
-
-func ping(w http.ResponseWriter, r *http.Request) {
-	if r != nil {
-		w.Write([]byte("OK"))
-	}
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +32,11 @@ func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
-	courseId := r.PathValue("id")
+	courseId := r.PathValue("courseId")
+	if strings.TrimSpace(courseId) == "" {
+		app.notFound(w)
+		return
+	}
 	data := app.newTemplateData(r)
 	ctx := context.Background()
 	course, err := app.getCourse(ctx, courseId)
@@ -52,316 +45,6 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Course = course
 	app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
-}
-
-func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
-	courseId := r.PathValue("courseId")
-	lecId := r.PathValue("lecId")
-	ctx := context.Background()
-	lec, err := app.lec.Get(ctx, courseId, lecId)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data := app.newTemplateData(r)
-	if lec.Order > 3 {
-		if !data.IsSubscribed {
-			app.unauthorized(w, "subRequired")
-			return
-		}
-	}
-	data.Lec = lec
-	data.TemplateTitle = lec.Title
-	app.renderFull(w, http.StatusOK, "lec.tmpl.html", data)
-}
-
-func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	if !data.IsSubscribed {
-		app.unauthorized(w, "subRequired")
-		return
-	}
-	courseId := r.PathValue("courseId")
-	examId := r.PathValue("examId")
-	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, courseId, examId)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data.Exam = exam
-	data.TemplateTitle = exam.Title
-	app.renderFull(w, http.StatusOK, "exam.tmpl.html", data)
-}
-
-func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	if !data.IsSubscribed {
-		app.unauthorized(w, "subRequired")
-		return
-	}
-	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.notFound(w)
-		return
-	}
-	examId := r.PathValue("examId")
-	if examId == "" {
-		app.notFound(w)
-		return
-	}
-	userId := app.getUserId(r)
-	if userId == "" {
-		app.serverError(w, errors.New("user id is empty string"))
-		return
-	}
-
-	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, courseId, examId)
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
-	err = r.ParseMultipartForm(10 << 20)
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	file, handler, err := r.FormFile("answer_file")
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", courseId, examId, userId)
-	url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	answer := &models.Answer{
-		UserId:           userId,
-		CourseId:         courseId,
-		ExamId:           examId,
-		ExamTitle:        exam.Title,
-		URL:              url,
-		StoragePath:      path,
-		Corrected:        false,
-		DateOfSubmission: time.Now(),
-	}
-	err = app.answer.Create(ctx, answer)
-	if err != nil {
-		object.Delete(ctx)
-		app.serverError(w, err)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-}
-
-func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	ctx := context.Background()
-	subedCourses, err := app.getSubscribedCourses(ctx, *user)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data.SubscribedCourses = subedCourses
-	app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
-}
-
-func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	if !data.IsSubscribed {
-		app.unauthorized(w, "subRequired")
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	ctx := context.Background()
-	answers, err := app.answer.GetAll(ctx, user.ID, courseId)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data.Answers = answers
-	app.renderFull(w, http.StatusOK, "grades.tmpl.html", data)
-}
-
-func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	if !data.IsSubscribed {
-		app.unauthorized(w, "subRequired")
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	examId := r.PathValue("examId")
-	if examId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	ctx := context.Background()
-	answer, err := app.answer.Get(ctx, user.ID, courseId, examId)
-	if err != nil {
-		app.clientError(w, http.StatusNotFound)
-		return
-	}
-	data.Answer = answer
-	exam, err := app.exam.Get(ctx, courseId, examId)
-	if err != nil {
-		app.serverError(w, errors.New("can't get exam url"))
-		return
-	}
-	data.ExamURL = exam.URL
-	app.renderFull(w, http.StatusOK, "answer.tmpl.html", data)
-}
-
-func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	ctx := context.Background()
-	subedCourses, err := app.getSubscribedCourses(ctx, *user)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data.SubscribedCourses = subedCourses
-	app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
-}
-
-func (app *application) courseMaterials(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	if !data.IsSubscribed {
-		app.unauthorized(w, "subRequired")
-		return
-	}
-	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	ctx := context.Background()
-	course, err := app.course.Get(ctx, courseId)
-	if err != nil {
-		app.clientError(w, http.StatusNotFound)
-		return
-	}
-	mats, err := app.material.GetAll(ctx, courseId)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	course.Materials = *mats
-	data.Course = course
-	app.renderFull(w, http.StatusOK, "courseMaterials.tmpl.html", data)
-}
-
-func (app *application) paymentsPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	ctx := context.Background()
-	subedCourses, err := app.getAllSubscribedCourses(ctx, *user)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	data.SubscribedCourses = subedCourses
-	app.renderFull(w, http.StatusOK, "payments.tmpl.html", data)
-}
-
-func (app *application) paymentHistory(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	ctx := context.Background()
-	course, err := app.course.Get(ctx, courseId)
-	if err != nil {
-		app.clientError(w, http.StatusNotFound)
-		return
-	}
-	payments, err := app.payment.GetAll(ctx, user.ID, courseId)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	course.UserPayments = *payments
-	data.Course = course
-	app.renderFull(w, http.StatusOK, "paymentHistory.tmpl.html", data)
 }
 
 func (app *application) myCoursesPage(w http.ResponseWriter, r *http.Request) {
@@ -385,6 +68,7 @@ func (app *application) myCoursesPage(w http.ResponseWriter, r *http.Request) {
 	app.renderFull(w, http.StatusOK, "mycourses.tmpl.html", data)
 }
 
+// TODO - wtf is this handler/page?
 func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if !data.IsLoggedIn {
@@ -397,8 +81,8 @@ func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	courseId := r.PathValue("courseId")
-	if courseId == "" {
-		app.clientError(w, http.StatusBadRequest)
+	if strings.TrimSpace(courseId) == "" {
+		app.notFound(w)
 		return
 	}
 	ctx := context.Background()
@@ -484,115 +168,4 @@ func (app *application) contactMessage(w http.ResponseWriter, r *http.Request) {
 		// TODO - send errors
 	}
 	w.WriteHeader(http.StatusOK)
-}
-
-func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	app.renderFull(w, http.StatusOK, "reset_password.tmpl.html", data)
-}
-
-func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if !data.IsLoggedIn {
-		app.unauthorized(w, "loginRequired")
-		return
-	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
-	err = r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	currect_password := r.PostFormValue("current_password")
-	new_password := r.PostFormValue("new_password")
-	confirm := r.PostFormValue("confirm_new_password")
-	if new_password != confirm {
-		http.Error(w, "new password doesn't match confirm password", http.StatusBadRequest)
-		return
-	}
-	if currect_password != user.Pwd {
-		fmt.Println(currect_password)
-		fmt.Println(user.Pwd)
-		http.Error(w, "current password is wrong", http.StatusBadRequest)
-		return
-	}
-	var updates []firestore.Update
-	updates = append(updates, firestore.Update{
-		Path:  "pwd",
-		Value: new_password,
-	})
-	ctx := context.Background()
-	err = app.user.Update(ctx, user.ID, updates)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-}
-
-func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
-	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
-}
-
-func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
-	app.render(w, http.StatusOK, "login.tmpl.html", nil)
-}
-
-func (app *application) login(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	if data.IsLoggedIn {
-		w.Write([]byte("already logged in"))
-		return
-	}
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	phone := r.PostFormValue("phone_number")
-	pass := r.PostFormValue("password")
-	ctx := context.Background()
-	user, err := app.user.ValidateLogin(ctx, phone, pass)
-	if err != nil {
-		fmt.Print(err)
-		app.clientError(w, http.StatusUnauthorized)
-		return
-	}
-	fmt.Printf("user id is: %s\n", user.ID)
-	app.session.Put(r.Context(), "userId", user.ID)
-	http.Redirect(w, r, "/", http.StatusFound)
-}
-
-func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
-	// get values from json object
-	formData := &models.User{}
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	formData.PhoneNumber = r.PostFormValue("phone_number")
-	formData.Pwd = r.PostFormValue("password")
-	formData.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
-	formData.Firstname = r.PostFormValue("firstname")
-	formData.Lastname = r.PostFormValue("lastname")
-	// create the user
-	ctx := context.Background()
-	userId, err := app.user.Create(ctx, formData)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	app.session.Put(r.Context(), "userId", userId)
-	http.Redirect(w, r, "/", http.StatusFound)
 }

@@ -14,6 +14,7 @@ type Lec struct {
 	Description string `firestore:"description"`
 	Order       int    `firestore:"order"`
 	VideoUrl    string `firestore:"video_url"`
+	Free        bool   `firestore:"free"`
 }
 
 type LecModel struct {

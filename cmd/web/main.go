@@ -2,17 +2,18 @@ package main
 
 import (
 	"context"
+	"expvar"
 	"flag"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"time"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-	"firebase.google.com/go/auth"
 	"firebase.google.com/go/storage"
 	scsfs "github.com/alexedwards/scs/firestore"
 	"github.com/alexedwards/scs/v2"
@@ -32,17 +33,17 @@ type application struct {
 	answer        *models.AnswerModel
 	user          *models.UserModel
 	sub           *models.SubscriptionModel
-	session       *scs.SessionManager
 	payment       *models.PaymentModel
 	contact       *models.ContactModel
+	session       *scs.SessionManager
 	storage       *fileStorage.StorageModel
 }
 
 var version string
 
 func main() {
+	// cmd flags
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	projectId := flag.String("project-id", "rehla-74745", "Google Cloud Project ID")
 	credFile := flag.String("cred-file", "./internal/rehla-74745-firebase-adminsdk-m9ksq-dc2a61849d.json", "Path to the credentials file")
 	dfBkt := flag.String("default-bucket", "rehla-74745.appspot.com", "Defualt google storage bucket")
 	versionDisplay := flag.Bool("version", false, "display version and exit")
@@ -53,11 +54,12 @@ func main() {
 		os.Exit(0)
 	}
 
+	// loggers
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	ctx := context.Background()
-	db, auth, strg, err := initDB_AUTH(ctx, *projectId, *credFile, *dfBkt)
+	db, strg, err := initDB_AUTH(ctx, *credFile, *dfBkt)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
@@ -70,7 +72,15 @@ func main() {
 
 	session := scs.New()
 	session.Store = scsfs.New(db)
-	session.Lifetime = 24 * time.Hour
+	session.Lifetime = 7200 * time.Hour
+
+	// metrics
+	expvar.Publish("goroutines", expvar.Func(func() interface{} {
+		return runtime.NumGoroutine()
+	}))
+	expvar.Publish("timestamp", expvar.Func(func() interface{} {
+		return time.Now().Unix()
+	}))
 
 	app := &application{
 		errorLog:      errorLog,
@@ -81,7 +91,7 @@ func main() {
 		exam:          &models.ExamModel{DB: db, ST: strg},
 		material:      &models.MaterialModel{DB: db, ST: strg},
 		answer:        &models.AnswerModel{DB: db, ST: strg},
-		user:          &models.UserModel{DB: db, Auth: auth},
+		user:          &models.UserModel{DB: db},
 		sub:           &models.SubscriptionModel{DB: db},
 		payment:       &models.PaymentModel{DB: db},
 		contact:       &models.ContactModel{DB: db},
@@ -107,17 +117,12 @@ func main() {
 	errorLog.Fatal(err)
 }
 
-func initDB_AUTH(ctx context.Context, projectId, credFile, dfBkt string) (*firestore.Client, *auth.Client, *storage.Client, error) {
+func initDB_AUTH(ctx context.Context, credFile, dfBkt string) (*firestore.Client, *storage.Client, error) {
 	opt := option.WithCredentialsFile(credFile)
 	cfg := &firebase.Config{
 		StorageBucket: dfBkt,
 	}
 	app, err := firebase.NewApp(ctx, cfg, opt)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	auth, err := app.Auth(ctx)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -132,20 +137,19 @@ func initDB_AUTH(ctx context.Context, projectId, credFile, dfBkt string) (*fires
 		log.Fatalln(err)
 	}
 
-	//TODO - ping the database to check if it's connected
 	docRef := firestoreClient.Collection("ping").Doc("test")
 	docSnapshot, err := docRef.Get(ctx)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	var data map[string]interface{}
 	if err := docSnapshot.DataTo(&data); err != nil {
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 	expectedValue := "pong"
 	if value, ok := data["ping"].(string); !ok || value != expectedValue {
-		return nil, nil, nil, fmt.Errorf("ping test failed, expected %s, got %s", expectedValue, value)
+		return nil, nil, fmt.Errorf("ping test failed, expected %s, got %s", expectedValue, value)
 	}
 
-	return firestoreClient, auth, storageClient, nil
+	return firestoreClient, storageClient, nil
 }

@@ -16,7 +16,8 @@ func TestPing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ping(resp, req)
+	app := &application{}
+	app.ping(resp, req)
 
 	res := resp.Result()
 	assert.Equal(t, res.StatusCode, http.StatusOK)

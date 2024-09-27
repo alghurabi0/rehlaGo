@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"path/filepath"
 
@@ -13,15 +12,16 @@ type templateData struct {
 	CurrentYear       int
 	Course            *models.Course
 	Courses           *[]models.Course
+	SubscribedCourses *[]models.Course
 	Lec               *models.Lec
 	Exam              *models.Exam
 	ExamURL           string
+	Answer            *models.Answer
+	Answers           *[]models.Answer
+	FreeMaterials     *[]models.Material
 	IsLoggedIn        bool
 	IsSubscribed      bool
 	TemplateTitle     string
-	SubscribedCourses *[]models.Course
-	Answer            *models.Answer
-	Answers           *[]models.Answer
 	User              *models.User
 }
 
@@ -51,7 +51,6 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		}
 		cache[name] = ts
 	}
-	fmt.Println(cache)
 	return cache, nil
 }
 

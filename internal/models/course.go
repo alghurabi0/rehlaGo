@@ -33,7 +33,9 @@ type Course struct {
 	UserPayments     []Payment    `firestore:"-"`
 	UserLastPayment  Payment      `firestore:"-"`
 	UserAmountPaid   int          `firestore:"-"`
-	Active           bool         `firestore:"active"`
+	// TODO - add to dashboard
+	Active bool `firestore:"active"`
+	Free   bool `firestore:"free"`
 }
 
 type CourseModel struct {

@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"runtime/debug"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
 )
 
@@ -140,4 +142,33 @@ func (app *application) GenerateRandomID() string {
 
 	id := fmt.Sprintf("%x", b)
 	return id
+}
+
+func (app *application) createFirestoreUpdateArr(data interface{}, excludeZeroValues bool) []firestore.Update {
+	var updates []firestore.Update
+	val := reflect.ValueOf(data).Elem()
+	typ := val.Type()
+
+	for i := 0; i < val.NumField(); i++ {
+		fieldVal := val.Field(i)
+		fieldType := typ.Field(i)
+
+		// Skip if the field is zero and excludeZeroValues is true
+		if excludeZeroValues && isZeroValue(fieldVal) {
+			continue
+		}
+
+		// Append update only if the value is non-zero
+		updates = append(updates, firestore.Update{
+			Path:  fieldType.Tag.Get("firestore"), // Use struct tags for field names
+			Value: fieldVal.Interface(),
+		})
+	}
+
+	return updates
+}
+
+// Helper function to check if a value is a zero value
+func isZeroValue(v reflect.Value) bool {
+	return reflect.DeepEqual(v.Interface(), reflect.Zero(v.Type()).Interface())
 }

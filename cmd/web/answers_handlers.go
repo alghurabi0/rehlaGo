@@ -69,6 +69,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	if err != nil && err != io.EOF {
 		app.serverError(w, err)
 	}
+	file.Seek(0, io.SeekStart)
 	allowedTypes := map[string]bool{
 		"image/jpeg":      true,
 		"image/png":       true,
@@ -83,6 +84,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		return
 	}
 
 	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", courseId, examId, userId)
@@ -104,7 +106,10 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	}
 	err = app.answer.Create(ctx, answer)
 	if err != nil {
-		object.Delete(ctx)
+		deleterErr := object.Delete(ctx)
+		if deleterErr != nil {
+			app.serverError(w, err)
+		}
 		app.serverError(w, err)
 		return
 	}

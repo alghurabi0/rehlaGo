@@ -23,13 +23,16 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /", isLoggedIn.ThenFunc(app.home))
 	mux.Handle("GET /courses", isLoggedIn.ThenFunc(app.courses))
 	mux.Handle("GET /courses/{courseId}", isSubscribed.ThenFunc(app.coursePage))
+
 	mux.Handle("GET /courses/{courseId}/lec/{lecId}", isSubscribed.ThenFunc(app.lecPage))
 
 	mux.Handle("GET /courses/{courseId}/exam/{examId}", isSubscribed.ThenFunc(app.examPage))
 	mux.Handle("POST /answers/{courseId}/{examId}", isSubscribed.ThenFunc(app.createAnswer))
+
 	mux.Handle("GET /materials", isLoggedIn.ThenFunc(app.materialsPage))
 	mux.Handle("GET /materials/free", isLoggedIn.ThenFunc(app.freeMaterials))
 	mux.Handle("GET /materials/{courseId}", isSubscribed.ThenFunc(app.courseMaterials))
+
 	mux.Handle("GET /progress", isLoggedIn.ThenFunc(app.progressPage))
 	mux.Handle("GET /progress/{courseId}", isSubscribed.ThenFunc(app.gradesPage))
 	mux.Handle("GET /progress/{courseId}/{examId}", isSubscribed.ThenFunc(app.answerPage))
@@ -48,6 +51,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 	mux.Handle("POST /signup", isLoggedIn.ThenFunc(app.createUser))
+	mux.Handle("POST /verify_signup", isLoggedIn.ThenFunc(app.verifyUser))
 	mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
 

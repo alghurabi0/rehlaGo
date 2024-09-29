@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
+	"github.com/alghurabi0/rehla/internal/validator"
+	"google.golang.org/api/iterator"
 )
 
 func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request) {
@@ -97,25 +100,103 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
+	// check if user logged in, redirect to homepage
+	isLoggedIn := app.isLoggedInCheck(r)
+	if isLoggedIn {
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+		return
+	}
 	// get values from json object
-	formData := &models.User{}
+	user := &models.User{}
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	formData.PhoneNumber = r.PostFormValue("phone_number")
-	formData.Pwd = r.PostFormValue("password")
-	formData.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
-	formData.Firstname = r.PostFormValue("firstname")
-	formData.Lastname = r.PostFormValue("lastname")
-	// create the user
+	user.Firstname = r.PostFormValue("firstname")
+	user.Lastname = r.PostFormValue("lastname")
+	user.PhoneNumber = r.PostFormValue("phone_number")
+	user.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
+	user.Pwd = r.PostFormValue("password")
+	// validation
+	// TODO - check if user with same number exist and send code 409
+	v := validator.Validator{}
+	v.Check(validator.NotBlank(user.Firstname), "firstname", "firstname shouldn't be empty")
+	v.Check(validator.NotBlank(user.Lastname), "lastname", "lastname shouldn't be empty")
+	v.Check(validator.ValidPhoneNumber(user.PhoneNumber), "phone_number", "phone_number should be a valid iraqi number of 11 digits")
+	v.Check(validator.ValidPhoneNumber(user.ParentPhoneNumber), "parent_phone_number", "parent_phone_number should be a valid iraqi number of 11 digits")
+	v.Check(validator.Password(user.Pwd), "password", "password should be at least 8 chars, number, or symbols")
+
+	if v.Errors != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		err = json.NewEncoder(w).Encode(v.Errors)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		return
+	}
+	// check if user already exist
 	ctx := context.Background()
-	userId, err := app.user.Create(ctx, formData)
+	count := 0
+	iter := app.user.DB.Collection("users").Where("phone_number", "==", user.PhoneNumber).Documents(ctx)
+	for {
+		_, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			app.serverError(w, err)
+		}
+		count++
+	}
+	if count > 0 {
+		app.clientError(w, http.StatusConflict)
+		return
+	}
+	// create the user
+	user.Verified = false
+	userId, err := app.user.Create(ctx, user)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	app.session.Put(r.Context(), "userId", userId)
-	http.Redirect(w, r, "/", http.StatusFound)
+	w.WriteHeader(http.StatusAccepted)
+	w.Write([]byte(userId))
+}
+
+func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
+	isLoggedIn := app.isLoggedInCheck(r)
+	if isLoggedIn {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	err := r.ParseForm()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	userId := r.PostFormValue("userId")
+	if userId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	_, err = app.user.Get(ctx, userId)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	user := &models.User{}
+	user.Verified = true
+	updates := app.createFirestoreUpdateArr(user, true)
+	err = app.user.Update(ctx, userId, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(ctx, "userId", userId)
+	w.WriteHeader(http.StatusOK)
 }

@@ -55,6 +55,7 @@ func (app *application) subPage(w http.ResponseWriter, r *http.Request) {
 	app.render(w, http.StatusOK, "sub.tmpl.html", data)
 }
 
+// TODO - handle multiple subs to same course
 func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	userId := r.PathValue("userId")
@@ -78,15 +79,21 @@ func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 	if courseId == "" {
 		http.Error(w, "must provide course id", http.StatusBadRequest)
 		return
-	} else {
-		course, err := app.course.Get(ctx, courseId)
-		if err != nil {
-			app.errorLog.Println(err)
-			app.clientError(w, http.StatusBadRequest)
-			return
-		}
-		sub.CourseTitle = course.Title
 	}
+	course, err := app.course.Get(ctx, courseId)
+	if err != nil {
+		app.errorLog.Println(err)
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	// checking if already subscribed
+	_, err = app.sub.Get(ctx, userId, courseId)
+	if err == nil {
+		http.Error(w, "already subscribed", http.StatusBadRequest)
+	}
+
+	sub.CourseTitle = course.Title
 	status := r.FormValue("status")
 	if status == "active" {
 		sub.Active = true
@@ -197,6 +204,19 @@ func (app *application) deleteSub(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	user.Subscriptions = app.removeString(user.Subscriptions, subId)
+	var updates []firestore.Update
+	updates = append(updates, firestore.Update{
+		Path:  "subscriptions",
+		Value: user.Subscriptions,
+	})
+	err = app.user.Update(ctx, user.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	http.Redirect(w, r, fmt.Sprintf("/users/%s", user.ID), http.StatusSeeOther)
 }
 

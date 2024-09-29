@@ -142,3 +142,14 @@ func (app *application) GenerateRandomID() string {
 	id := fmt.Sprintf("%x", b)
 	return id
 }
+
+func (app *application) removeString(slice []string, str string) []string {
+	for i, v := range slice {
+		if v == str {
+			// Remove the string by appending the elements before and after the index
+			return append(slice[:i], slice[i+1:]...)
+		}
+	}
+	// Return the original slice if the string is not found
+	return slice
+}

@@ -1,0 +1,19 @@
+{{ define "verifyForm" }}
+<div
+  id="verify_form"
+  class="mt-10 w-full grid-cols-1 justify-items-center gap-y-4 p-2 hidden"
+>
+  <input
+    id="otp"
+    type="number"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="رمز التأكيد"
+  />
+  <button
+    id="verify_button"
+    class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
+  >
+    تأكيد
+  </button>
+</div>
+{{ end }}

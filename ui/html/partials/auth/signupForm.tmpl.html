@@ -1,0 +1,51 @@
+{{ define "signupForm" }}
+<form
+  id="signup_form"
+  class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2"
+>
+  <input
+    id="firstname"
+    name="firstname"
+    type="text"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="الاسم الأول"
+  />
+  <input
+    id="lastname"
+    name="lastname"
+    type="text"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="الاسم الثاني"
+  />
+  <input
+    id="phone_number"
+    name="phone_number"
+    type="tel"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="رقم الهاتف"
+  />
+  <input
+    id="parent_phone_number"
+    name="parent_phone_number"
+    type="tel"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="رقم هاتف ولي الأمر"
+  />
+  <input
+    id="password"
+    name="password"
+    type="password"
+    class="h-12 w-full rounded-lg pr-4 text-end"
+    placeholder="الرمز السري"
+  />
+  <div id="recaptcha_container"></div>
+  <button
+    id="signup_button"
+    type="submit"
+    hx-post="/signup"
+    class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
+  >
+    انشاء الحساب
+  </button>
+</form>
+{{ end }}

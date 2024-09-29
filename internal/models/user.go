@@ -11,17 +11,18 @@ import (
 )
 
 type User struct {
-	ID                string   `firestore:"-"`
-	Firstname         string   `firestore:"firstname"`
-	Lastname          string   `firestore:"lastname"`
-	PhoneNumber       string   `firestore:"phone_number"`
-	ParentPhoneNumber string   `firestore:"parent_phone_number"`
-	Pwd               string   `firestore:"pwd"`
-	Gender            string   `firestore:"gender"`
-	Subscriptions     []string `firestore:"subscriptions"`
-	ImgURL            string   `firestore:"img_url"`
-	ImgPath           string   `firestore:"img_path"`
-	NumSubs           int      `firestore:"-"`
+	ID                string `firestore:"-"`
+	Firstname         string `firestore:"firstname"`
+	Lastname          string `firestore:"lastname"`
+	PhoneNumber       string `firestore:"phone_number"`
+	ParentPhoneNumber string `firestore:"parent_phone_number"`
+	Pwd               string `firestore:"pwd"`
+	// --
+	Verified      bool     `firestore:"verified"`
+	Subscriptions []string `firestore:"subscriptions"`
+	ImgURL        string   `firestore:"img_url"`
+	ImgPath       string   `firestore:"img_path"`
+	NumSubs       int      `firestore:"-"`
 }
 
 type UserModel struct {

@@ -17,22 +17,26 @@ function render() {
 }
 
 let formData = {};
+var userId = "";
 
 function sendOTP(event) {
   if (event) event.preventDefault();
-  const form = document.getElementById("signup_form");
-  const inputs = form.getElementsByTagName("input");
+  const inputs = signup_form.getElementsByTagName("input");
+
   // TODO
+    // validation
   for (let i = 0; i < inputs.length; i++) {
     if (!inputs[i].value) {
       alert("Please fill all the fields");
       return;
     }
   }
+
+  // send data to backend
   for (let i = 0; i < inputs.length; i++) {
     formData[inputs[i].name] = inputs[i].value;
   }
-  fetch("/signup_validate", {
+  fetch("/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,6 +46,7 @@ function sendOTP(event) {
     .then((res) => {
       console.log(res);
       if (res.status == 202) {
+          userId = res.text()
         signInWithPhoneNumber(
           auth,
           formData["phone_number"],
@@ -59,6 +64,7 @@ function sendOTP(event) {
             console.log("firebase error", error);
           });
       } else if (res.status == 409) {
+          // TODO
         alert("User already exists");
       } else {
         console.log("Error", res);
@@ -79,16 +85,15 @@ function verifyOTP() {
     .confirm(otp)
     .then(() => {
       console.log("OTP verified");
-      fetch("/signup", {
+      fetch("/verify_signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
       })
         .then((res) => {
           console.log(res);
-          if (res.status == 201) {
+          if (res.status == 200) {
             alert("User created successfully");
             window.location.href = "/";
           } else {
@@ -107,7 +112,7 @@ function verifyOTP() {
 
 const signup_form = document.getElementById("signup_form");
 const verify_button = document.getElementById("verify_button");
-if (signup_button) {
+if (signup_form) {
   signup_form.addEventListener("submit", sendOTP);
 }
 if (verify_button) {

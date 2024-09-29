@@ -1,12 +1,3 @@
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
-import { app } from "/static/js/base.js";
-
-const storage = getStorage(app);
-
 const inputEl = document.querySelector("#file_upload");
 const filename = document.querySelector("#filename");
 if (inputEl && filename) {

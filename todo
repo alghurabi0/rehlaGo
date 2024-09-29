@@ -1,10 +1,16 @@
+x - done
+c - done, but check it
+
 x offer free materials
-- finish up dashboard/correctors dashboard
+c fix when deleting sub I lose all answers
+c fix answer uploads weird files?
+c (service-worker?) fix getting lecs based on if sub is exists and not on active or not
+c (service-worker?) fix getting lecs even if not subscribed?, exists in sub array
+c finish up dashboard/correctors dashboard
 - implement auth
 - implement tests
 - clean up node modules? execcive javascript?
 - ui, frontend !
-- implement a proper web worker
+c implement a proper service worker
 - security, rate limiting..
 - log to a file
-1f232e4749bbbef320b35a03122e1bd4953dcb90022f73d054ebca253a38cc48

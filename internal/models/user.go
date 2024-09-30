@@ -3,8 +3,6 @@ package models
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -131,18 +129,13 @@ func (u *UserModel) ValidateLogin(ctx context.Context, phone, pass string) (*Use
 			break
 		}
 		if err != nil {
-			log.Fatalf("failed to iterate: %v", err)
+			return nil, err
 		}
 		err = doc.DataTo(&user)
 		if err != nil {
-			fmt.Print(err)
+			return nil, err
 		}
 		user.ID = doc.Ref.ID
-	}
-	fmt.Print(phone)
-	fmt.Print(pass)
-	if user.PhoneNumber != phone {
-		return &User{}, errors.New("user not found")
 	}
 	if user.Pwd != pass {
 		return &User{}, errors.New("incorrect password")

@@ -52,6 +52,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /signup", isLoggedIn.ThenFunc(app.signUpPage))
 	mux.Handle("POST /signup", isLoggedIn.ThenFunc(app.createUser))
 	mux.Handle("POST /verify_signup", isLoggedIn.ThenFunc(app.verifyUser))
+
 	mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
 

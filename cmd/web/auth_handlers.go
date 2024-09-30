@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
@@ -86,15 +87,47 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	phone := r.PostFormValue("phone_number")
-	pass := r.PostFormValue("password")
-	ctx := context.Background()
-	user, err := app.user.ValidateLogin(ctx, phone, pass)
-	if err != nil {
-		fmt.Print(err)
-		app.clientError(w, http.StatusUnauthorized)
+	if strings.TrimSpace(phone) == "" {
+		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	fmt.Printf("user id is: %s\n", user.ID)
+	pass := r.PostFormValue("password")
+	if strings.TrimSpace(pass) == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	ctx := context.Background()
+	iter := app.user.DB.Collection("users").Where("phone_number", "==", phone).Documents(ctx)
+	count := 0
+	user := &models.User{}
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		count++
+		err = doc.DataTo(&user)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		user.ID = doc.Ref.ID
+	}
+	if count == 0 {
+		http.Error(w, "no_match", http.StatusBadRequest)
+		return
+	} else if count > 1 {
+		app.serverError(w, fmt.Errorf("more than one user with this phone number: %s", phone))
+		return
+	}
+	if user.Pwd != pass {
+		http.Error(w, "wrong-pass", http.StatusBadRequest)
+		return
+	}
 	app.session.Put(r.Context(), "userId", user.ID)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
@@ -119,13 +152,12 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	user.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
 	user.Pwd = r.PostFormValue("password")
 	// validation
-	// TODO - check if user with same number exist and send code 409
 	v := validator.Validator{}
 	v.Check(validator.NotBlank(user.Firstname), "firstname", "firstname shouldn't be empty")
 	v.Check(validator.NotBlank(user.Lastname), "lastname", "lastname shouldn't be empty")
 	v.Check(validator.ValidPhoneNumber(user.PhoneNumber), "phone_number", "phone_number should be a valid iraqi number of 11 digits")
 	v.Check(validator.ValidPhoneNumber(user.ParentPhoneNumber), "parent_phone_number", "parent_phone_number should be a valid iraqi number of 11 digits")
-	v.Check(validator.Password(user.Pwd), "password", "password should be at least 8 chars, number, or symbols")
+	v.Check(validator.Password(user.Pwd), "password", "password should be at least 8 chars, numbers, or symbols")
 
 	if v.Errors != nil {
 		w.WriteHeader(http.StatusBadRequest)

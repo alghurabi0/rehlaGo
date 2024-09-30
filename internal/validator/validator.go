@@ -3,6 +3,7 @@ package validator
 import (
 	"mime/multipart"
 	"net/http"
+	"regexp"
 	"strings"
 	"unicode/utf8"
 )
@@ -52,4 +53,13 @@ func FileTypeAllowed(buf []byte, allowed map[string]bool) bool {
 
 func FileSize(handler *multipart.FileHeader, maxSize int64) bool {
 	return handler.Size <= maxSize
+}
+
+func ValidPhoneNumber(phone string) bool {
+	match, _ := regexp.MatchString(`^07[0-9]{9}$`, phone)
+	return match
+}
+
+func Password(pwd string) bool {
+	return len(pwd) >= 8
 }

@@ -19,6 +19,7 @@ function render() {
 
 let formData = {};
 var userId = "";
+const signup_form = document.getElementById("signup_form");
 
 function sendOTP(event) {
   if (event) event.preventDefault();
@@ -37,6 +38,7 @@ function sendOTP(event) {
   for (let i = 0; i < inputs.length; i++) {
     formData[inputs[i].name] = inputs[i].value;
   }
+  console.log(formData);
   fetch("/signup", {
     method: "POST",
     headers: {
@@ -111,7 +113,6 @@ function verifyOTP() {
     });
 }
 
-const signup_form = document.getElementById("signup_form");
 const verify_button = document.getElementById("verify_button");
 if (signup_form) {
   signup_form.addEventListener("submit", sendOTP);

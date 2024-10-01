@@ -156,11 +156,6 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.infoLog.Println(user)
-	user.Firstname = r.PostFormValue("firstname")
-	user.Lastname = r.PostFormValue("lastname")
-	user.PhoneNumber = r.PostFormValue("phone_number")
-	user.ParentPhoneNumber = r.PostFormValue("parent_phone_number")
-	user.Pwd = r.PostFormValue("password")
 	// validation
 	v := validator.Validator{}
 	v.Check(validator.NotBlank(user.Firstname), "firstname", "firstname shouldn't be empty")

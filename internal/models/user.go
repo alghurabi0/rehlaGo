@@ -10,11 +10,11 @@ import (
 
 type User struct {
 	ID                string `firestore:"-"`
-	Firstname         string `firestore:"firstname"`
-	Lastname          string `firestore:"lastname"`
-	PhoneNumber       string `firestore:"phone_number"`
-	ParentPhoneNumber string `firestore:"parent_phone_number"`
-	Pwd               string `firestore:"pwd"`
+	Firstname         string `json:"firstname" firestore:"firstname"`
+	Lastname          string `json:"lastname" firestore:"lastname"`
+	PhoneNumber       string `json:"phone_number" firestore:"phone_number"`
+	ParentPhoneNumber string `json:"parent_phone_number" firestore:"parent_phone_number"`
+	Pwd               string `json:"password" firestore:"pwd"`
 	// --
 	Verified      bool     `firestore:"verified"`
 	Subscriptions []string `firestore:"subscriptions"`

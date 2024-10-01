@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 
@@ -139,11 +140,18 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusBadRequest)
 		return
 	}
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "unable to read body request", http.StatusBadRequest)
+		return
+	}
+
+	defer r.Body.Close()
 	// get values from json object
 	user := &models.User{}
-	err := r.ParseForm()
+	err = json.Unmarshal(body, user)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		http.Error(w, "invalid json format", http.StatusBadRequest)
 		return
 	}
 	user.Firstname = r.PostFormValue("firstname")

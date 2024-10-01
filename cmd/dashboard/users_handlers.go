@@ -115,7 +115,6 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		Pwd:               pwd,
 		PhoneNumber:       phone_number,
 		ParentPhoneNumber: parent_phone_number,
-		Gender:            gender,
 	}
 	ctx := context.Background()
 	id, err := app.user.Create(ctx, user)

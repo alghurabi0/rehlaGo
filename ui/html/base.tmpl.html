@@ -11,6 +11,7 @@
         integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
         crossorigin="anonymous"></script>
     <script type="module" src="/static/js/base.js"></script>
+    <script src="sw-register.js"></script>
     <title>{{template "title" .}} - Rehla</title>
 </head>
 
@@ -25,18 +26,6 @@
         {{ template "nav" . }}
         {{ template "nav_drawer" . }}
     </main>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, (error) => {
-                    console.log('ServiceWorker registration failed: ', error);
-                });
-            });
-        }
-    </script>
 </body>
 
 </html>

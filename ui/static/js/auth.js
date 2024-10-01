@@ -50,9 +50,10 @@ function sendOTP(event) {
       console.log(res);
       if (res.status == 202) {
           userId = res.text()
+          const phone = '+964' + formData["phone_number"].slice(1);
         signInWithPhoneNumber(
           auth,
-          formData["phone_number"],
+          phone,
           window.recaptchaVerifier
         )
           .then((confirmationResult) => {

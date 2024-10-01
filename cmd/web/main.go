@@ -73,6 +73,7 @@ func main() {
 	session := scs.New()
 	session.Store = scsfs.New(db)
 	session.Lifetime = 7200 * time.Hour
+	session.Cookie.Secure = true
 
 	// metrics
 	expvar.Publish("goroutines", expvar.Func(func() interface{} {

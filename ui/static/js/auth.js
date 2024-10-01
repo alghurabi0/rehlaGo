@@ -4,6 +4,7 @@ import {
   signInWithPhoneNumber,
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { app } from "/static/js/base.js";
+console.log("auth file");
 
 const auth = getAuth(app);
 render();

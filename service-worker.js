@@ -42,7 +42,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
     event.respondWith(networkFirst(event.request));
   }
-});
+);
 
 // Cache First Strategy
 async function cacheFirst(request) {

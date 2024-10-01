@@ -145,6 +145,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unable to read body request", http.StatusBadRequest)
 		return
 	}
+	app.infoLog.Println(string(body))
 
 	defer r.Body.Close()
 	// get values from json object
@@ -154,6 +155,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid json format", http.StatusBadRequest)
 		return
 	}
+	app.infoLog.Println(user)
 	user.Firstname = r.PostFormValue("firstname")
 	user.Lastname = r.PostFormValue("lastname")
 	user.PhoneNumber = r.PostFormValue("phone_number")

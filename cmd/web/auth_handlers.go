@@ -220,6 +220,12 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	userId := &userId{}
 	err = json.Unmarshal(body, userId)
+	if err != nil {
+		http.Error(w, "invalid json format", http.StatusBadRequest)
+		return
+	}
+
+	// TODO - if empty
 	app.infoLog.Println(userId)
 
 	ctx := context.Background()

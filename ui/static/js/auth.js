@@ -94,6 +94,7 @@ function verifyOTP() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(userId),
       })
         .then((res) => {
           console.log(res);

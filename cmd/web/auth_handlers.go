@@ -202,24 +202,28 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(userId))
 }
 
+type userId struct {
+	UserId string `json:"userId"`
+}
+
 func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	isLoggedIn := app.isLoggedInCheck(r)
 	if isLoggedIn {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	err := r.ParseForm()
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		app.serverError(w, err)
+		http.Error(w, "unable to read body request", http.StatusBadRequest)
 		return
 	}
-	userId := r.PostFormValue("userId")
-	if userId == "" {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
+	defer r.Body.Close()
+	userId := &userId{}
+	err = json.Unmarshal(body, userId)
+	app.infoLog.Println(userId)
+
 	ctx := context.Background()
-	_, err = app.user.Get(ctx, userId)
+	_, err = app.user.Get(ctx, userId.UserId)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -228,7 +232,7 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	user := &models.User{}
 	user.Verified = true
 	updates := app.createFirestoreUpdateArr(user, true)
-	err = app.user.Update(ctx, userId, updates)
+	err = app.user.Update(ctx, userId.UserId, updates)
 	if err != nil {
 		app.serverError(w, err)
 		return

@@ -18,6 +18,7 @@ function render() {
 }
 
 let formData = {};
+// TODO
 var userId = "";
 const signup_form = document.getElementById("signup_form");
 
@@ -50,6 +51,7 @@ function sendOTP(event) {
       console.log(res);
       if (res.status == 202) {
           userId = res.text()
+          console.log(userId);
           const phone = '+964' + formData["phone_number"].slice(1);
         signInWithPhoneNumber(
           auth,

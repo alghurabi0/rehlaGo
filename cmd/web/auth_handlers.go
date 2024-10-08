@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/alghurabi0/rehla/internal/models"
@@ -129,7 +130,35 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "wrong-pass", http.StatusBadRequest)
 		return
 	}
-	app.session.Put(r.Context(), "userId", user.ID)
+	if user.SessionId != "" {
+		err = app.redis.Del(ctx, user.SessionId).Err()
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+	}
+	session_id := app.GenerateRandomID()
+	user.SessionId = session_id
+	updates := app.createFirestoreUpdateArr(user, true)
+	err = app.user.Update(ctx, user.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	re, err := json.Marshal(user)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal user to json: %v\n", err)
+		return
+	}
+
+	err = app.redis.Set(ctx, session_id, re, time.Hour*24*365).Err()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r.Context(), "session_id", session_id)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
@@ -202,10 +231,6 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(userId))
 }
 
-type userId struct {
-	UserId string `json:"userId"`
-}
-
 func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	isLoggedIn := app.isLoggedInCheck(r)
 	if isLoggedIn {
@@ -218,18 +243,13 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	userId := &userId{}
-	err = json.Unmarshal(body, userId)
-	if err != nil {
-		http.Error(w, "invalid json format", http.StatusBadRequest)
-		return
-	}
+	userId := string(body)
 
 	// TODO - if empty
 	app.infoLog.Println(userId)
 
 	ctx := context.Background()
-	_, err = app.user.Get(ctx, userId.UserId)
+	_, err = app.user.Get(ctx, userId)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -238,7 +258,7 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	user := &models.User{}
 	user.Verified = true
 	updates := app.createFirestoreUpdateArr(user, true)
-	err = app.user.Update(ctx, userId.UserId, updates)
+	err = app.user.Update(ctx, userId, updates)
 	if err != nil {
 		app.serverError(w, err)
 		return

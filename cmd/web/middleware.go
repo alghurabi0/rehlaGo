@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"expvar"
 	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/alghurabi0/rehla/internal/models"
 	"github.com/felixge/httpsnoop"
 )
 
@@ -56,22 +58,29 @@ func (app *application) metrics(next http.Handler) http.Handler {
 
 func (app *application) isLoggedIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userId := app.session.GetString(r.Context(), "userId")
-		if userId == "" {
+		session_id := app.session.GetString(r.Context(), "session_id")
+		if session_id == "" {
 			next.ServeHTTP(w, r)
 			return
 		}
 
 		ctx := context.Background()
-		user, err := app.user.Get(ctx, userId)
+		val, err := app.redis.Get(ctx, session_id).Result()
 		if err != nil {
-			app.errorLog.Printf("couldn't get user: %v", err)
+			app.errorLog.Printf("couldn't get redis key: %s, error: %v", session_id, err)
+			next.ServeHTTP(w, r)
+			return
+		}
+		var user models.User
+		err = json.Unmarshal([]byte(val), &user)
+		if err != nil {
+			app.errorLog.Printf("can't unmarshal json to user: %v\n", err)
 			next.ServeHTTP(w, r)
 			return
 		}
 
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
-		ctx = context.WithValue(ctx, userModelContextKey, user)
+		ctx = context.WithValue(ctx, userModelContextKey, val)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

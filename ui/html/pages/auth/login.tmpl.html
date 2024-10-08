@@ -16,6 +16,11 @@
       <form
         id="login_form"
         class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2"
+        hx-post="/login"
+        hx-trigger="submit"
+        hx-select=".view"
+        hx-target=".view"
+        hx-swap="outerHTML"
       >
         <input
           id="phone_number"
@@ -32,8 +37,8 @@
           placeholder="الرمز السري"
         />
         <button
-          hx-post="/login"
           id="login_button"
+          type="submit"
           class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
         >
           Login

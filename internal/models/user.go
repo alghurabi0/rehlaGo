@@ -21,6 +21,7 @@ type User struct {
 	ImgURL        string   `firestore:"img_url"`
 	ImgPath       string   `firestore:"img_path"`
 	NumSubs       int      `firestore:"-"`
+	SessionId     string   `firestore:"session_id"`
 }
 
 type UserModel struct {

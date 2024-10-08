@@ -12,7 +12,7 @@ function render() {
   window.recaptchaVerifier = new RecaptchaVerifier(
     auth,
     "recaptcha_container",
-    {}
+    {},
   );
   recaptchaVerifier.render();
 }
@@ -27,7 +27,7 @@ function sendOTP(event) {
   const inputs = signup_form.getElementsByTagName("input");
 
   // TODO
-    // validation
+  // validation
   for (let i = 0; i < inputs.length; i++) {
     if (!inputs[i].value) {
       alert("Please fill all the fields");
@@ -48,33 +48,36 @@ function sendOTP(event) {
     body: JSON.stringify(formData),
   })
     .then((res) => {
-      console.log(res);
       if (res.status == 202) {
-          userId = res.text()
-          console.log(userId);
-          const phone = '+964' + formData["phone_number"].slice(1);
-        signInWithPhoneNumber(
-          auth,
-          phone,
-          window.recaptchaVerifier
-        )
-          .then((confirmationResult) => {
-            window.confirmationResult = confirmationResult;
-            console.log("OTP is sent");
-            document.getElementById("signup_form").classList.remove("grid");
-            document.getElementById("signup_form").classList.add("hidden");
-            document.getElementById("verify_form").classList.remove("hidden");
-            document.getElementById("verify_form").classList.add("grid");
-          })
-          .catch((error) => {
-            console.log("firebase error", error);
-          });
+        return res.text();
       } else if (res.status == 409) {
-          // TODO
+        // TODO
         alert("User already exists");
       } else {
         console.log("Error", res);
       }
+    })
+    .then((userid) => {
+      userId = userid;
+      console.log(userId);
+      console.log(userid);
+      //const phone = "+964" + formData["phone_number"].slice(1);
+      //signInWithPhoneNumber(
+      //auth,
+      //phone,
+      //window.recaptchaVerifier
+      //)
+      //.then((confirmationResult) => {
+      //window.confirmationResult = confirmationResult;
+      //console.log("OTP is sent");
+      document.getElementById("signup_form").classList.remove("grid");
+      document.getElementById("signup_form").classList.add("hidden");
+      document.getElementById("verify_form").classList.remove("hidden");
+      document.getElementById("verify_form").classList.add("grid");
+      //})
+      //.catch((error) => {
+      //console.log("firebase error", error);
+      //});
     })
     .catch((error) => {
       console.log("fetch error", error);
@@ -87,34 +90,54 @@ function verifyOTP() {
     alert("Please enter OTP");
     return;
   }
-  window.confirmationResult
-    .confirm(otp)
-    .then(() => {
-      console.log("OTP verified");
-      fetch("/verify_signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userId),
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.status == 200) {
-            alert("User created successfully");
-            window.location.href = "/";
-          } else {
-            // TODO
-            console.log("Error", res);
-          }
-        })
-        .catch((error) => {
-          console.log("fetch error", error);
-        });
+  fetch("/verify_signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: userId,
+  })
+    .then((res) => {
+      console.log(res);
+      if (res.status == 200) {
+        alert("User created successfully");
+        window.location.href = "/";
+      } else {
+        // TODO
+        console.log("Error", res);
+      }
     })
     .catch((error) => {
-      console.log("firebase verify error", error);
+      console.log("fetch error", error);
     });
+  //window.confirmationResult
+  //.confirm(otp)
+  //.then(() => {
+  //console.log("OTP verified");
+  //fetch("/verify_signup", {
+  //method: "POST",
+  //headers: {
+  //"Content-Type": "application/json",
+  //},
+  //body: JSON.stringify(userId),
+  //})
+  //.then((res) => {
+  //console.log(res);
+  //if (res.status == 200) {
+  //alert("User created successfully");
+  //window.location.href = "/";
+  //} else {
+  //// TODO
+  //console.log("Error", res);
+  //}
+  //})
+  //.catch((error) => {
+  //console.log("fetch error", error);
+  //});
+  //})
+  //.catch((error) => {
+  //console.log("firebase verify error", error);
+  //});
 }
 
 const verify_button = document.getElementById("verify_button");

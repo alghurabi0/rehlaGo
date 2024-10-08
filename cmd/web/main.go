@@ -19,6 +19,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/alghurabi0/rehla/internal/fileStorage"
 	"github.com/alghurabi0/rehla/internal/models"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
 )
 
@@ -37,6 +38,7 @@ type application struct {
 	contact       *models.ContactModel
 	session       *scs.SessionManager
 	storage       *fileStorage.StorageModel
+	redis         *redis.Client
 }
 
 var version string
@@ -75,6 +77,17 @@ func main() {
 	session.Lifetime = 7200 * time.Hour
 	session.Cookie.Secure = true
 
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	_, err = rdb.Ping(ctx).Result()
+	if err != nil {
+		errorLog.Fatalf("failed to ping redis: %v\n", err)
+	}
+	infoLog.Println("redis connected")
+
 	// metrics
 	expvar.Publish("goroutines", expvar.Func(func() interface{} {
 		return runtime.NumGoroutine()
@@ -98,6 +111,7 @@ func main() {
 		contact:       &models.ContactModel{DB: db},
 		session:       session,
 		storage:       &fileStorage.StorageModel{ST: strg},
+		redis:         rdb,
 	}
 	/*
 		tlsConfig := &tls.Config{

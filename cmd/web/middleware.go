@@ -80,7 +80,7 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 		}
 
 		ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
-		ctx = context.WithValue(ctx, userModelContextKey, val)
+		ctx = context.WithValue(ctx, userModelContextKey, &user)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})

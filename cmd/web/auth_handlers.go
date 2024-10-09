@@ -70,17 +70,27 @@ func (app *application) resetPassword(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		http.Error(w, "user is signed in", http.StatusConflict)
+		return
+	}
 	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
 }
 
 func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		http.Error(w, "user is signed in", http.StatusConflict)
+		return
+	}
 	app.render(w, http.StatusOK, "login.tmpl.html", nil)
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	if data.IsLoggedIn {
-		w.Write([]byte("already logged in"))
+		http.Redirect(w, r, "/", http.StatusConflict)
 		return
 	}
 	err := r.ParseForm()
@@ -166,7 +176,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	// check if user logged in, redirect to homepage
 	isLoggedIn := app.isLoggedInCheck(r)
 	if isLoggedIn {
-		http.Redirect(w, r, "/", http.StatusBadRequest)
+		http.Redirect(w, r, "/", http.StatusConflict)
 		return
 	}
 	body, err := io.ReadAll(r.Body)
@@ -222,6 +232,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// create the user
 	user.Verified = false
+	user.SessionId = ""
 	userId, err := app.user.Create(ctx, user)
 	if err != nil {
 		app.serverError(w, err)
@@ -247,6 +258,10 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 
 	// TODO - if empty
 	app.infoLog.Println(userId)
+	if strings.TrimSpace(userId) == "" {
+		http.Error(w, "empty request body", http.StatusBadRequest)
+		return
+	}
 
 	ctx := context.Background()
 	_, err = app.user.Get(ctx, userId)
@@ -257,13 +272,24 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 
 	user := &models.User{}
 	user.Verified = true
+	user.SessionId = app.GenerateRandomID()
 	updates := app.createFirestoreUpdateArr(user, true)
 	err = app.user.Update(ctx, userId, updates)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
+	userJson, err := json.Marshal(user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.redis.Set(ctx, user.SessionId, userJson, time.Hour*24*365).Err()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
-	app.session.Put(ctx, "userId", userId)
+	app.session.Put(ctx, "session_id", user.SessionId)
 	w.WriteHeader(http.StatusOK)
 }

@@ -290,6 +290,6 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.session.Put(ctx, "session_id", user.SessionId)
+	app.session.Put(r.Context(), "session_id", user.SessionId)
 	w.WriteHeader(http.StatusOK)
 }

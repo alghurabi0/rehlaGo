@@ -14,3 +14,4 @@ c implement auth
 c implement a proper service worker
 - security, rate limiting..
 - log to a file
+x implement session management where a user can't sign in from two devices at the same time.

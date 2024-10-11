@@ -1,0 +1,35 @@
+{
+  "id": "/",
+  "name": "Rehla",
+  "short_name": "Rehla",
+  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "white",
+  "theme_color": "#A490BB",
+  "icons": [
+      {
+          "src": "/static/icons/icon_x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+      },
+      {
+          "src": "/static/icons/icon_x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+      },
+      {
+          "src": "/static/icons/maskable_icon_x512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+      },
+      {
+          "src": "/static/icons/maskable_icon_x192.png",
+          "sizes": "192",
+          "type": "image/png",
+          "purpose": "maskable"
+      }
+  ]
+}
+

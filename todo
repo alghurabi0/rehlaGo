@@ -14,3 +14,12 @@ c implement auth
 c implement a proper service worker
 - security, rate limiting..
 - log to a file
+
+
+currently
+- user proper icons
+- cache icons
+- use design font and cache it...
+- change lang to arabic
+- implement user profile photo and name
+- lift bottom nav bar in mobile (dead zone)

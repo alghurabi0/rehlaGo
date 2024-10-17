@@ -169,7 +169,8 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.session.Put(r.Context(), "session_id", session_id)
-	http.Redirect(w, r, "/", http.StatusFound)
+	//http.Redirect(w, r, "/", http.StatusFound)
+	w.Header().Set("HX-Redirect", "/")
 }
 
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {

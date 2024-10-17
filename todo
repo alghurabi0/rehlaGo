@@ -17,9 +17,9 @@ c implement a proper service worker
 
 
 currently
-- user proper icons
-- cache icons
+x use proper icons
+x(no need because svgs) cache icons
 - use design font and cache it...
-- change lang to arabic
-- implement user profile photo and name
-- lift bottom nav bar in mobile (dead zone)
+c change lang to arabic
+x implement user profile photo and name
+-? lift bottom nav bar in mobile (dead zone)

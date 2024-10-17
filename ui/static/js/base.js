@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const username = document.querySelector("#username");
   const tabUsername = document.querySelector("#tabUsername");
   const navDrawer = document.querySelector("#nav_drawer");
+
   if (loginDialog && loginClose) {
     loginClose.addEventListener("click", () => {
       loginDialog.classList.add("hidden");
@@ -92,3 +93,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+

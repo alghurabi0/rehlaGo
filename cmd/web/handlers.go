@@ -16,6 +16,15 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+		data.User = user
+	}
 	app.renderFull(w, http.StatusOK, "home.tmpl.html", data)
 }
 

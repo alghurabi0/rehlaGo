@@ -1,8 +1,44 @@
 {{ define "username" }}
-<div id="username" class="flex justify-end items-center md:hidden">
-    <h2 class="mr-5 text-xl font-semibold text-zinc-800">مرحبا، ضيف صالح</h2>
-    <div class="h-12 w-12 overflow-hidden rounded-full border-2 border-zinc-600">
-        <img src="https://placehold.co/100x100" alt="profile" />
+<div class="flex flex-row-reverse justify-between md:hidden">
+  <div id="username" class="flex justify-end items-center">
+    <h2 class="mr-5 text-xl font-semibold text-zinc-800">
+      {{ if .IsLoggedIn }}
+      <bdi>مرحبا, {{.User.Firstname}} {{.User.Lastname}}</bdi>
+      {{ else }} مرحبا {{ end }}
+    </h2>
+    <div
+      class="h-12 w-12 overflow-hidden rounded-full border-2 border-zinc-600"
+    >
+    {{ if .IsLoggedIn }}
+    <img src={{if .User.ImgURL }}"{{.User.ImgURL}}"{{else}}"https://placehold.co/100x100"{{end}} alt="profile" />
+    {{ else }}
+    <img src="https://placehold.co/100x100" alt="profile" />
+    {{ end }}
     </div>
+  </div>
+  {{ if eq .IsLoggedIn false }}
+  <div class="flex justify-start ml-2">
+    <button
+      class="bg-[#612C8C] rounded-2xl p-2 text-white font-semibold"
+      hx-get="/signup"
+      hx-select=".view"
+      hx-target="main"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+    >
+      sign up
+    </button>
+    <button
+      class="bg-[#612C8C] rounded-2xl p-2 ml-2 text-white font-semibold"
+      hx-get="/login"
+      hx-select=".view"
+      hx-target="main"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+    >
+      log in
+    </button>
+  </div>
+  {{ end }}
 </div>
 {{ end }}

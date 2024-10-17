@@ -1,32 +1,36 @@
 {{ define "base" }}
 <!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <link rel="stylesheet" href="/static/css/tailwind.css" />
     <link rel="manifest" href="/static/web.webmanifest" />
-    <script src="https://unpkg.com/htmx.org@1.9.12"
-        integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
-        crossorigin="anonymous"></script>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.12"
+      integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+      crossorigin="anonymous"
+    ></script>
     <script type="module" src="/static/js/base.js"></script>
     <script src="sw-register.js"></script>
     <title>{{template "title" .}} - Rehla</title>
-</head>
+  </head>
 
-<body class="bg-white h-screen min-h-screen font-sans leading-normal tracking-normal">
-    <main class="mx-auto max-w-md overflow-hidden rounded-lg shadow-lg md:max-w-xl">
-        <div class="w-full p-4">
-            {{ template "username" . }} {{ template "main" . }}
-        </div>
-        {{ template "loginRequired" }}
-        {{ template "subRequired" }}
-        {{ template "tabNav" . }}
-        {{ template "nav" . }}
-        {{ template "nav_drawer" . }}
+  <body
+    class="bg-white h-screen min-h-screen font-sans leading-normal tracking-normal select-none"
+  >
+    <main
+      class="mx-auto max-w-md overflow-scroll rounded-lg shadow-lg md:max-w-xl"
+    >
+      <div class="w-full p-4">
+        {{ template "username" . }} {{ template "main" . }}
+      </div>
+      {{ template "loginRequired" }} {{ template "subRequired" }} {{ template
+      "tabNav" . }} {{ template "nav" . }} {{ template "nav_drawer" . }}
     </main>
-</body>
-
+  </body>
 </html>
 {{ end }}

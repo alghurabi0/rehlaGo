@@ -1107,10 +1107,6 @@ video {
   width: 50px;
 }
 
-.w-\[87px\] {
-  width: 87px;
-}
-
 .w-\[90px\] {
   width: 90px;
 }
@@ -1384,6 +1380,10 @@ video {
 
 .\!overflow-visible {
   overflow: visible !important;
+}
+
+.overflow-scroll {
+  overflow: scroll;
 }
 
 .overflow-x-scroll {
@@ -2705,6 +2705,10 @@ video {
 
   .md\:block {
     display: block;
+  }
+
+  .md\:flex {
+    display: flex;
   }
 
   .md\:hidden {

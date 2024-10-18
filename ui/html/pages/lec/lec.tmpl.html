@@ -1,44 +1,102 @@
-{{ define "title" }}{{ .TemplateTitle }}{{ end }}
-{{ define "main" }}
+{{ define "title" }}{{ .TemplateTitle }}{{ end }} {{ define "main" }}
 <div class="view">
-    <div class="flex flex-row justify-end mt-3">
-        <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">تفاصيل المحاضرة</h1>
-        <img src="https://placehold.co/20x20" />
-    </div>
+  <div class="flex flex-row justify-end mt-3">
+    <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">
+      تفاصيل المحاضرة
+    </h1>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
 
-    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
-        <div class="flex h-full w-full flex-col items-center justify-between pb-5">
-            <div class="flex w-full flex-col items-end rounded-xl px-4 py-2 text-black">
-                <h1 class="text-2xl font-bold">{{ .Lec.Title }}</h1>
-                <p class="text-md self mt-4">{{ .Lec.Description }}</p>
+  <div
+    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
+  >
+    <div class="flex h-full w-full flex-col items-center justify-between pb-5">
+      <div
+        class="flex w-full flex-col items-end rounded-xl px-4 py-2 text-black"
+      >
+        <h1 class="text-2xl font-bold">{{ .Lec.Title }}</h1>
+        <p class="text-md self mt-4">{{ .Lec.Description }}</p>
+      </div>
+
+      <div class="w-full mt-1">
+        <script
+          src="https://fast.wistia.com/embed/medias/{{ .Lec.VideoUrl }}.jsonp"
+          async
+        ></script>
+        <script
+          src="https://fast.wistia.com/assets/external/E-v1.js"
+          async
+        ></script>
+        <div
+          class="wistia_responsive_padding"
+          style="padding: 56.25% 0 0 0; position: relative"
+        >
+          <div
+            class="wistia_responsive_wrapper"
+            style="
+              height: 100%;
+              left: 0;
+              position: absolute;
+              top: 0;
+              width: 100%;
+            "
+          >
+            <div
+              class="wistia_embed wistia_async_{{ .Lec.VideoUrl }} seo=true videoFoam=true"
+              style="height: 100%; position: relative; width: 100%"
+            >
+              <div
+                class="wistia_swatch"
+                style="
+                  height: 100%;
+                  left: 0;
+                  opacity: 0;
+                  overflow: hidden;
+                  position: absolute;
+                  top: 0;
+                  transition: opacity 200ms;
+                  width: 100%;
+                "
+              >
+                <img
+                  src="https://fast.wistia.com/embed/medias/{{ .Lec.VideoUrl }}/swatch"
+                  style="
+                    filter: blur(5px);
+                    height: 100%;
+                    object-fit: contain;
+                    width: 100%;
+                  "
+                  alt=""
+                  aria-hidden="true"
+                  onload="this.parentNode.style.opacity=1;"
+                />
+              </div>
             </div>
-
-            <div class="w-full mt-1">
-                <script src="https://fast.wistia.com/embed/medias/{{ .Lec.VideoUrl }}.jsonp" async></script>
-                <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-                <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
-                    <div class="wistia_responsive_wrapper"
-                        style="height:100%;left:0;position:absolute;top:0;width:100%;">
-                        <div class="wistia_embed wistia_async_{{ .Lec.VideoUrl }} seo=true videoFoam=true"
-                            style="height:100%;position:relative;width:100%">
-                            <div class="wistia_swatch"
-                                style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;">
-                                <img src="https://fast.wistia.com/embed/medias/{{ .Lec.VideoUrl }}/swatch"
-                                    style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt=""
-                                    aria-hidden="true" onload="this.parentNode.style.opacity=1;" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-row w-full h-14 text-white text-lg rounded-xl bg-[#A490BB] mt-7 justify-center">
-                <button class="mr-2">PDF تحميل المواد الخاصة بالمحاضرة</button>
-                <img src="https://placehold.co/25x25" />
-            </div>
-
+          </div>
         </div>
+      </div>
 
+      <div
+        class="flex flex-row w-full h-14 text-white text-lg rounded-xl bg-[#A490BB] mt-7 justify-center"
+      >
+        <button class="mr-2">PDF تحميل المواد الخاصة بالمحاضرة</button>
+        <img src="https://placehold.co/25x25" />
+      </div>
     </div>
+  </div>
 </div>
 {{ end }}

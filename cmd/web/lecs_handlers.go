@@ -28,6 +28,14 @@ func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
 		app.unauthorized(w, "subRequired")
 		return
 	}
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		data.User = user
+	}
 	data.Lec = lec
 	data.TemplateTitle = lec.Title
 	app.renderFull(w, http.StatusOK, "lec.tmpl.html", data)

@@ -1,27 +1,139 @@
 {{ define "tabNav" }}
-<footer class="fixed bottom-0 left-0 w-full bg-zinc-100 md:hidden">
-    <div class="flex justify-around">
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        {{ if .IsLoggedIn }}
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        {{ else }}
-        <div class="flex-grow flex items-center justify-center pt-4 pb-2">
-            <img src="/static/icons/home.png" class="w-8" />
-        </div>
-        {{ end }}
-    </div>
+<footer
+  class="flex justify-around fixed bottom-0 left-0 w-full bg-zinc-100 md:hidden"
+>
+  <div
+    class="flex-grow flex items-center justify-center"
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <svg
+      width="25"
+      height="24"
+      viewBox="0 0 25 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M12.1859 1.21065C12.547 0.929784 13.0526 0.929784 13.4137 1.21065L22.4137 8.21065C22.6573 8.4001 22.7998 8.69141 22.7998 9V20C22.7998 20.7957 22.4837 21.5587 21.9211 22.1213C21.3585 22.6839 20.5955 23 19.7998 23H5.7998C5.00415 23 4.24109 22.6839 3.67848 22.1213C3.11588 21.5587 2.7998 20.7957 2.7998 20V9C2.7998 8.69141 2.94228 8.4001 3.18586 8.21065L12.1859 1.21065ZM10.7998 21H14.7998V13H10.7998V21ZM16.7998 21V12C16.7998 11.4477 16.3521 11 15.7998 11H9.7998C9.24752 11 8.7998 11.4477 8.7998 12V21H5.7998C5.53459 21 5.28023 20.8946 5.0927 20.7071C4.90516 20.5196 4.7998 20.2652 4.7998 20V9.48908L12.7998 3.26686L20.7998 9.48908V20C20.7998 20.2652 20.6944 20.5196 20.5069 20.7071C20.3194 20.8946 20.065 21 19.7998 21H16.7998Z"
+        fill="black"
+      />
+    </svg>
+  </div>
+  <div
+    class="flex-grow flex items-center justify-center"
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <svg
+      width="25"
+      height="24"
+      viewBox="0 0 25 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M1.3999 3C1.3999 2.44772 1.84762 2 2.3999 2H8.3999C9.72598 2 10.9978 2.52678 11.9354 3.46447C12.1037 3.63275 12.2588 3.81178 12.3999 3.99997C12.541 3.81178 12.6961 3.63275 12.8644 3.46447C13.8021 2.52678 15.0738 2 16.3999 2H22.3999C22.9522 2 23.3999 2.44772 23.3999 3V18C23.3999 18.5523 22.9522 19 22.3999 19H15.3999C14.8695 19 14.3608 19.2107 13.9857 19.5858C13.6106 19.9609 13.3999 20.4696 13.3999 21C13.3999 21.5523 12.9522 22 12.3999 22C11.8476 22 11.3999 21.5523 11.3999 21C11.3999 20.4696 11.1892 19.9609 10.8141 19.5858C10.439 19.2107 9.93034 19 9.3999 19H2.3999C1.84762 19 1.3999 18.5523 1.3999 18V3ZM11.3999 17.5359C10.797 17.1878 10.1081 17 9.3999 17H3.3999V4H8.3999C9.19555 4 9.95861 4.31607 10.5212 4.87868C11.0838 5.44129 11.3999 6.20435 11.3999 7V17.5359ZM13.3999 17.5359C14.0028 17.1878 14.6917 17 15.3999 17H21.3999V4H16.3999C15.6043 4 14.8412 4.31607 14.2786 4.87868C13.716 5.44129 13.3999 6.20435 13.3999 7V17.5359Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
+  <div
+    class="flex-grow flex items-center justify-center"
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M3.87868 1.87868C4.44129 1.31607 5.20435 1 6 1H13C13.2652 1 13.5196 1.10536 13.7071 1.29289L20.7071 8.29289C20.8946 8.48043 21 8.73478 21 9V20C21 20.7957 20.6839 21.5587 20.1213 22.1213C19.5587 22.6839 18.7957 23 18 23H6C5.20435 23 4.44129 22.6839 3.87868 22.1213C3.31607 21.5587 3 20.7957 3 20V4C3 3.20435 3.31607 2.44129 3.87868 1.87868ZM6 3C5.73478 3 5.48043 3.10536 5.29289 3.29289C5.10536 3.48043 5 3.73478 5 4V20C5 20.2652 5.10536 20.5196 5.29289 20.7071C5.48043 20.8946 5.73478 21 6 21H18C18.2652 21 18.5196 20.8946 18.7071 20.7071C18.8946 20.5196 19 20.2652 19 20V9.41421L12.5858 3H6Z"
+        fill="#202020"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M13 1C13.5523 1 14 1.44772 14 2V8H20C20.5523 8 21 8.44772 21 9C21 9.55228 20.5523 10 20 10H13C12.4477 10 12 9.55228 12 9V2C12 1.44772 12.4477 1 13 1Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
+  <div
+    class="flex-grow flex items-center justify-center"
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clip-path="url(#clip0_1201_2661)">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M16.998 7C16.4458 7 15.998 6.55228 15.998 6C15.998 5.44772 16.4458 5 16.998 5H22.998C23.5503 5 23.998 5.44772 23.998 6V12C23.998 12.5523 23.5503 13 22.998 13C22.4458 13 21.998 12.5523 21.998 12V8.41421L14.2052 16.2071C13.8146 16.5976 13.1815 16.5976 12.7909 16.2071L8.49805 11.9142L1.70515 18.7071C1.31463 19.0976 0.681464 19.0976 0.29094 18.7071C-0.0995842 18.3166 -0.0995842 17.6834 0.29094 17.2929L7.79094 9.79289C8.18146 9.40237 8.81463 9.40237 9.20515 9.79289L13.498 14.0858L20.5838 7H16.998Z"
+          fill="#202020"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1201_2661">
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(-0.00195312)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  </div>
+  <div
+    class="flex-grow flex items-center justify-center"
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M12.001 4C10.3441 4 9.00098 5.34315 9.00098 7C9.00098 8.65685 10.3441 10 12.001 10C13.6578 10 15.001 8.65685 15.001 7C15.001 5.34315 13.6578 4 12.001 4ZM7.00098 7C7.00098 4.23858 9.23955 2 12.001 2C14.7624 2 17.001 4.23858 17.001 7C17.001 9.76142 14.7624 12 12.001 12C9.23955 12 7.00098 9.76142 7.00098 7ZM4.46544 15.4645C5.40312 14.5268 6.67489 14 8.00098 14H16.001C17.3271 14 18.5988 14.5268 19.5365 15.4645C20.4742 16.4021 21.001 17.6739 21.001 19V21C21.001 21.5523 20.5533 22 20.001 22C19.4487 22 19.001 21.5523 19.001 21V19C19.001 18.2044 18.6849 17.4413 18.1223 16.8787C17.5597 16.3161 16.7966 16 16.001 16H8.00098C7.20533 16 6.44227 16.3161 5.87966 16.8787C5.31705 17.4413 5.00098 18.2043 5.00098 19V21C5.00098 21.5523 4.55326 22 4.00098 22C3.44869 22 3.00098 21.5523 3.00098 21V19C3.00098 17.6739 3.52776 16.4021 4.46544 15.4645Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
 </footer>
 {{ end }}

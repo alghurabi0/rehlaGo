@@ -153,10 +153,17 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 		app.errorLog.Printf("%v\n", err)
 		return
 	}
+	cover, coverHand, err := r.FormFile("cover")
+	if err != nil {
+		http.Error(w, "Error Retrieving the File", http.StatusInternalServerError)
+		app.errorLog.Printf("%v\n", err)
+		return
+	}
 	defer photo.Close()
+	defer cover.Close()
 
 	ctx := context.Background()
-	id, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler)
+	id, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler, cover, *coverHand)
 	if err != nil {
 		app.serverError(w, err)
 		return

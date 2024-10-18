@@ -16,6 +16,15 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+
+		data.User = user
+	}
 	app.renderFull(w, http.StatusOK, "home.tmpl.html", data)
 }
 
@@ -27,6 +36,15 @@ func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		data.User = user
+	}
+
 	data.Courses = courses
 	app.renderFull(w, http.StatusOK, "courses.tmpl.html", data)
 }
@@ -43,6 +61,15 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 	}
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		data.User = user
+	}
+
 	data.Course = course
 	app.renderFull(w, http.StatusOK, "course.tmpl.html", data)
 }

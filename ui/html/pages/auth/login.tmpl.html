@@ -1,7 +1,7 @@
 {{ define "title" }}Login{{ end }} {{ define "main" }}
 <div
-  class="view w-full bg-cover bg-center bg-no-repeat"
-  style="background-image: url(&quot;/static/icons/bgimg&quot;)"
+  class="view w-full h-full bg-cover bg-center bg-no-repeat"
+  style="background-image: url(/static/icons/bg_img.jpg)"
 >
   <div class="mx-auto max-w-md">
     <div class="ml-2 flex flex-row justify-start">
@@ -12,15 +12,13 @@
     <div
       class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-10"
     >
-      <img src="https://placehold.co/100x100" class="w-2/5" />
+      <img src="/static/icons/icon_x192.png" class="w-2/5" />
       <form
         id="login_form"
         class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2"
         hx-post="/login"
         hx-trigger="submit"
-        hx-select=".view"
-        hx-target=".view"
-        hx-swap="outerHTML"
+        hx-push-url="true"
       >
         <input
           id="phone_number"
@@ -41,9 +39,10 @@
           type="submit"
           class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
         >
-          Login
+        تسجيل الدخول
         </button>
       </form>
+          <h1>ليس لديك حساب؟ انشاء حساب جديد</h1>
 
       <div class="flex w-full flex-row justify-between text-white">
         <div class="ml-2 flex flex-row">

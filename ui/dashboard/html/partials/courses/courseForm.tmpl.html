@@ -38,6 +38,12 @@
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
   >
+    Cover Image
+  </label>
+      <input type="file" placeholder="{{if .Course.Cover }}{{.Course.Cover }}{{ end }}" name="cover" />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+  >
     Price
   </label>
   <input

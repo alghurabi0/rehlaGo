@@ -1,119 +1,173 @@
-{{ define "title" }}Course{{ end }}
-{{ define "main" }}
+{{ define "title" }}Course{{ end }} {{ define "main" }}
 <div class="view">
-    <div class="flex flex-row justify-end">
-        <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">تفاصيل الدورة</h1>
-        <img src="https://placehold.co/20x20" />
+  <div class="flex flex-row justify-end">
+    <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">
+      تفاصيل الدورة
+    </h1>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
+
+  <div
+    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
+  >
+    <div
+      class="flex max-h-[302px] w-full flex-col items-center justify-between rounded-lg bg-[#E5E5E5E5] shadow-lg md:w-5/6"
+    >
+      <div
+        class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white"
+      >
+        <h1 class="text-2xl">{{ .Course.Title }}</h1>
+        <div class="mt-2 flex flex-row w-full justify-end">
+          <div class="flex flex-row mr-2 text-lg">
+            <h2 class="mr-2">{{ .Course.Teacher }}</h2>
+            <h2>الاستاذ</h2>
+          </div>
+          <img src="https://placehold.co/15x15" />
+        </div>
+        <p class="text-sm self mt-2">{{ .Course.Description }}</p>
+      </div>
+
+      <div class="flex w-full flex-col items-end px-4 py-2 text-black">
+        <div class="flex flex-row">
+          <div class="flex flex-row">
+            <p class="mr-1">محاضرة</p>
+            <p class="mr-2">{{ .Course.NumberOfLecs }}</p>
+          </div>
+          <img src="https://placehold.co/25x25" />
+        </div>
+        <div class="mt-1 flex flex-row">
+          <div class="flex flex-row">
+            <p class="mr-1">دينار عراقي</p>
+            <p class="mr-2">{{ .Course.Price }}</p>
+          </div>
+          <img src="https://placehold.co/25x25" />
+        </div>
+        <button
+          class="mt-3 flex h-[48px] w-5/6 flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]"
+        >
+          <p class="mr-2 text-lg text-white">اشترك في الدورة</p>
+          <img src="https://placehold.co/25x25" />
+        </button>
+      </div>
     </div>
 
-    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
-        <div
-            class="flex max-h-[302px] w-full flex-col items-center justify-between rounded-lg bg-[#E5E5E5E5] shadow-lg md:w-5/6">
-            <div class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white">
-                <h1 class="text-2xl">{{ .Course.Title }}</h1>
-                <div class="mt-2 flex flex-row w-full justify-end">
-                    <div class="flex flex-row mr-2 text-lg">
-                        <h2 class="mr-2">{{ .Course.Teacher }}</h2>
-                        <h2>الاستاذ</h2>
-                    </div>
-                    <img src="https://placehold.co/15x15" />
-                </div>
-                <p class="text-sm self mt-2">{{ .Course.Description }}</p>
-            </div>
-
-            <div class="flex w-full flex-col items-end px-4 py-2 text-black">
-                <div class="flex flex-row">
-                    <div class="flex flex-row">
-                        <p class="mr-1">محاضرة</p>
-                        <p class="mr-2">{{ .Course.NumberOfLecs }}</p>
-                    </div>
-                    <img src="https://placehold.co/25x25" />
-                </div>
-                <div class="mt-1 flex flex-row">
-                    <div class="flex flex-row">
-                        <p class="mr-1">دينار عراقي</p>
-                        <p class="mr-2">{{ .Course.Price }}</p>
-                    </div>
-                    <img src="https://placehold.co/25x25" />
-                </div>
-                <button
-                    class="mt-3 flex h-[48px] w-5/6 flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]">
-                    <p class="mr-2 text-lg text-white">اشترك في الدورة</p>
-                    <img src="https://placehold.co/25x25" />
-                </button>
-            </div>
-        </div>
-
-        <div class="mt-2 place-self-end text-lg">
-            <button id="examTabLink" class="tablink mr-3" onclick="showTab('#examTab')">Exams</button>
-            <button id="lecTabLink" class="tablink" onclick="showTab('#lecTab')">Lectures</button>
-        </div>
-        <div id="lecTab" class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden">
-            {{ range .Course.Lecs }}
-            {{ template "lecCard" . }}
-            {{ end }}
-        </div>
-        <div id="examTab" class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden">
-            {{ range .Course.Exams}}
-            {{ template "examCard" . }}
-            {{ end }}
-        </div>
-
+    <div class="mt-2 place-self-end text-lg">
+      <button
+        id="examTabLink"
+        class="tablink mr-3"
+        onclick="showTab('#examTab')"
+      >
+        Exams
+      </button>
+      <button id="lecTabLink" class="tablink" onclick="showTab('#lecTab')">
+        Lectures
+      </button>
     </div>
-    <script>
-        function showTab(tabName) {
-            console.log(tabName);
-            let tabToClose = ''
-            if (tabName === '#examTab') {
-                tabToClose = '#lecTab'
-            } else {
-                tabToClose = '#examTab'
-            }
-            console.log(tabToClose);
-            tabToCloseEl = document.querySelector(tabToClose)
-            console.log("tab to close", tabToCloseEl);
-            tabToCloseEl.classList.add("hidden");
+    <div
+      id="lecTab"
+      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden"
+    >
+      {{ range .Course.Lecs }} {{ template "lecCard" . }} {{ end }}
+    </div>
+    <div
+      id="examTab"
+      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden"
+    >
+      {{ range .Course.Exams}} {{ template "examCard" . }} {{ end }}
+    </div>
+  </div>
+  <script>
+    function showTab(tabName) {
+      console.log(tabName);
+      let tabToClose = "";
+      if (tabName === "#examTab") {
+        tabToClose = "#lecTab";
+      } else {
+        tabToClose = "#examTab";
+      }
+      console.log(tabToClose);
+      tabToCloseEl = document.querySelector(tabToClose);
+      console.log("tab to close", tabToCloseEl);
+      tabToCloseEl.classList.add("hidden");
 
-            tablinks = document.querySelectorAll(".tablink");
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("activeTab");
-            }
+      tablinks = document.querySelectorAll(".tablink");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("activeTab");
+      }
 
-            tabToShowEl = document.querySelector(tabName)
-            console.log("tab to show", tabToShowEl);
-            tabToShowEl.classList.remove("hidden");
+      tabToShowEl = document.querySelector(tabName);
+      console.log("tab to show", tabToShowEl);
+      tabToShowEl.classList.remove("hidden");
 
-            if (tabName === "#lecTab") {
-                document.querySelector("#lecTabLink").classList.add("activeTab");
-            } else {
-                document.querySelector("#examTabLink").classList.add("activeTab");
-            }
-        }
-        let lecTab = document.querySelector('#lecTab')
-        if (lecTab) {
-            showTab("#lecTab");
-        }
-    </script>
+      if (tabName === "#lecTab") {
+        document.querySelector("#lecTabLink").classList.add("activeTab");
+      } else {
+        document.querySelector("#examTabLink").classList.add("activeTab");
+      }
+    }
+    let lecTab = document.querySelector("#lecTab");
+    if (lecTab) {
+      showTab("#lecTab");
+    }
+  </script>
 </div>
-{{ end }}
-{{ define "lecCard" }}
+{{ end }} {{ define "lecCard" }}
 <div class="flex flex-row justify-between py-4 px-4">
-    <img src="https://placehold.co/25x25" class="cursor-pointer" hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
-        hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true" />
-    <div class="flex flex-row cursor-pointer" hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}" hx-select=".view"
-        hx-target=".view" hx-swap="outerHTML" hx-push-url="true">
-        <h1>{{ .Order }}</h1>
-        <h1>المحاضرة رقم</h1>
-    </div>
+  <img
+    src="https://placehold.co/25x25"
+    class="cursor-pointer"
+    hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  />
+  <div
+    class="flex flex-row cursor-pointer"
+    hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <h1>{{ .Order }}</h1>
+    <h1>المحاضرة رقم</h1>
+  </div>
 </div>
-{{ end }}
-{{ define "examCard" }}
+{{ end }} {{ define "examCard" }}
 <div class="flex flex-row justify-between py-4 px-4">
-    <img src="https://placehold.co/25x25" class="cursor-pointer" hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"
-        hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true" />
-    <div class="flex flex-row cursor-pointer" hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}" hx-select=".view"
-        hx-target=".view" hx-swap="outerHTML" hx-push-url="true">
-        <h1>{{ .Title }}</h1>
-    </div>
+  <img
+    src="https://placehold.co/25x25"
+    class="cursor-pointer"
+    hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  />
+  <div
+    class="flex flex-row cursor-pointer"
+    hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+  >
+    <h1>{{ .Title }}</h1>
+  </div>
 </div>
 {{ end }}

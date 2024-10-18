@@ -1,6 +1,14 @@
-const CACHE_NAME = 'Rehla-v3';
+const CACHE_NAME = 'Rehla-vtest';
 const urlsToCache = [
   '/',
+<<<<<<< HEAD
+=======
+  '/courses',
+  '/static/css/tailwind.css',
+  '/static/js/auth.js',
+  '/static/js/base.js',
+  '/static/js/exam.js',
+>>>>>>> 95e47b83543db6b6486661854f32b4a0de01ecd6
 ];
 
 // Install event: Cache initial resources

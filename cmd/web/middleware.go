@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/alghurabi0/rehla/internal/models"
 	"github.com/felixge/httpsnoop"
+	"google.golang.org/api/iterator"
 )
 
 func (app *application) secureHeaders(next http.Handler) http.Handler {
@@ -68,6 +70,47 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 		val, err := app.redis.Get(ctx, session_id).Result()
 		if err != nil {
 			app.errorLog.Printf("couldn't get redis key: %s, error: %v", session_id, err)
+			iter := app.user.DB.Collection("users").Where("session_id", "==", session_id).Documents(ctx)
+			count := 0
+			user := &models.User{}
+			for {
+				doc, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					app.serverError(w, err)
+					return
+				}
+				count++
+				err = doc.DataTo(&user)
+				if err != nil {
+					app.serverError(w, err)
+					return
+				}
+				user.ID = doc.Ref.ID
+			}
+			if count == 0 {
+				http.Error(w, "no_match", http.StatusBadRequest)
+				return
+			} else if count > 1 {
+				app.serverError(w, fmt.Errorf("more than one user with this session_id: %s", session_id))
+				return
+			}
+			re, err := json.Marshal(user)
+			if err != nil {
+				app.errorLog.Printf("failed to marshal user to json: %v\n", err)
+				return
+			}
+			err = app.redis.Set(ctx, session_id, re, time.Hour*24).Err()
+			if err != nil {
+				app.serverError(w, err)
+				return
+			}
+
+			ctx = context.WithValue(r.Context(), isLoggedInContextKey, true)
+			ctx = context.WithValue(ctx, userModelContextKey, &user)
+			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
 			return
 		}

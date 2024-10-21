@@ -14,9 +14,9 @@ c implement auth
 c implement a proper service worker
 - security, rate limiting..
 - log to a file
-<<<<<<< HEAD
 x implement session management where a user can't sign in from two devices at the same time.
-=======
+- cache videos/change current method
+- prevent screen recording
 
 
 currently
@@ -24,6 +24,5 @@ x use proper icons
 x(no need because svgs) cache icons
 - use design font and cache it...
 c change lang to arabic
-x implement user profile photo and name
+x? implement user profile photo and name
 -? lift bottom nav bar in mobile (dead zone)
->>>>>>> 95e47b83543db6b6486661854f32b4a0de01ecd6

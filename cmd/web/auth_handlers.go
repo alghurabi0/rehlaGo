@@ -162,7 +162,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.redis.Set(ctx, session_id, re, time.Hour*24*365).Err()
+	err = app.redis.Set(ctx, session_id, re, time.Hour*24).Err()
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -285,7 +285,7 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	err = app.redis.Set(ctx, user.SessionId, userJson, time.Hour*24*365).Err()
+	err = app.redis.Set(ctx, user.SessionId, userJson, time.Hour*24).Err()
 	if err != nil {
 		app.serverError(w, err)
 		return

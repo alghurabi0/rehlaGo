@@ -19,6 +19,7 @@ import (
 	"github.com/alghurabi0/rehla/internal/dashboard_models"
 	"github.com/alghurabi0/rehla/internal/fileStorage"
 	"github.com/alghurabi0/rehla/internal/models"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
 )
 
@@ -39,6 +40,7 @@ type application struct {
 	contact       *models.ContactModel
 	storage       *fileStorage.StorageModel
 	wistia        *fileStorage.WistiaModel
+	redis         *redis.Client
 }
 
 var version string
@@ -84,6 +86,17 @@ func main() {
 		errorLog.Fatal(errors.New("empty wistia token"))
 	}
 
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	_, err = rdb.Ping(ctx).Result()
+	if err != nil {
+		errorLog.Fatalf("failed to ping redis: %v\n", err)
+	}
+	infoLog.Println("redis connected")
+
 	app := &application{
 		infoLog:       infoLog,
 		errorLog:      errorLog,
@@ -101,6 +114,7 @@ func main() {
 		session:       session,
 		storage:       &fileStorage.StorageModel{ST: strg},
 		wistia:        &fileStorage.WistiaModel{Token: wistiaToken},
+		redis:         rdb,
 	}
 
 	srv := &http.Server{

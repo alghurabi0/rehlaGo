@@ -27,7 +27,7 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, courseId, examId)
+	exam, err := app.getExam(ctx, courseId, examId)
 	if err != nil {
 		app.serverError(w, err)
 		return

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"expvar"
 	"flag"
 	"fmt"
@@ -127,6 +128,38 @@ func main() {
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+
+	//
+	courses, err := app.course.GetAll(context.Background())
+	if err != nil {
+		app.errorLog.Printf("failed to get courses--main\n")
+		return
+	}
+	for _, course := range *courses {
+		foo, err := json.Marshal(&course)
+		if err != nil {
+			app.errorLog.Printf("failed to marshal firestore doc to redis --main, err: %v \n", err)
+			return
+		}
+
+		err = app.redis.Set(context.Background(), fmt.Sprintf("course:%s", course.ID), foo, 0).Err()
+		if err != nil {
+			app.errorLog.Printf("failed to add course %v to redis, err: %v\n", course, err)
+			return
+		}
+	}
+	foo, err := json.Marshal(*courses)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal firestore docs to redis --main, err: %v \n", err)
+		return
+	}
+
+	err = app.redis.Set(context.Background(), "courses", foo, 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to add courses--main to redis, err: %v\n", err)
+		return
+	}
+
 	infoLog.Printf("starting the srv and listening on %s", *addr)
 	err = srv.ListenAndServe()
 	errorLog.Fatal(err)

@@ -35,7 +35,7 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	exam, err := app.exam.Get(ctx, courseId, examId)
+	exam, err := app.getExam(ctx, courseId, examId)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -193,7 +193,7 @@ func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := context.Background()
-	exam, err := app.exam.Get(ctx, courseId, examId)
+	exam, err := app.getExam(ctx, courseId, examId)
 	if err != nil {
 		app.serverError(w, errors.New("can't get exam url"))
 		return

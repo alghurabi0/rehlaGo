@@ -18,7 +18,7 @@ func (app *application) lecPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := context.Background()
-	lec, err := app.lec.Get(ctx, courseId, lecId)
+	lec, err := app.getLec(ctx, courseId, lecId)
 	if err != nil {
 		app.serverError(w, err)
 		return

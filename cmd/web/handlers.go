@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 func (app *application) ping(w http.ResponseWriter, r *http.Request) {
@@ -31,11 +34,27 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 func (app *application) courses(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	ctx := context.Background()
-	courses, err := app.course.GetAll(ctx)
-	if err != nil {
-		app.serverError(w, err)
-		return
+	var courses *[]models.Course
+
+	foo, err := app.redis.Get(ctx, "courses").Result()
+
+	if err == nil {
+		err = json.Unmarshal([]byte(foo), courses)
+		if err != nil {
+			courses, err = app.course.GetAll(ctx)
+			if err != nil {
+				app.serverError(w, err)
+				return
+			}
+		}
+	} else {
+		courses, err = app.course.GetAll(ctx)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
 	}
+
 	if data.IsLoggedIn {
 		user, err := app.getUser(r)
 		if err != nil {
@@ -61,6 +80,7 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 	}
+
 	if data.IsLoggedIn {
 		user, err := app.getUser(r)
 		if err != nil {

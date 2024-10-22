@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -119,6 +120,32 @@ func (app *application) createExam(w http.ResponseWriter, r *http.Request) {
 	if id == "" {
 		app.serverError(w, errors.New("got empty exam id from firestore"))
 		return
+	}
+	exam.ID = id
+	exam.CourseId = courseId
+	jsonExam, err := json.Marshal(exam)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:exam:%s", courseId, id), jsonExam, 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to set lec -redis, err: %v\n", err)
+	}
+
+	exams, err := app.exam.GetAll(ctx, courseId)
+	if err != nil {
+		http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams/%s", courseId, id), http.StatusSeeOther)
+		return
+	}
+	jsonExams, err := json.Marshal(exams)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
+		app.redis.Del(ctx, fmt.Sprintf("course:%s:exams", courseId))
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:exams", courseId), jsonExams, 0).Err()
+	if err != nil {
+		app.redis.Del(ctx, fmt.Sprintf("course:%s:exams", courseId))
+		app.errorLog.Printf("failed to set lecs -redis, err: %v\n", err)
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/exams/%s", courseId, id), http.StatusSeeOther)

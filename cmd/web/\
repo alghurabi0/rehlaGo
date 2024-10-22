@@ -109,7 +109,6 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 			return nil, err
 		}
 	}
-	course.ID = courseId
 
 	foo, err = app.redis.Get(ctx, fmt.Sprintf("course:%s:lecs", courseId)).Result()
 	if err == nil {
@@ -147,96 +146,6 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 	course.Exams = *exams
 
 	return course, nil
-}
-
-func (app *application) getCourseInfo(ctx context.Context, courseId string) (*models.Course, error) {
-	var course *models.Course
-
-	foo, err := app.redis.Get(ctx, fmt.Sprintf("course:%s", courseId)).Result()
-	if err == nil {
-		err = json.Unmarshal([]byte(foo), course)
-		if err != nil {
-			course, err = app.course.Get(ctx, courseId)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		course, err = app.course.Get(ctx, courseId)
-		if err != nil {
-			return nil, err
-		}
-	}
-	course.ID = courseId
-
-	return course, nil
-}
-
-func (app *application) getLec(ctx context.Context, courseId, lecId string) (*models.Lec, error) {
-	var lec *models.Lec
-	foo, err := app.redis.Get(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, lecId)).Result()
-	if err == nil {
-		err = json.Unmarshal([]byte(foo), lec)
-		if err != nil {
-			lec, err = app.lec.Get(ctx, courseId, lecId)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		lec, err = app.lec.Get(ctx, courseId, lecId)
-		if err != nil {
-			return nil, err
-		}
-	}
-	lec.ID = lecId
-	lec.CourseId = courseId
-
-	return lec, nil
-}
-
-func (app *application) getExam(ctx context.Context, courseId, examId string) (*models.Exam, error) {
-	var exam *models.Exam
-	foo, err := app.redis.Get(ctx, fmt.Sprintf("course:%s:exam:%s", courseId, examId)).Result()
-	if err == nil {
-		err = json.Unmarshal([]byte(foo), exam)
-		if err != nil {
-			exam, err = app.exam.Get(ctx, courseId, examId)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		exam, err = app.exam.Get(ctx, courseId, examId)
-		if err != nil {
-			return nil, err
-		}
-	}
-	exam.ID = examId
-	exam.CourseId = courseId
-
-	return exam, nil
-}
-
-func (app *application) getMaterials(ctx context.Context, courseId string) (*[]models.Material, error) {
-	var materials *[]models.Material
-	foo, err := app.redis.Get(ctx, fmt.Sprintf("course:%s:mats", courseId)).Result()
-	if err == nil {
-		err = json.Unmarshal([]byte(foo), materials)
-		if err != nil {
-			materials, err = app.material.GetAll(ctx, courseId)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		materials, err = app.material.GetAll(ctx, courseId)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return materials, nil
 }
 
 func (app *application) getUserId(r *http.Request) string {

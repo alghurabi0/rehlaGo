@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"strings"
+
+	"github.com/alghurabi0/rehla/internal/models"
 )
 
 func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
@@ -39,16 +41,18 @@ func (app *application) courseMaterials(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	ctx := context.Background()
-	course, err := app.course.Get(ctx, courseId)
+	var course *models.Course
+
+	course, err := app.getCourseInfo(ctx, courseId)
 	if err != nil {
-		app.clientError(w, http.StatusNotFound)
+		app.serverError(w, err)
 		return
 	}
 	if !data.IsSubscribed && !course.Free {
 		app.unauthorized(w, "subRequired")
 		return
 	}
-	mats, err := app.material.GetAll(ctx, courseId)
+	mats, err := app.getMaterials(ctx, courseId)
 	if err != nil {
 		app.serverError(w, err)
 		return

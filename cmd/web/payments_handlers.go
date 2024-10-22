@@ -44,7 +44,7 @@ func (app *application) paymentHistory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := context.Background()
-	course, err := app.course.Get(ctx, courseId)
+	course, err := app.getCourseInfo(ctx, courseId)
 	if err != nil {
 		app.serverError(w, err)
 		return

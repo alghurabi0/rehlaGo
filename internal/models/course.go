@@ -111,17 +111,17 @@ func (c *CourseModel) Update(ctx context.Context, courseId string, updates []fir
 	return nil
 }
 
-func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader, cover multipart.File, coverHand multipart.FileHeader) (string, error) {
+func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader, cover multipart.File, coverHand multipart.FileHeader) (*Course, error) {
 	bkt, err := c.ST.DefaultBucket()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	// Upload the file to Firebase Storage
 	wc := bkt.Object(handler.Filename).NewWriter(ctx)
 	defer wc.Close()
 	// Copy the uploaded file's content to Firebase storage
 	if _, err := io.Copy(wc, photo); err != nil {
-		return "", err
+		return nil, err
 	}
 	expiration := time.Now().Add(time.Hour * 8640)
 	opts := &gcloud.SignedURLOptions{
@@ -130,30 +130,30 @@ func (c *CourseModel) Create(ctx context.Context, title, description, teacher st
 	}
 	url, err := bkt.SignedURL(handler.Filename, opts)
 	if err != nil {
-		return "", fmt.Errorf("couldn't get signed url: %v", err)
+		return nil, fmt.Errorf("couldn't get signed url: %v", err)
 	}
 	if url == "" {
-		return "", errors.New("empty photo signed file url")
+		return nil, errors.New("empty photo signed file url")
 	}
 	// Upload the file to Firebase Storage
 	wcc := bkt.Object(coverHand.Filename).NewWriter(ctx)
 	defer wcc.Close()
 	// Copy the uploaded file's content to Firebase storage
 	if _, err := io.Copy(wc, cover); err != nil {
-		return "", err
+		return nil, err
 	}
 	coverUrl, err := bkt.SignedURL(coverHand.Filename, opts)
 	if err != nil {
-		return "", fmt.Errorf("couldn't get signed url: %v", err)
+		return nil, fmt.Errorf("couldn't get signed url: %v", err)
 	}
 	if coverUrl == "" {
-		return "", errors.New("empty photo signed file url")
+		return nil, errors.New("empty photo signed file url")
 	}
 	// create wistia folder
 	jsonData := []byte(fmt.Sprintf(`{"name": "%s", "public": "true"}`, title))
 	folderId, err := wistiaReq("POST", "https://api.wistia.com/v1/projects", jsonData)
 	if err != nil {
-		return "", fmt.Errorf("couldn't create a wistia folder: %s", err)
+		return nil, fmt.Errorf("couldn't create a wistia folder: %s", err)
 	}
 
 	course := &Course{
@@ -170,10 +170,11 @@ func (c *CourseModel) Create(ctx context.Context, title, description, teacher st
 	}
 	doc, _, err := c.DB.Collection("courses").Add(ctx, course)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
+	course.ID = doc.ID
 
-	return doc.ID, nil
+	return course, nil
 }
 
 func (c *CourseModel) Delete(ctx context.Context, id string) error {

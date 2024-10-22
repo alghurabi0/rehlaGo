@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -163,16 +164,53 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 	defer cover.Close()
 
 	ctx := context.Background()
-	id, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler, cover, *coverHand)
+	course, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler, cover, *coverHand)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	if id == "" {
+	if course.ID == "" {
 		app.serverError(w, errors.New("empty course id"))
 		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/courses/%s", id), http.StatusSeeOther)
+	// add single redis course
+	jsonCourse, err := json.Marshal(course)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal course %v to json, err: %v\n", course, err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s", course.ID), jsonCourse, 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to save this course %v to redis, err: %v\n", course, err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lecs", course.ID), "", 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to save empty lecs to redis, err: %v\n", err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:exams", course.ID), "", 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to save empty exams to redis, err: %v\n", err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:mats", course.ID), "", 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to save empty mats to redis, err: %v\n", err)
+	}
+	// update all courses redis
+	courses, err := app.course.GetAll(ctx)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	*courses = append(*courses, *course)
+	jsonCourses, err := json.Marshal(*courses)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal courses %v to json, err: %v\n", courses, err)
+	}
+	err = app.redis.Set(ctx, "courses", jsonCourses, 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to add all jsonCourses %s to redis, err: %v\n", jsonCourses, err)
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/courses/%s", course.ID), http.StatusSeeOther)
 }
 
 func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
@@ -229,6 +267,16 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 		return
+	}
+	// add single redis course
+	jsonCourse, err := json.Marshal(course)
+	if err != nil {
+		app.errorLog.Printf("failed to marshal course %v to json, err: %v\n", course, err)
+	}
+	err = app.redis.Set(ctx, fmt.Sprintf("course:%s", courseId), jsonCourse, 0).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to save this course %v to redis, err: %v\n", course, err)
+		app.redis.Del(ctx, fmt.Sprintf("course:%s", courseId))
 	}
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s", courseId), http.StatusSeeOther)
 }
@@ -308,6 +356,10 @@ func (app *application) deleteCourse(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, fmt.Errorf("error while deleting course from firestore: %v", err))
 		return
+	}
+	err = app.redis.Del(ctx, fmt.Sprintf("course:%s", id)).Err()
+	if err != nil {
+		app.errorLog.Printf("failed to deleted course from redis with id %s, err: %v\n", id, err)
 	}
 
 	http.Redirect(w, r, "/courses", http.StatusSeeOther)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -117,32 +116,6 @@ func (app *application) createLec(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, errors.New("got empty exam id from firestore"))
 		return
 	}
-	lec.ID = id
-	lec.CourseId = courseId
-	jsonLec, err := json.Marshal(lec)
-	if err != nil {
-		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
-	}
-	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, id), jsonLec, 0).Err()
-	if err != nil {
-		app.errorLog.Printf("failed to set lec -redis, err: %v\n", err)
-	}
-
-	lecs, err := app.lec.GetAll(ctx, courseId)
-	if err != nil {
-		http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, id), http.StatusSeeOther)
-		return
-	}
-	jsonLecs, err := json.Marshal(lecs)
-	if err != nil {
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:exams", courseId))
-		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
-	}
-	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lecs", courseId), jsonLecs, 0).Err()
-	if err != nil {
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:exams", courseId))
-		app.errorLog.Printf("failed to set lecs -redis, err: %v\n", err)
-	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, id), http.StatusSeeOther)
 }
@@ -189,40 +162,6 @@ func (app *application) editLec(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// add single lec to redis
-	foo, err := app.lec.Get(ctx, courseId, lecId)
-	if err != nil {
-		http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId), http.StatusSeeOther)
-		return
-	}
-	bar, err := json.Marshal(foo)
-	if err != nil {
-		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, lecId))
-	}
-	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, lecId), bar, 0).Err()
-	if err != nil {
-		app.errorLog.Printf("failed to set lec -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, lecId))
-	}
-
-	// add all lecs to redis
-	lecs, err := app.lec.GetAll(ctx, courseId)
-	if err != nil {
-		http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId), http.StatusSeeOther)
-		return
-	}
-	jsonLecs, err := json.Marshal(lecs)
-	if err != nil {
-		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lecs", courseId))
-	}
-	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lecs", courseId), jsonLecs, 0).Err()
-	if err != nil {
-		app.errorLog.Printf("failed to set lecs -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lecs", courseId))
-	}
-
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs/%s", courseId, lecId), http.StatusSeeOther)
 }
 
@@ -255,22 +194,6 @@ func (app *application) deleteLec(w http.ResponseWriter, r *http.Request) {
 	err = app.redis.Del(ctx, fmt.Sprintf("course:%s:lec:%s", courseId, lecId)).Err()
 	if err != nil {
 		app.errorLog.Printf("failed to delete a lec -redis, err: %v\n", err)
-	}
-	// add all lecs to redis
-	lecs, err := app.lec.GetAll(ctx, courseId)
-	if err != nil {
-		http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs", courseId), http.StatusSeeOther)
-		return
-	}
-	jsonLecs, err := json.Marshal(lecs)
-	if err != nil {
-		app.errorLog.Printf("failed to marshal json -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lecs", courseId))
-	}
-	err = app.redis.Set(ctx, fmt.Sprintf("course:%s:lecs", courseId), jsonLecs, 0).Err()
-	if err != nil {
-		app.errorLog.Printf("failed to set lecs -redis, err: %v\n", err)
-		app.redis.Del(ctx, fmt.Sprintf("course:%s:lecs", courseId))
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/courses/%s/lecs", courseId), http.StatusSeeOther)

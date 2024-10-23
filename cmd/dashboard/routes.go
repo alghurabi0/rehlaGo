@@ -66,6 +66,12 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /users/{userId}/{subId}", isAdmin.ThenFunc(app.createPayment))
 	mux.Handle("DELETE /users/{userId}/{subId}/{paymentId}", isAdmin.ThenFunc(app.deletePayment))
 
+	mux.Handle("GET /cache", isAdmin.ThenFunc(app.courses))
+	mux.Handle("GET /cache/{courseId}", isAdmin.ThenFunc(app.updateCourseCache))
+	mux.Handle("GET /cache/{courseId}/lecs", isAdmin.ThenFunc(app.updateLecsCache))
+	mux.Handle("GET /cache/{courseId}/exams", isAdmin.ThenFunc(app.updateExamsCache))
+	mux.Handle("GET /cache/{courseId}/mats", isAdmin.ThenFunc(app.updateMatsCache))
+
 	mux.Handle("GET /correct/{courseId}", isCorrector.ThenFunc(app.correctExams))
 	mux.Handle("GET /correct/{courseId}/{examId}", isCorrector.ThenFunc(app.correctAnswers))
 	mux.Handle("GET /correct/{courseId}/{examId}/{userId}", isCorrector.ThenFunc(app.correctAnswer))

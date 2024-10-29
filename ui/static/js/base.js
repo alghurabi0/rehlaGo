@@ -21,7 +21,7 @@ onMessage(messaging, (payload) => {
 });
 
 function appendMessage(payload) {
-  const messagesElement = document.querySelector('#messages')!;
+  const messagesElement = document.querySelector('#messages');
   const dataHeaderElement = document.createElement('h5');
   const dataElement = document.createElement('pre');
   dataElement.style.overflowX = 'hidden;';

@@ -121,7 +121,7 @@ function requestPermission() {
   });
 }
 
-document.getElementById('request-permission-button')!.addEventListener('click', requestPermission);
+document.getElementById('request-permission-button').addEventListener('click', requestPermission);
 
 // ----------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {

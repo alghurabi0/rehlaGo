@@ -88,13 +88,13 @@ function setTokenSentToServer(sent) {
 
 function updateUIForPushEnabled(currentToken) {
   console.log("shoHideDiv token true");
-  showHideDiv(permissionDivId, false);
+  showHideDiv('permission_div', false);
   showToken(currentToken);
 }
 
 function updateUIForPushPermissionRequired() {
   console.log("shoHideDiv token false");
-  showHideDiv(permissionDivId, true);
+  showHideDiv('permission_div', true);
 }
 
 function showHideDiv(divId, show) {

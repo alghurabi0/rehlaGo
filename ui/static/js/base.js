@@ -98,7 +98,7 @@ function updateUIForPushPermissionRequired() {
 }
 
 function showHideDiv(divId, show) {
-  const div = document.querySelector('#' + divId)! as HTMLDivElement;
+  const div = document.querySelector('#' + divId) as HTMLDivElement;
   if (show) {
     div.style.display = 'block';
   } else {

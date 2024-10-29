@@ -133,6 +133,11 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
+	folderId := r.FormValue("folder_id")
+	if folderId == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 	priceStr := r.FormValue("price")
 	if priceStr == "" {
 		app.clientError(w, http.StatusBadRequest)
@@ -163,7 +168,7 @@ func (app *application) createCourse(w http.ResponseWriter, r *http.Request) {
 	defer cover.Close()
 
 	ctx := context.Background()
-	course, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler, cover, *coverHand)
+	course, err := app.course.Create(ctx, title, description, teacher, price, photo, *handler, cover, *coverHand, folderId)
 	if err != nil {
 		app.serverError(w, err)
 		return

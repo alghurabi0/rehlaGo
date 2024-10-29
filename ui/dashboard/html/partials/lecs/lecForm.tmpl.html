@@ -7,7 +7,6 @@
   hx-target=".view"
   hx-swap="outerHTML"
   hx-push-url="true"
-  hx-include="#video_url"
 >
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
@@ -35,6 +34,18 @@
   />
   <label
     class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+    for="video_url"
+  >
+    Video Url
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Lec.VideoUrl}}{{.Lec.VideoUrl}}{{ end }}"
+    name="video_url"
+    id="video_url"
+  />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
     for="order"
   >
     Order
@@ -45,7 +56,6 @@
     name="order"
     id="order"
   />
-  <input type="hidden" name="video_url" id="video_url" />
   <button type="submit">Save</button>
 </form>
 {{ end }}

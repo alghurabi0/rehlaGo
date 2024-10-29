@@ -61,6 +61,16 @@
     placeholder="{{ if .Course.Description }}{{.Course.Description}}{{ end }}"
     name="description"
   />
+  <label
+    class="select-none cursor-pointer mt-px ml-3 mb-0 text-sm font-normal text-blue-gray-500"
+  >
+   Folder Id 
+  </label>
+  <input
+    type="text"
+    placeholder="{{ if .Course.FolderId}}{{.Course.FolderId}}{{ end }}"
+    name="folder_id"
+  />
   <button type="submit">Save</button>
 </form>
 {{ end }}

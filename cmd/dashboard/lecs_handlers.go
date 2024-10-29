@@ -105,6 +105,7 @@ func (app *application) createLec(w http.ResponseWriter, r *http.Request) {
 		Order:       order,
 		Description: description,
 		VideoUrl:    url,
+		FolderId:    course.FolderId,
 		Free:        course.Free,
 	}
 	id, err := app.lec.Create(ctx, courseId, lec)
@@ -139,6 +140,14 @@ func (app *application) editLec(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	if title != "" {
 		lec.Title = title
+	}
+	description := r.FormValue("description")
+	if description != "" {
+		lec.Description = description
+	}
+	url := r.FormValue("video_url")
+	if url != "" {
+		lec.VideoUrl = url
 	}
 	orderStr := r.FormValue("order")
 	if orderStr != "" {

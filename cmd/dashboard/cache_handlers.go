@@ -7,6 +7,19 @@ import (
 	"net/http"
 )
 
+func (app *application) cache(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	courses, err := app.course.GetAll(ctx)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data := app.newTemplateData(r)
+	data.Courses = courses
+	app.render(w, http.StatusOK, "cache.tmpl.html", data)
+}
+
 func (app *application) updateCourseCache(w http.ResponseWriter, r *http.Request) {
 	courseId := r.PathValue("courseId")
 	if courseId == "" {

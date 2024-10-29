@@ -111,7 +111,7 @@ func (c *CourseModel) Update(ctx context.Context, courseId string, updates []fir
 	return nil
 }
 
-func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader, cover multipart.File, coverHand multipart.FileHeader) (*Course, error) {
+func (c *CourseModel) Create(ctx context.Context, title, description, teacher string, price int, photo multipart.File, handler multipart.FileHeader, cover multipart.File, coverHand multipart.FileHeader, folderId string) (*Course, error) {
 	bkt, err := c.ST.DefaultBucket()
 	if err != nil {
 		return nil, err
@@ -149,12 +149,7 @@ func (c *CourseModel) Create(ctx context.Context, title, description, teacher st
 	if coverUrl == "" {
 		return nil, errors.New("empty photo signed file url")
 	}
-	// create wistia folder
-	jsonData := []byte(fmt.Sprintf(`{"name": "%s", "public": "true"}`, title))
-	folderId, err := wistiaReq("POST", "https://api.wistia.com/v1/projects", jsonData)
-	if err != nil {
-		return nil, fmt.Errorf("couldn't create a wistia folder: %s", err)
-	}
+	// TODO - create bunny folder
 
 	course := &Course{
 		Title:       title,

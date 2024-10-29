@@ -55,9 +55,9 @@ function resetUI() {
 }
 
 function clearMessages() {
-  const messagesElement = document.querySelector('#messages')!;
+  const messagesElement = document.querySelector('#messages');
   while (messagesElement.hasChildNodes()) {
-    messagesElement.removeChild(messagesElement.lastChild!);
+    messagesElement.removeChild(messagesElement.lastChild);
   }
 }
 

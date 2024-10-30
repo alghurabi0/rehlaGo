@@ -16,53 +16,48 @@ export const messaging = getMessaging(app);
 const vapidKey = 'BE03NBCHDxocr72eaQka3A2Ttpsa7b4iF-VlfyAJ9_MzHRr7GVHxQKcj3Jh6IO3ku3-VNz4RjvCiwM6qn8W1YdA';
 onMessage(messaging, (payload) => {
   console.log('Message received. ', payload);
-  // Update the UI to include the received message.
-  appendMessage(payload);
 });
 
-function appendMessage(payload) {
-  const messagesElement = document.querySelector('#messages');
-  const dataHeaderElement = document.createElement('h5');
-  const dataElement = document.createElement('pre');
-  dataElement.style.overflowX = 'hidden;';
-  dataHeaderElement.textContent = 'Received message:';
-  dataElement.textContent = JSON.stringify(payload, null, 2);
-  messagesElement.appendChild(dataHeaderElement);
-  messagesElement.appendChild(dataElement);
+function initializeNotifications() {
+  if (Notification.permission === 'granted' && isTokenSentToServer()) {
+    console.log('Notification permission already granted.');
+    retrieveToken();
+  } else if (Notification.permission === 'default') {
+      requestPermission();
+  } else {
+    console.log('Notification permission denied or unavailable.');
+  }
 }
 
-function resetUI() {
-  clearMessages();
-  showToken('loading...');
-  // Get registration token. Initially this makes a network call, once retrieved
-  // subsequent calls to getToken will return from cache.
+function retrieveToken() {
   getToken(messaging, vapidKey).then((currentToken) => {
     if (currentToken) {
       sendTokenToServer(currentToken);
-      updateUIForPushEnabled(currentToken);
     } else {
       // Show permission request.
       console.log('No registration token available. Request permission to generate one.');
       // Show permission UI.
-      updateUIForPushPermissionRequired();
       setTokenSentToServer(false);
     }
   }).catch((err) => {
     console.log('An error occurred while retrieving token. ', err);
-    showToken('Error retrieving registration token.');
     setTokenSentToServer(false);
   });
 }
 
-function clearMessages() {
-  const messagesElement = document.querySelector('#messages');
-  while (messagesElement.hasChildNodes()) {
-    messagesElement.removeChild(messagesElement.lastChild);
-  }
-}
-
-function showToken(currentToken) {
-    console.log("currentToken: " + currentToken);
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      // TODO(developer): Retrieve a registration token for use with FCM.
+      // In many cases once an app has been granted notification permission,
+      // it should update its UI reflecting this.
+      retrieveToken();
+    } else {
+      console.log('Unable to get permission to notify.');
+    }
+  });
 }
 
 // Send the registration token your application server, so that it can:
@@ -86,42 +81,7 @@ function setTokenSentToServer(sent) {
   window.localStorage.setItem('sentToServer', sent ? '1' : '0');
 }
 
-function updateUIForPushEnabled(currentToken) {
-  console.log("shoHideDiv token true");
-  showHideDiv('permission_div', false);
-  showToken(currentToken);
-}
-
-function updateUIForPushPermissionRequired() {
-  console.log("shoHideDiv token false");
-  showHideDiv('permission_div', true);
-}
-
-function showHideDiv(divId, show) {
-  const div = document.querySelector('#' + divId);
-  if (show) {
-    div.style.display = 'block';
-  } else {
-    div.style.display = 'none';
-  }
-}
-
-function requestPermission() {
-  console.log('Requesting permission...');
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');
-      // TODO(developer): Retrieve a registration token for use with FCM.
-      // In many cases once an app has been granted notification permission,
-      // it should update its UI reflecting this.
-      resetUI();
-    } else {
-      console.log('Unable to get permission to notify.');
-    }
-  });
-}
-
-document.getElementById('request-permission-button').addEventListener('click', requestPermission);
+initializeNotifications();
 
 // ----------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {

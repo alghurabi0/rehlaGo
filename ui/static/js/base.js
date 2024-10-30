@@ -12,7 +12,7 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+export const messaging = getMessaging(app);
 const vapidKey = 'BE03NBCHDxocr72eaQka3A2Ttpsa7b4iF-VlfyAJ9_MzHRr7GVHxQKcj3Jh6IO3ku3-VNz4RjvCiwM6qn8W1YdA';
 onMessage(messaging, (payload) => {
   console.log('Message received. ', payload);

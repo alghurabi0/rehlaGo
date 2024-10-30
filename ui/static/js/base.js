@@ -71,7 +71,7 @@ function showToken(currentToken) {
 function sendTokenToServer(currentToken) {
   if (!isTokenSentToServer()) {
     console.log('Sending token to server...', currentToken);
-    // TODO(developer): Send the current token to your server.
+    fetch(`/${currentToken}`);
     setTokenSentToServer(true);
   } else {
     console.log('Token already sent to server so won\'t send it again unless it changes');

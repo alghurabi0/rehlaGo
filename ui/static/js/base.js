@@ -26,6 +26,7 @@ function initializeNotifications() {
       requestPermission();
   } else {
     console.log('Notification permission denied or unavailable.');
+    requestPermission();
   }
 }
 

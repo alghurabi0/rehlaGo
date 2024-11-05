@@ -74,13 +74,13 @@ func (app *application) coursePage(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	data := app.newTemplateData(r)
 	ctx := context.Background()
 	course, err := app.getCourse(ctx, courseId)
 	if err != nil {
 		app.serverError(w, err)
 	}
 
+	data := app.newTemplateData(r)
 	if data.IsLoggedIn {
 		user, err := app.getUser(r)
 		if err != nil {

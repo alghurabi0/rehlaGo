@@ -1,6 +1,7 @@
 x - done
 c - done, but check it
 
+--Done
 x offer free materials
 c fix when deleting sub I lose all answers
 c fix answer uploads weird files?
@@ -8,21 +9,27 @@ c (service-worker?) fix getting lecs based on if sub is exists and not on active
 c (service-worker?) fix getting lecs even if not subscribed?, exists in sub array
 c finish up dashboard/correctors dashboard
 c implement auth
-- implement tests
-- clean up node modules? execcive javascript?
-- ui, frontend !
 c implement a proper service worker
+x implement session management where a user can't sign in from two devices at the same time.
+x cache videos/change current method
+
+--Me
+- session manager with redis
+- clean up node modules? execcive javascript?
+- documentation
 - security, rate limiting..
 - log to a file
-x implement session management where a user can't sign in from two devices at the same time.
-- cache videos/change current method
+c change lang to arabic
+x? implement user profile photo and name
+- implement tests
 - prevent screen recording
 
 
-currently
+--Hire
+- ui, frontend !
+- use design font and cache it...
 x use proper icons
 x(no need because svgs) cache icons
-- use design font and cache it...
-c change lang to arabic
-x? implement user profile photo and name
 -? lift bottom nav bar in mobile (dead zone)
+
+

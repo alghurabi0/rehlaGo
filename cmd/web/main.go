@@ -16,7 +16,7 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/storage"
-	scsfs "github.com/alexedwards/scs/firestore"
+	"github.com/alexedwards/scs/redisstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/alghurabi0/rehla/internal/fileStorage"
 	"github.com/alghurabi0/rehla/internal/models"
@@ -73,11 +73,6 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	session := scs.New()
-	session.Store = scsfs.New(db)
-	session.Lifetime = 7200 * time.Hour
-	session.Cookie.Secure = true
-
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
@@ -88,6 +83,11 @@ func main() {
 		errorLog.Fatalf("failed to ping redis: %v\n", err)
 	}
 	infoLog.Println("redis connected")
+
+	session := scs.New()
+	session.Store = redisstore.New(rdb)
+	session.Lifetime = 7200 * time.Hour
+	session.Cookie.Secure = true
 
 	// metrics
 	expvar.Publish("goroutines", expvar.Func(func() interface{} {

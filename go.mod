@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/storage v1.36.0
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/alexedwards/scs/firestore v0.0.0-20240316134038-7e11d57e8885
+	github.com/alexedwards/scs/redisstore v0.0.0-20240316134038-7e11d57e8885
 	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/felixge/httpsnoop v1.0.4
 	github.com/justinas/alice v1.2.0
@@ -27,6 +28,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/gomodule/redigo v1.8.0 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect

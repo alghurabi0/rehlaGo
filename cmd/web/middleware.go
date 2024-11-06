@@ -91,7 +91,8 @@ func (app *application) isLoggedIn(next http.Handler) http.Handler {
 				user.ID = doc.Ref.ID
 			}
 			if count == 0 {
-				http.Error(w, "no_match", http.StatusBadRequest)
+				app.session.PopString(r.Context(), "session_id")
+				w.Header().Set("HX-Redirect", "/")
 				return
 			} else if count > 1 {
 				app.serverError(w, fmt.Errorf("more than one user with this session_id: %s", session_id))

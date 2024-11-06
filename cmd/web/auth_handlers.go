@@ -301,7 +301,6 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("HX-Redirect", "/")
 		return
 	}
-	ctx := context.Background()
-	app.session.PopString(ctx, "session_id")
+	app.session.PopString(r.Context(), "session_id")
 	w.Header().Set("HX-Redirect", "/")
 }

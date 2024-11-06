@@ -39,7 +39,6 @@ function sendOTP(event) {
   for (let i = 0; i < inputs.length; i++) {
     formData[inputs[i].name] = inputs[i].value;
   }
-  console.log(formData);
   fetch("/signup", {
     method: "POST",
     headers: {
@@ -53,7 +52,7 @@ function sendOTP(event) {
       } else if (res.status == 409) {
         // TODO
         alert("User already exists");
-        return
+        return Promise.reject("User exists");
       } else {
         alert(res);
         console.log("Error", res);
@@ -61,24 +60,18 @@ function sendOTP(event) {
     })
     .then((userid) => {
       userId = userid;
-      console.log(userId);
-      console.log(userid);
       const phone = "+964" + formData["phone_number"].slice(1);
-      signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult;
-          console.log("OTP is sent");
-          document.getElementById("signup_form").classList.remove("grid");
-          document.getElementById("signup_form").classList.add("hidden");
-          document.getElementById("verify_form").classList.remove("hidden");
-          document.getElementById("verify_form").classList.add("grid");
-        })
-        .catch((error) => {
-          console.log("firebase error", error);
-        });
+      return signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+    })
+    .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        document.getElementById("signup_form").classList.remove("grid");
+        document.getElementById("signup_form").classList.add("hidden");
+        document.getElementById("verify_form").classList.remove("hidden");
+        document.getElementById("verify_form").classList.add("grid");
     })
     .catch((error) => {
-      console.log("fetch error", error);
+        console.log("firebase error", error);
     });
 }
 

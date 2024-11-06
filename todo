@@ -14,7 +14,7 @@ x implement session management where a user can't sign in from two devices at th
 x cache videos/change current method
 
 --Me
-- session manager with redis
+x session manager with redis
 - clean up node modules? execcive javascript?
 - documentation
 - security, rate limiting..

@@ -294,3 +294,14 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 	app.session.Put(r.Context(), "session_id", user.SessionId)
 	w.WriteHeader(http.StatusOK)
 }
+
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		w.Header().Set("HX-Redirect", "/")
+		return
+	}
+	ctx := context.Background()
+	app.session.PopString(ctx, "session_id")
+	w.Header().Set("HX-Redirect", "/")
+}

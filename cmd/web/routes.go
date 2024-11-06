@@ -61,6 +61,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /login", isLoggedIn.ThenFunc(app.loginPage))
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
+	mux.Handle("POST /logout", isLoggedIn.ThenFunc(app.logout))
 
 	mux.Handle("GET /debug/vars", expvar.Handler())
 

@@ -53,7 +53,6 @@ function sendOTP(event) {
       } else if (res.status == 409) {
         // TODO
         alert("User already exists");
-        window.location.href = "/";
         return
       } else {
         alert(res);

@@ -56,6 +56,7 @@ function sendOTP(event) {
         window.location.href = "/";
         return
       } else {
+        alert(res);
         console.log("Error", res);
       }
     })

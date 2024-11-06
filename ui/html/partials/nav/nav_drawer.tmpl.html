@@ -1,60 +1,122 @@
 {{ define "nav_drawer" }}
-<div id="nav_drawer"
-    class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden">
-    <div id="nav_drawer_username" class="flex items-center justify-end">
-        <h2 class="mr-5 text-xl font-semibold text-zinc-800">ضيف صالح</h2>
-        <div class="h-12 w-12 overflow-hidden rounded-full border-2 border-zinc-600">
-            <img src="https://placehold.co/100x100" alt="profile" />
-        </div>
+<div
+  id="nav_drawer"
+  class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden"
+>
+  <div id="nav_drawer_username" class="flex items-center justify-end">
+    <h2 class="mr-5 text-xl font-semibold text-zinc-800">ضيف صالح</h2>
+    <div
+      class="h-12 w-12 overflow-hidden rounded-full border-2 border-zinc-600"
+    >
+      <img src="https://placehold.co/100x100" alt="profile" />
     </div>
-    <button hx-get="/mycourses" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        دوراتي
-    </button>
-    <button hx-get="/payments" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        تاريخ الدفع
-    </button>
-    <button hx-get="/privacy_policy" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        سياسة الخصوصية
-    </button>
-    <button hx-get="/contact" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        تواصل معنا
-    </button>
-    <button class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        تسجيل الخروج
-    </button>
-    <span class="block h-1 bg-slate-300 w-5/6"></span>
-    <button hx-get="/" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        الرئيسية
-    </button>
-    <button hx-get="/myprofile" hx-push-url="true" class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        ملفي الشخصي
-    </button>
-    <button hx-get="/courses" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        الدورات
-    </button>
-    <button hx-get="/materials" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        المواد
-    </button>
-    <button hx-get="/progress" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="flex h-8 w-5/6 flex-row-reverse items-center justify-start">
-        <img class="ml-2" src="https://placehold.co/20x20" />
-        مستوى التقدم
-    </button>
+  </div>
+  <button
+    hx-get="/mycourses"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    دوراتي
+  </button>
+  <button
+    hx-get="/payments"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    تاريخ الدفع
+  </button>
+  <button
+    hx-get="/privacy_policy"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    سياسة الخصوصية
+  </button>
+  <button
+    hx-get="/contact"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    تواصل معنا
+  </button>
+  <button
+    hx-post="/logout"
+    hx-swap="outerHTML"
+    hx-select=".view"
+    hx-target=".view"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    تسجيل الخروج
+  </button>
+  <span class="block h-1 bg-slate-300 w-5/6"></span>
+  <button
+    hx-get="/"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    الرئيسية
+  </button>
+  <button
+    hx-get="/myprofile"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    ملفي الشخصي
+  </button>
+  <button
+    hx-get="/courses"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    الدورات
+  </button>
+  <button
+    hx-get="/materials"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    المواد
+  </button>
+  <button
+    hx-get="/progress"
+    hx-select=".view"
+    hx-target=".view"
+    hx-swap="outerHTML"
+    hx-push-url="true"
+    class="flex h-8 w-5/6 flex-row-reverse items-center justify-start"
+  >
+    <img class="ml-2" src="https://placehold.co/20x20" />
+    مستوى التقدم
+  </button>
 </div>
 {{ end }}

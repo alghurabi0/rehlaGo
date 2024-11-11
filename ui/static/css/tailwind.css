@@ -1047,6 +1047,10 @@ video {
   width: 75%;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -2688,6 +2692,10 @@ video {
 }
 
 @media (min-width: 768px) {
+  .md\:mr-20 {
+    margin-right: 5rem;
+  }
+
   .md\:mr-4 {
     margin-right: 1rem;
   }
@@ -2722,6 +2730,10 @@ video {
 
   .md\:w-56 {
     width: 14rem;
+  }
+
+  .md\:w-9\/12 {
+    width: 75%;
   }
 
   .md\:w-\[100px\] {

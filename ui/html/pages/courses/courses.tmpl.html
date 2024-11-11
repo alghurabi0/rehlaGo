@@ -1,6 +1,6 @@
 {{ define "title" }}Courses{{ end }} {{ define "main" }}
 <div class="view">
-  <div class="flex flex-row justify-end">
+  <div class="flex flex-row justify-end items-center md:mr-20">
     <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">الدروس</h1>
     <svg
       width="20"
@@ -31,7 +31,7 @@
   <img
     src="{{if .TeacherImg}}{{.TeacherImg}}{{end}}"
     alt="icon"
-    class="h-[150px]"
+    class="h-[150px] rounded-xl"
   />
 
   <div class="flex flex-col w-1/2 items-end">
@@ -40,21 +40,14 @@
 
     <div class="flex flex-row mt-3">
       <div class="flex flex-row">
-        <p class="text-xs mr-1 text-slate-500">دينار عراقي</p>
-        <p class="text-xs text-slate-500">{{ .Price }}</p>
+        <p class="text-sm font-semibold mr-1 text-slate-500">دينار عراقي</p>
+        <p class="text-sm font-semibold text-slate-500">{{ .Price }}</p>
       </div>
       <img src="https://placehold.co/25x25" class="ml-1" />
     </div>
 
-    <div class="flex flex-row">
-      <p class="text-sm text-slate-500">
-        {{if .NumberOfLecs}}{{.NumberOfLecs}}{{end}}
-      </p>
-      <img src="https://placehold.co/25x25" class="ml-1" />
-    </div>
-
     <button
-      class="mt-2 w-3/4 p-1 rounded-full border-black border-2 cursor-pointer bg-[#E5E5E5E5]"
+      class="mt-4 w-3/4 p-1 rounded-full border-black border-2 cursor-pointer bg-[#E5E5E5E5]"
       hx-get="/courses/{{ .ID }}"
       hx-select=".view"
       hx-target=".view"

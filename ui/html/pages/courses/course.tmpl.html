@@ -1,6 +1,6 @@
 {{ define "title" }}Course{{ end }} {{ define "main" }}
 <div class="view">
-  <div class="flex flex-row justify-end">
+  <div class="flex flex-row justify-end items-center md:mr-20">
     <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">
       تفاصيل الدورة
     </h1>
@@ -30,27 +30,20 @@
       <div
         class="flex h-[147px] w-full flex-col items-end rounded-xl bg-sky-500 px-4 py-2 text-white"
       >
-        <h1 class="text-2xl">{{ .Course.Title }}</h1>
+        <h1 class="text-2xl font-bold">{{ .Course.Title }}</h1>
         <div class="mt-2 flex flex-row w-full justify-end">
           <div class="flex flex-row mr-2 text-lg">
-            <h2 class="mr-2">{{ .Course.Teacher }}</h2>
-            <h2>الاستاذ</h2>
+            <h2 class="mr-2 font-bold">{{ .Course.Teacher }}</h2>
+            <h2>:الاستاذ</h2>
           </div>
           <img src="https://placehold.co/15x15" />
         </div>
-        <p class="text-sm self mt-2">{{ .Course.Description }}</p>
+        <bdi class="text-sm self mt-2">{{ .Course.Description }}</bdi>
       </div>
 
       <div class="flex w-full flex-col items-end px-4 py-2 text-black">
-        <div class="flex flex-row">
-          <div class="flex flex-row">
-            <p class="mr-1">محاضرة</p>
-            <p class="mr-2">{{ .Course.NumberOfLecs }}</p>
-          </div>
-          <img src="https://placehold.co/25x25" />
-        </div>
         <div class="mt-1 flex flex-row">
-          <div class="flex flex-row">
+          <div class="flex flex-row font-semibold">
             <p class="mr-1">دينار عراقي</p>
             <p class="mr-2">{{ .Course.Price }}</p>
           </div>
@@ -60,34 +53,34 @@
         <button
           class="mt-3 flex h-[48px] w-5/6 flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]"
         >
-          <p class="mr-2 text-lg text-white">اشترك في الدورة</p>
+          <p class="mr-2 text-lg text-white font-semibold">اشترك في الدورة</p>
           <img src="https://placehold.co/25x25" />
         </button>
         {{ end }}
       </div>
     </div>
 
-    <div class="mt-2 place-self-end text-lg">
+    <div class="mt-2 place-self-end text-lg md:mr-20">
       <button
         id="examTabLink"
-        class="tablink mr-3"
+        class="tablink mr-3 font-bold"
         onclick="showTab('#examTab')"
       >
-        Exams
+      الامتحانات
       </button>
-      <button id="lecTabLink" class="tablink" onclick="showTab('#lecTab')">
-        Lectures
+      <button id="lecTabLink" class="tablink font-bold" onclick="showTab('#lecTab')">
+          المحاضرات
       </button>
     </div>
     <div
       id="lecTab"
-      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden"
+      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden md:w-5/6"
     >
       {{ range .Course.Lecs }} {{ template "lecCard" . }} {{ end }}
     </div>
     <div
       id="examTab"
-      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden"
+      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden md:w-5/6"
     >
       {{ range .Course.Exams}} {{ template "examCard" . }} {{ end }}
     </div>
@@ -146,7 +139,7 @@
     hx-swap="outerHTML"
     hx-push-url="true"
   >
-    <h1>{{ .Title }}</h1>
+    <bdi>{{ .Title }}</bdi>
   </div>
 </div>
 {{ end }} {{ define "examCard" }}
@@ -168,7 +161,7 @@
     hx-swap="outerHTML"
     hx-push-url="true"
   >
-    <h1>{{ .Title }}</h1>
+    <bdi>{{ .Title }}</bdi>
   </div>
 </div>
 {{ end }}

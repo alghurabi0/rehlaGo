@@ -1,6 +1,6 @@
 {{ define "title" }}{{ .TemplateTitle }}{{ end }} {{ define "main" }}
 <div class="view">
-  <div class="flex flex-row justify-end mt-3">
+  <div class="flex flex-row justify-end mt-3 items-center md:mr-20">
     <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">
       تفاصيل المحاضرة
     </h1>
@@ -24,12 +24,12 @@
   <div
     class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
   >
-    <div class="flex h-full w-full flex-col items-center justify-between pb-5">
+    <div class="flex h-full w-full flex-col items-center justify-between pb-5 md:w-9/12">
       <div
         class="flex w-full flex-col items-end rounded-xl px-4 py-2 text-black"
       >
-        <h1 class="text-2xl font-bold">{{ .Lec.Title }}</h1>
-        <p class="text-md self mt-4">{{ .Lec.Description }}</p>
+        <bdi class="text-2xl font-bold">{{ .Lec.Title }}</bdi>
+        <bdi class="text-md self mt-4">{{ .Lec.Description }}</bdi>
       </div>
 
       <div class="w-full mt-1">

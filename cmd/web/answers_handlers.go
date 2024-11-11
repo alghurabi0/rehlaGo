@@ -134,6 +134,7 @@ func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.SubscribedCourses = subedCourses
+	data.User = user
 	app.renderFull(w, http.StatusOK, "progress.tmpl.html", data)
 }
 
@@ -164,6 +165,7 @@ func (app *application) gradesPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Answers = answers
+	data.User = user
 	app.renderFull(w, http.StatusOK, "grades.tmpl.html", data)
 }
 
@@ -205,5 +207,6 @@ func (app *application) answerPage(w http.ResponseWriter, r *http.Request) {
 	}
 	data.ExamURL = exam.URL
 	data.Answer = answer
+	data.User = user
 	app.renderFull(w, http.StatusOK, "answer.tmpl.html", data)
 }

@@ -26,6 +26,7 @@ func (app *application) materialsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.SubscribedCourses = subedCourses
+	data.User = user
 	app.renderFull(w, http.StatusOK, "materials.tmpl.html", data)
 }
 

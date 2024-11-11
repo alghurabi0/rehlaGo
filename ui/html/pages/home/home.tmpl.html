@@ -1,5 +1,5 @@
 {{ define "title" }}Home{{ end }} {{ define "main" }}
-<div class="view">
+<div class="view md:pr-20">
   <div class="flex flex-row-reverse justify-between">
     <h1 class="text-end font-bold text-xl my-2 text-black">الاقسام الرئيسية</h1>
     {{ if not .IsLoggedIn }}
@@ -29,10 +29,10 @@
   </div>
 
   <div
-    class="text-md mt-4 grid grid-cols-2 justify-items-center gap-y-4 font-bold leading-5 text-[#612C8C] md:grid-cols-3 pb-20 md:pb-0"
+    class="text-md mt-4 grid grid-cols-2 justify-items-center gap-y-4 gap-x-7 font-bold leading-5 text-[#612C8C] md:grid-cols-3 pb-20 md:pb-0"
   >
     <div
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] sm:h-36 sm:w-36 cursor-pointer"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
       hx-get="/courses"
       hx-select=".view"
       hx-target=".view"
@@ -47,7 +47,7 @@
       <span class="mb-6">الدروس</span>
     </div>
     <div
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] md:h-36 md:w-36"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
       hx-get="/progress"
       hx-select=".view"
       hx-target=".view"
@@ -67,7 +67,7 @@
       hx-target=".view"
       hx-swap="outerHTML"
       hx-push-url="true"
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] sm:h-36 sm:w-36"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
     >
       <img
         src="/static/icons/homepage/Books.svg"
@@ -82,12 +82,7 @@
       hx-target=".view"
       hx-swap="outerHTML"
       hx-push-url="true"
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] sm:h-36 sm:w-36"
-      hx-get="/myprofile"
-      hx-select=".view"
-      hx-target=".view"
-      hx-swap="outerHTML"
-      hx-push-url="true"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
     >
       <img
         src="/static/icons/homepage/Student_card.svg"
@@ -97,7 +92,7 @@
       <span class="mb-6">ملفي الشخصي</span>
     </div>
     <div
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] sm:h-36 sm:w-36"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
     >
       <img
         src="/static/icons/homepage/Communication.svg"
@@ -107,7 +102,7 @@
       <span class="mb-6">الدردشة</span>
     </div>
     <div
-      class="flex h-[135px] w-[135px] flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5] sm:h-36 sm:w-36"
+      class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
     >
       <img
         src="/static/icons/homepage/Pendilum.svg"

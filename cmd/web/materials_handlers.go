@@ -53,6 +53,12 @@ func (app *application) courseMaterials(w http.ResponseWriter, r *http.Request) 
 		app.unauthorized(w, "subRequired")
 		return
 	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	mats, err := app.getMaterials(ctx, courseId)
 	if err != nil {
 		app.serverError(w, err)
@@ -61,6 +67,7 @@ func (app *application) courseMaterials(w http.ResponseWriter, r *http.Request) 
 
 	course.Materials = *mats
 	data.Course = course
+	data.User = user
 	app.renderFull(w, http.StatusOK, "courseMaterials.tmpl.html", data)
 }
 

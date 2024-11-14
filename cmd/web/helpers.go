@@ -128,6 +128,7 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 		}
 	} else {
 		app.infoLog.Println("4 why am I here")
+		app.errorLog.Println(err)
 		lecs, err = app.lec.GetAll(ctx, courseId)
 		if err != nil {
 			return nil, err
@@ -149,6 +150,7 @@ func (app *application) getCourse(ctx context.Context, courseId string) (*models
 		}
 	} else {
 		app.infoLog.Println("6 why am I here")
+		app.errorLog.Println(err)
 		exams, err = app.exam.GetAll(ctx, courseId)
 		if err != nil {
 			return nil, err

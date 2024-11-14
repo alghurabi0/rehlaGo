@@ -1,7 +1,9 @@
 {{ define "title" }}Progress{{ end }} {{ define "main" }}
 <div class="view">
   <div class="flex flex-row justify-end items-center md:mr-20">
-    <h1 class="mr-2 my-2 text-end text-lg font-bold text-black">Progress</h1>
+    <h1 class="mr-2 my-2 text-end text-lg font-bold text-black">
+      التقدم والدرجات
+    </h1>
     <svg
       width="20"
       height="20"
@@ -23,7 +25,7 @@
   >
     {{ if .SubscribedCourses }} {{ range .SubscribedCourses }} {{ template
     "progressCard" . }} {{ end }} {{ else }}
-    <h1>You don't have subscribed courses</h1>
+    <h1>ليس لديك دورات مسجلة بعد</h1>
     {{ end }}
   </div>
 </div>
@@ -37,7 +39,7 @@
     <h1 class="text-xl font-bold">{{ .Title }}</h1>
     <div class="flex flex-row mr-2 font-bold">
       <h2 class="mr-2">{{ .Teacher }}</h2>
-      <h2>الاستاذ</h2>
+      <h2>:الاستاذ</h2>
     </div>
     <button
       hx-get="/progress/{{ .ID }}"
@@ -48,7 +50,20 @@
       class="mt-3 flex h-[48px] w-full flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]"
     >
       <p class="mr-2 text-md font-bold text-white">عرض مستوى تقدمك</p>
-      <img src="https://placehold.co/20x20" />
+      <svg
+        width="20"
+        height="12"
+        viewBox="0 0 20 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M14.1667 1.83366C13.7064 1.83366 13.3333 1.46056 13.3333 1.00033C13.3333 0.540088 13.7064 0.166992 14.1667 0.166992H19.1667C19.6269 0.166992 20 0.540088 20 1.00033V6.00033C20 6.46056 19.6269 6.83366 19.1667 6.83366C18.7064 6.83366 18.3333 6.46056 18.3333 6.00033V3.01217L11.8393 9.50625C11.5138 9.83168 10.9862 9.83168 10.6607 9.50625L7.08333 5.92884L1.42259 11.5896C1.09715 11.915 0.569515 11.915 0.244078 11.5896C-0.0813592 11.2641 -0.0813592 10.7365 0.244078 10.4111L6.49408 4.16107C6.81951 3.83563 7.34715 3.83563 7.67259 4.16107L11.25 7.73848L17.1548 1.83366H14.1667Z"
+          fill="white"
+        />
+      </svg>
     </button>
   </div>
 </div>

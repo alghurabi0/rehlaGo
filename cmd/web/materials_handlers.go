@@ -79,7 +79,13 @@ func (app *application) freeMaterials(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
 
 	data.FreeMaterials = mats
+	data.User = user
 	app.renderFull(w, http.StatusOK, "freeMaterials.tmpl.html", data)
 }

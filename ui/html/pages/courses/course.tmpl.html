@@ -36,7 +36,24 @@
             <h2 class="mr-2 font-bold">{{ .Course.Teacher }}</h2>
             <h2>:الاستاذ</h2>
           </div>
-          <img src="https://placehold.co/15x15" />
+          <div
+            class="flex w-5 items-center justify-center rounded-full border-2 border-solid border-white"
+          >
+            <svg
+              width="14"
+              height="16"
+              viewBox="0 0 14 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M7 2C5.75736 2 4.75 3.00736 4.75 4.25C4.75 5.49264 5.75736 6.5 7 6.5C8.24264 6.5 9.25 5.49264 9.25 4.25C9.25 3.00736 8.24264 2 7 2ZM3.25 4.25C3.25 2.17893 4.92893 0.5 7 0.5C9.07107 0.5 10.75 2.17893 10.75 4.25C10.75 6.32107 9.07107 8 7 8C4.92893 8 3.25 6.32107 3.25 4.25ZM1.34835 10.5984C2.05161 9.89509 3.00544 9.5 4 9.5H10C10.9946 9.5 11.9484 9.89509 12.6517 10.5984C13.3549 11.3016 13.75 12.2554 13.75 13.25V14.75C13.75 15.1642 13.4142 15.5 13 15.5C12.5858 15.5 12.25 15.1642 12.25 14.75V13.25C12.25 12.6533 12.0129 12.081 11.591 11.659C11.169 11.2371 10.5967 11 10 11H4C3.40326 11 2.83097 11.2371 2.40901 11.659C1.98705 12.081 1.75 12.6533 1.75 13.25V14.75C1.75 15.1642 1.41421 15.5 1 15.5C0.585786 15.5 0.25 15.1642 0.25 14.75V13.25C0.25 12.2554 0.645088 11.3016 1.34835 10.5984Z"
+                fill="white"
+              />
+            </svg>
+          </div>
         </div>
         <bdi class="text-sm self mt-2">{{ .Course.Description }}</bdi>
       </div>
@@ -66,10 +83,14 @@
         class="tablink mr-3 font-bold"
         onclick="showTab('#examTab')"
       >
-      الامتحانات
+        الامتحانات
       </button>
-      <button id="lecTabLink" class="tablink font-bold" onclick="showTab('#lecTab')">
-          المحاضرات
+      <button
+        id="lecTabLink"
+        class="tablink font-bold"
+        onclick="showTab('#lecTab')"
+      >
+        المحاضرات
       </button>
     </div>
     <div
@@ -122,15 +143,30 @@
 </div>
 {{ end }} {{ define "lecCard" }}
 <div class="flex flex-row justify-between py-4 px-4">
-  <img
-    src="https://placehold.co/25x25"
-    class="cursor-pointer"
-    hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
+  <div
+    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-[#A490BB]"
+    hx-get="/courses/5zpJwCU9bwi25c82h4Ik/lec/hoSfFdi3BPlGCtkEUZpv"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"
     hx-push-url="true"
-  />
+  >
+    <svg
+      class="mr-1"
+      width="12"
+      height="14"
+      viewBox="0 0 12 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M10.9858 13.585C10.7718 13.7018 10.511 13.6925 10.3058 13.5606L0.972504 7.56062C0.781688 7.43796 0.666342 7.22668 0.666342 6.99984C0.666342 6.77299 0.781688 6.56172 0.972504 6.43905L10.3058 0.439052C10.511 0.307177 10.7718 0.297836 10.9858 0.414697C11.1998 0.531557 11.333 0.755967 11.333 0.999838L11.333 12.9998C11.333 13.2437 11.1998 13.4681 10.9858 13.585ZM9.99967 11.7787L9.99967 2.22095L2.56585 6.99984L9.99967 11.7787Z"
+        fill="white"
+      />
+    </svg>
+  </div>
   <div
     class="flex flex-row cursor-pointer"
     hx-get="/courses/{{ .CourseId }}/lec/{{ .ID }}"
@@ -144,15 +180,27 @@
 </div>
 {{ end }} {{ define "examCard" }}
 <div class="flex flex-row justify-between py-4 px-4">
-  <img
-    src="https://placehold.co/25x25"
+  <svg
     class="cursor-pointer"
     hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"
     hx-push-url="true"
-  />
+    width="30"
+    height="30"
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M14.9997 3.00016C8.37226 3.00016 2.99967 8.37275 2.99967 15.0002C2.99967 21.6276 8.37226 27.0002 14.9997 27.0002C21.6271 27.0002 26.9997 21.6276 26.9997 15.0002C26.9997 8.37275 21.6271 3.00016 14.9997 3.00016ZM0.333008 15.0002C0.333008 6.89999 6.8995 0.333496 14.9997 0.333496C23.0998 0.333496 29.6663 6.89999 29.6663 15.0002C29.6663 23.1003 23.0998 29.6668 14.9997 29.6668C6.8995 29.6668 0.333008 23.1003 0.333008 15.0002ZM14.9997 8.3335C15.7361 8.3335 16.333 8.93045 16.333 9.66683V17.1145L19.3902 14.0574C19.9109 13.5367 20.7551 13.5367 21.2758 14.0574C21.7965 14.5781 21.7965 15.4223 21.2758 15.943L15.9425 21.2763C15.4218 21.797 14.5776 21.797 14.0569 21.2763L8.72353 15.943C8.20283 15.4223 8.20283 14.5781 8.72353 14.0574C9.24423 13.5367 10.0885 13.5367 10.6091 14.0574L13.6663 17.1145V9.66683C13.6663 8.93045 14.2633 8.3335 14.9997 8.3335Z"
+      fill="#202020"
+    />
+  </svg>
+
   <div
     class="flex flex-row cursor-pointer"
     hx-get="/courses/{{ .CourseId }}/exam/{{ .ID }}"

@@ -1,22 +1,57 @@
-{{ define "title" }}Free Materials{{ end }}
-{{ define "main" }}
+{{ define "title" }}Free Materials{{ end }} {{ define "main" }}
 <div class="view">
-    <div class="mt-2 flex flex-row justify-end">
-        <h1 class="my-2 mr-2 text-end text-lg font-bold text-black">المواد التعليمية</h1>
-        <img src="https://placehold.co/20x20" />
-    </div>
+  <div class="mt-2 flex flex-row justify-end items-center md:mr-20">
+    <h1 class="my-2 mr-2 text-end text-lg font-bold text-black">
+      المواد التعليمية
+    </h1>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
 
-    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-5 pb-20 md:pb-0">
-        {{ range .FreeMaterials }}
-        {{ template "materialCard" . }}
-        {{ end }}
+  <div
+    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-5 pb-20 md:pb-0"
+  >
+    <div class="flex w-full flex-col items-end md:w-5/6">
+      <h1 class="text-end text-2xl font-bold">المواد المجانية</h1>
     </div>
+    {{ range .FreeMaterials }} {{ template "materialCard" . }} {{ end }}
+  </div>
 </div>
-{{ end }}
-{{ define "materialCard" }}
-<a href="{{ .URL }}" download target="_blank"
-    class="flex h-[50px] w-full flex-row items-center justify-center rounded-xl border-2 border-black shadow-black shadow">
-    <img src="https://placehold.co/25x25" class="mr-4" />
-    <h2 class="text-xl font-bold">{{ .Title }}</h2>
+{{ end }} {{ define "materialCard" }}
+<a
+  href="{{ .URL }}"
+  download
+  target="_blank"
+  class="flex h-[50px] w-full flex-row items-center justify-center rounded-xl border-2 border-black shadow-black shadow md:w-5/6"
+>
+  <svg
+    width="21"
+    height="22"
+    viewBox="0 0 21 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M19.8743 13.083C20.4496 13.083 20.916 13.5494 20.916 14.1247V18.2913C20.916 19.1201 20.5868 19.915 20.0007 20.501C19.4147 21.0871 18.6198 21.4163 17.791 21.4163L3.20768 21.4163C2.37888 21.4163 1.58402 21.0871 0.997974 20.501C0.411923 19.915 0.0826831 19.1201 0.0826831 18.2913V14.1247C0.0826831 13.5494 0.549054 13.083 1.12435 13.083C1.69965 13.083 2.16602 13.5494 2.16602 14.1247V18.2913C2.16602 18.5676 2.27576 18.8326 2.47111 19.0279C2.66646 19.2233 2.93142 19.333 3.20768 19.333L17.791 19.333C18.0673 19.333 18.3322 19.2233 18.5276 19.0279C18.7229 18.8326 18.8327 18.5676 18.8327 18.2913V14.1247C18.8327 13.5494 19.2991 13.083 19.8743 13.083ZM16.4443 8.17977C16.851 8.58657 16.851 9.24611 16.4443 9.65291L11.2359 14.8612C10.8291 15.268 10.1696 15.268 9.76278 14.8612L4.55445 9.65291C4.14765 9.24611 4.14765 8.58657 4.55445 8.17977C4.96124 7.77298 5.62079 7.77298 6.02759 8.17977L9.45768 11.6099L9.45768 1.62467C9.45768 1.04938 9.92405 0.583008 10.4993 0.583008C11.0746 0.583008 11.541 1.04938 11.541 1.62467L11.541 11.6099L14.9711 8.17977C15.3779 7.77298 16.0375 7.77298 16.4443 8.17977Z"
+      fill="#202020"
+    />
+  </svg>
+
+  <h2 class="text-xl font-bold">{{ .Title }}</h2>
 </a>
 {{ end }}

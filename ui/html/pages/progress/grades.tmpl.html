@@ -22,7 +22,7 @@
   </div>
 
   <div class="text-md mt-4 grid grid-cols-1 justify-items-center pb-20 md:pb-0">
-    <h1 class="mt-6 justify-self-end text-end text-xl font-bold md:md-20">
+    <h1 class="mt-6 justify-self-end text-end text-xl font-bold md:mr-20">
       تفاصيل ودرجات الامتحانات
     </h1>
     <div
@@ -58,12 +58,12 @@
   {{ else }}
   <h2 class="text-center col-span-1">__</h2>
   {{ end }}
-  <h2 class="text-center col-span-1">{{ .DateOfSubmission }}</h2>
+  <h2 class="text-center col-span-1">{{ humanDate .DateOfSubmission }}</h2>
   <h2 class="text-center col-span-2">{{ .ExamTitle }}</h2>
 </div>
 {{ end }} {{ define "exportGrades" }}
 <div
-  class="mt-12 flex w-full flex-col items-end rounded-lg border-2 border-black p-3 md:2-5/6"
+  class="mt-12 flex w-full flex-col items-end rounded-lg border-2 border-black p-3 md:w-5/6"
 >
   <h1 class="text-lg font-bold">PDF تصدير الدرجات بصيغة</h1>
   <p class="text-md mt-1 text-end font-semibold">

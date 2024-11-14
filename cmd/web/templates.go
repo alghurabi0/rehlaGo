@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"github.com/alghurabi0/rehla/internal/models"
 )
@@ -26,7 +27,8 @@ type templateData struct {
 }
 
 var functions = template.FuncMap{
-	"subtract": subtract,
+	"subtract":  subtract,
+	"humanDate": humanDate,
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -56,4 +58,8 @@ func newTemplateCache() (map[string]*template.Template, error) {
 
 func subtract(a, b int) int {
 	return a - b
+}
+
+func humanDate(t time.Time) string {
+	return t.Format("2006-01-02")
 }

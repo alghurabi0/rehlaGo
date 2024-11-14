@@ -26,6 +26,12 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
 	ctx := context.Background()
 	exam, err := app.getExam(ctx, courseId, examId)
 	if err != nil {
@@ -33,6 +39,7 @@ func (app *application) examPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.Exam = exam
+	data.User = user
 	data.TemplateTitle = exam.Title
 	app.renderFull(w, http.StatusOK, "exam.tmpl.html", data)
 }

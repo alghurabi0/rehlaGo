@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -116,6 +117,16 @@ func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 		Value: user.Subscriptions,
 	})
 	err = app.user.Update(ctx, user.ID, updates)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	re, err := json.Marshal(user)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.redis.Set(ctx, user.SessionId, re, time.Hour*24).Err()
 	if err != nil {
 		app.serverError(w, err)
 		return

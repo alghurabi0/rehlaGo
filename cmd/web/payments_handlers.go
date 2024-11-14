@@ -24,6 +24,7 @@ func (app *application) paymentsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data.SubscribedCourses = subedCourses
+	data.User = user
 	app.renderFull(w, http.StatusOK, "payments.tmpl.html", data)
 }
 
@@ -56,5 +57,6 @@ func (app *application) paymentHistory(w http.ResponseWriter, r *http.Request) {
 	}
 	course.UserPayments = *payments
 	data.Course = course
+	data.User = user
 	app.renderFull(w, http.StatusOK, "paymentHistory.tmpl.html", data)
 }

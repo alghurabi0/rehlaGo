@@ -21,6 +21,13 @@ func (app *application) resetPasswordPage(w http.ResponseWriter, r *http.Request
 		app.unauthorized(w, "loginRequired")
 		return
 	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	data.User = user
 	app.renderFull(w, http.StatusOK, "reset_password.tmpl.html", data)
 }
 

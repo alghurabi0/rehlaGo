@@ -1,34 +1,51 @@
-{{ define "title" }}Payments{{ end }}
-{{ define "main" }}
+{{ define "title" }}Payments{{ end }} {{ define "main" }}
 <div class="view">
-    <div class="flex flex-row justify-end">
-        <h1 class="mr-2 my-2 text-end text-lg font-bold text-black">Payments</h1>
-        <img src="https://placehold.co/20x20" />
-    </div>
-    <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
-        {{ range .SubscribedCourses }}
-        {{ template "courseCard" . }}
-        {{ else }}
-        <h1>You don't have subscribed courses</h1>
-        {{ end }}
-    </div>
+  <div class="flex flex-row justify-end items-center md:mr-20">
+    <h1 class="mr-2 my-2 text-end text-lg font-bold text-black">تاريخ الدفع</h1>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
+        fill="#202020"
+      />
+    </svg>
+  </div>
+  <div
+    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
+  >
+    {{ range .SubscribedCourses }} {{ template "courseCard" . }} {{ else }}
+    <h1>ليس لديك دورات مسجلة بعد</h1>
+    {{ end }}
+  </div>
 </div>
-{{ end }}
-{{ define "courseCard" }}
-<div class="flex  w-full flex-row items-center justify-between rounded-lg bg-[#E5E5E5E5] p-2 shadow-lg md:w-3/4">
-    <img src="/static/icons/Video.png" alt="icon" class="h-[150px]" />
-
-    <div class="flex w-1/2 flex-col gap-3 items-end">
-        <h1 class="text-xl font-bold">{{ .Title }}</h1>
-        <div class="flex flex-row mr-2 font-bold">
-            <h2 class="mr-2">{{ .Teacher }}</h2>
-            <h2>الاستاذ</h2>
-        </div>
-        <button hx-get="/payments/{{ .ID }}" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-            class="mt-3 flex h-[48px] w-full flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]">
-            <p class="mr-2 text-md font-bold text-white">عرض مستوى تقدمك</p>
-            <img src="https://placehold.co/20x20" />
-        </button>
+{{ end }} {{ define "courseCard" }}
+<div
+  class="flex w-full flex-row items-center justify-between rounded-lg bg-[#E5E5E5E5] p-2 shadow-lg md:w-5/6"
+>
+  <div class="flex w-full flex-col gap-3 items-end">
+    <h1 class="text-xl font-bold">{{ .Title }}</h1>
+    <div class="flex flex-row mr-2 font-bold">
+      <h2 class="mr-2">{{ .Teacher }}</h2>
+      <h2>الاستاذ</h2>
     </div>
+    <button
+      hx-get="/payments/{{ .ID }}"
+      hx-select=".view"
+      hx-target=".view"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+      class="mt-3 flex h-[48px] w-full flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]"
+    >
+      <p class="mr-2 text-md font-bold text-white">عرض تاريخ الدفع</p>
+    </button>
+  </div>
 </div>
 {{ end }}

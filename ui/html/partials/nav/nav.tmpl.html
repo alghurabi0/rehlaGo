@@ -8,7 +8,11 @@
         id="tabUsername"
         class="w-12 overflow-hidden rounded-full border-2 border-zinc-600 my-1.5"
       >
-        <img src="https://placehold.co/100x100" alt="profile" />
+    {{ if .IsLoggedIn }}
+    <img src={{if .User.ImgURL }}"{{.User.ImgURL}}"{{else}}"https://placehold.co/100x100"{{end}} alt="profile" />
+    {{ else }}
+    <img src="https://placehold.co/100x100" alt="profile" />
+    {{ end }}
       </div>
       <div
         class="nav-item flex flex-col items-center my-1.5"
@@ -208,7 +212,7 @@
     text-anchor="middle" 
     fill="#ADADAD" 
     font-family="Arial" 
-    font-size="12"
+    font-size="15"
   >
     دوراتي
   </text>

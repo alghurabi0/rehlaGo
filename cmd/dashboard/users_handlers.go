@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/alghurabi0/rehla/internal/models"
@@ -206,6 +208,24 @@ func (app *application) editUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.errorLog.Print(err)
 	}
+	// update redis
+	if user.SessionId != "" {
+		_, err := app.redis.Get(ctx, user.SessionId).Result()
+		if err == nil {
+			jsonUser, err := json.Marshal(user)
+			if err != nil {
+				app.redis.Del(ctx, user.SessionId)
+				app.serverError(w, err)
+				return
+			}
+			err = app.redis.Set(ctx, user.SessionId, jsonUser, time.Hour*24).Err()
+			if err != nil {
+				app.redis.Del(ctx, user.SessionId)
+				app.serverError(w, err)
+				return
+			}
+		}
+	}
 
 	http.Redirect(w, r, fmt.Sprintf("/users/%s", userId), http.StatusSeeOther)
 }
@@ -232,6 +252,13 @@ func (app *application) deleteUser(w http.ResponseWriter, r *http.Request) {
 	err = app.storage.DeleteFile(ctx, user.ImgPath)
 	if err != nil {
 		app.errorLog.Print(err)
+	}
+	if user.SessionId != "" {
+		err = app.redis.Del(ctx, user.SessionId).Err()
+		if err != nil {
+			app.errorLog.Println(err)
+		}
+
 	}
 	http.Redirect(w, r, "/users", http.StatusSeeOther)
 }

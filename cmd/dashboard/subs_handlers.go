@@ -123,11 +123,13 @@ func (app *application) createSub(w http.ResponseWriter, r *http.Request) {
 	}
 	re, err := json.Marshal(user)
 	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
 		app.serverError(w, err)
 		return
 	}
 	err = app.redis.Set(ctx, user.SessionId, re, time.Hour*24).Err()
 	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
 		app.serverError(w, err)
 		return
 	}
@@ -182,6 +184,18 @@ func (app *application) editSub(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	re, err := json.Marshal(user)
+	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
+		app.serverError(w, err)
+		return
+	}
+	err = app.redis.Set(ctx, user.SessionId, re, time.Hour*24).Err()
+	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
+		app.serverError(w, err)
+		return
+	}
 	http.Redirect(w, r, fmt.Sprintf("/users/%s/%s", user.ID, sub.ID), http.StatusSeeOther)
 }
 
@@ -224,6 +238,18 @@ func (app *application) deleteSub(w http.ResponseWriter, r *http.Request) {
 	})
 	err = app.user.Update(ctx, user.ID, updates)
 	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	re, err := json.Marshal(user)
+	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
+		app.serverError(w, err)
+		return
+	}
+	err = app.redis.Set(ctx, user.SessionId, re, time.Hour*24).Err()
+	if err != nil {
+		app.redis.Del(ctx, user.SessionId)
 		app.serverError(w, err)
 		return
 	}

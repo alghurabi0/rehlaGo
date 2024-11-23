@@ -63,3 +63,7 @@ func ValidPhoneNumber(phone string) bool {
 func Password(pwd string) bool {
 	return len(pwd) >= 8
 }
+
+func ValidGender(gender string) bool {
+	return gender == "male" || gender == "female"
+}

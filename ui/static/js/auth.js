@@ -18,7 +18,6 @@ function render() {
 }
 
 let formData = {};
-// TODO
 var userId = "";
 const signup_form = document.getElementById("signup_form");
 
@@ -62,6 +61,8 @@ function sendOTP(event) {
       } else {
         alert(res);
         console.log("Error", res);
+        alert("error");
+        return Promise.reject("invalid");
       }
     })
     .then((userid) => {

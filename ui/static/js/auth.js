@@ -25,6 +25,7 @@ const signup_form = document.getElementById("signup_form");
 function sendOTP(event) {
   if (event) event.preventDefault();
   const inputs = signup_form.getElementsByTagName("input");
+  const select = signup_form.getElementsByTagName("select");
 
   // TODO
   // validation
@@ -34,10 +35,15 @@ function sendOTP(event) {
       return;
     }
   }
+  if (!select.value) {
+      alert("Please fill all the fields");
+      return;
+  }
 
   // send data to backend
   for (let i = 0; i < inputs.length; i++) {
     formData[inputs[i].name] = inputs[i].value;
+    formData[select.name] = select.value;
   }
   fetch("/signup", {
     method: "POST",
@@ -61,17 +67,17 @@ function sendOTP(event) {
     .then((userid) => {
       userId = userid;
       const phone = "+964" + formData["phone_number"].slice(1);
-      return signInWithPhoneNumber(auth, phone, window.recaptchaVerifier)
+      return signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
     })
     .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        document.getElementById("signup_form").classList.remove("grid");
-        document.getElementById("signup_form").classList.add("hidden");
-        document.getElementById("verify_form").classList.remove("hidden");
-        document.getElementById("verify_form").classList.add("grid");
+      window.confirmationResult = confirmationResult;
+      document.getElementById("signup_form").classList.remove("grid");
+      document.getElementById("signup_form").classList.add("hidden");
+      document.getElementById("verify_form").classList.remove("hidden");
+      document.getElementById("verify_form").classList.add("grid");
     })
     .catch((error) => {
-        console.log("firebase error", error);
+      console.log("firebase error", error);
     });
 }
 

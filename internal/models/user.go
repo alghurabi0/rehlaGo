@@ -14,6 +14,7 @@ type User struct {
 	Lastname          string `json:"lastname" firestore:"lastname"`
 	PhoneNumber       string `json:"phone_number" firestore:"phone_number"`
 	ParentPhoneNumber string `json:"parent_phone_number" firestore:"parent_phone_number"`
+	Gender            string `json:"gender" firestore:"gender"`
 	Pwd               string `json:"password" firestore:"pwd"`
 	// --
 	Verified      bool     `firestore:"verified"`

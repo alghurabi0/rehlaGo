@@ -209,6 +209,7 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	v.Check(validator.NotBlank(user.Lastname), "lastname", "lastname shouldn't be empty")
 	v.Check(validator.ValidPhoneNumber(user.PhoneNumber), "phone_number", "phone_number should be a valid iraqi number of 11 digits")
 	v.Check(validator.ValidPhoneNumber(user.ParentPhoneNumber), "parent_phone_number", "parent_phone_number should be a valid iraqi number of 11 digits")
+	v.Check(validator.ValidGender(user.Gender), "gender", "gender should be male or female")
 	v.Check(validator.Password(user.Pwd), "password", "password should be at least 8 chars, numbers, or symbols")
 
 	if v.Errors != nil {

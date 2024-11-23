@@ -4,7 +4,7 @@
   style="background-image: url(/static/icons/bg_img.jpg)"
 >
   <div class="mx-auto max-w-md">
-    <div class="ml-2 flex flex-row justify-start items-center">
+    <div id="share_app" class="ml-2 flex flex-row justify-start items-center" onclick="shareWebApp()">
       <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
       <svg
         width="18"
@@ -82,8 +82,8 @@
         function shareWebApp() {
             if (navigator.share) {  // Check if Web Share API is supported
                 navigator.share({
-                    title: 'My Web App',  // Title of the shared content
-                    text: 'Check out this awesome web app!',  // Optional text to share
+                    title: 'Rehla',  // Title of the shared content
+                    text: 'Download Rehla App',  // Optional text to share
                     url: window.location.href,  // URL of the current page
             })
             .then(() => console.log('Shared successfully!'))

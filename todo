@@ -22,14 +22,14 @@ x session manager with redis
 c change lang to arabic
 x? implement user profile photo and name
 - implement tests
-- prevent screen recording
+x prevent screen recording
 
 
 --Hire
-- ui, frontend !
+x ui, frontend !
 - use design font and cache it...
 x use proper icons
 x(no need because svgs) cache icons
--? lift bottom nav bar in mobile (dead zone)
+x? lift bottom nav bar in mobile (dead zone)
 
 

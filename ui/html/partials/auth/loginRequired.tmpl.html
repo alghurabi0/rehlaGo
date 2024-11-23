@@ -1,14 +1,41 @@
 {{ define "loginRequired" }}
-<div id="loginDialog"
-    class="absolute bottom-0 left-0 right-0 top-0 flex w-4/6 flex-col items-center border border-black p-3 hidden">
-    <img id="loginClose" class="w-[27px] self-end" src="https://placehold.co/20x20" />
-    <img src="/static/icons/sub.png" />
-    <h1 class="text-xl font-bold text-center">يجب عليك تسجيل الدخول اولا</h1>
-    <p class="text-center text-lg">لضمان الوصول الى جميع المواد التعليمية و المحاضرات المتوفرة على تطبيق رحلة</p>
-    <button hx-get="/login"
-        class="mt-3 flex h-[50px] w-full flex-row items-center justify-center rounded-xl bg-[#A490BB]">
-        <h2 class="mr-2 text-lg font-bold text-white">تسجيل الدخول</h2>
-        <img src="https://placehold.co/20x20" />
-    </button>
-</div>
+<dialog
+  id="loginDialog"
+  class="absolute bottom-0 left-0 right-0 top-0 flex w-4/6 flex-col items-center border border-black p-3 hidden"
+>
+  <svg
+    id="loginClose"
+    class="self-end"
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M10.0007 2.49967C5.85851 2.49967 2.50065 5.85754 2.50065 9.99967C2.50065 14.1418 5.85851 17.4997 10.0007 17.4997C14.1428 17.4997 17.5006 14.1418 17.5006 9.99967C17.5006 5.85754 14.1428 2.49967 10.0007 2.49967ZM0.833984 9.99967C0.833984 4.93706 4.93804 0.833008 10.0007 0.833008C15.0633 0.833008 19.1673 4.93706 19.1673 9.99967C19.1673 15.0623 15.0633 19.1663 10.0007 19.1663C4.93804 19.1663 0.833984 15.0623 0.833984 9.99967ZM6.9114 6.91042C7.23683 6.58498 7.76447 6.58498 8.08991 6.91042L10.0007 8.82116L11.9114 6.91042C12.2368 6.58498 12.7645 6.58498 13.0899 6.91042C13.4153 7.23586 13.4153 7.76349 13.0899 8.08893L11.1792 9.99967L13.0899 11.9104C13.4153 12.2359 13.4153 12.7635 13.0899 13.0889C12.7645 13.4144 12.2368 13.4144 11.9114 13.0889L10.0007 11.1782L8.08991 13.0889C7.76447 13.4144 7.23683 13.4144 6.9114 13.0889C6.58596 12.7635 6.58596 12.2359 6.9114 11.9104L8.82214 9.99967L6.9114 8.08893C6.58596 7.76349 6.58596 7.23586 6.9114 6.91042Z"
+      fill="#202020"
+    />
+  </svg>
+
+  <img src="/static/icons/sub.png" />
+  <h1 class="text-xl font-bold text-center">يجب عليك تسجيل الدخول اولا</h1>
+  <p class="text-center text-lg">
+    لضمان الوصول الى جميع المواد التعليمية و المحاضرات المتوفرة على تطبيق رحلة
+  </p>
+  <button
+    hx-get="/login"
+    class="mt-3 flex h-[50px] w-full flex-row items-center justify-center rounded-xl bg-[#A490BB]"
+  >
+    <h2 class="mr-2 text-lg font-bold text-white">تسجيل الدخول</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <path
+        fill="#ffffff"
+        d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"
+      />
+    </svg>
+  </button>
+</dialog>
 {{ end }}

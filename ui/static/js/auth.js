@@ -25,7 +25,7 @@ const signup_form = document.getElementById("signup_form");
 function sendOTP(event) {
   if (event) event.preventDefault();
   const inputs = signup_form.getElementsByTagName("input");
-  const select = signup_form.getElementsByTagName("select");
+  const select = signup_form.querySelector("select");
 
   // TODO
   // validation

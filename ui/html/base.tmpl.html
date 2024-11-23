@@ -30,6 +30,19 @@
       </div>
       {{ template "loginRequired" }} {{ template "subRequired" }} {{ template
       "tabNav" . }} {{ template "nav_drawer" . }}
+      <script>
+        function showWindow() {
+          const dialog = document.querySelector("#subWindow");
+          dialog.classList.add("flex");
+          dialog.showModal();
+        }
+
+        function closeWindow() {
+          const dialog = document.querySelector("#subWindow");
+          dialog.classList.remove("flex");
+          dialog.close();
+        }
+      </script>
     </main>
   </body>
 </html>

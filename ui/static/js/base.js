@@ -108,12 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginDialog && loginClose) {
     loginClose.addEventListener("click", () => {
       loginDialog.classList.add("hidden");
+      loginDialog.classList.remove("flex");
+      loginDialog.close();
     });
   }
 
   if (subDialog && subClose) {
     subClose.addEventListener("click", () => {
       subDialog.classList.add("hidden");
+      subDialog.classList.remove("flex");
+      subDialog.close();
     });
   }
 
@@ -128,11 +132,15 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("login required");
         if (loginDialog) {
           loginDialog.classList.remove("hidden");
+          loginDialog.classList.add("flex");
+          loginDialog.showModal();
         }
       } else if (event.detail.xhr.responseText == "subRequired") {
         console.log("subscription required");
         if (subDialog) {
           subDialog.classList.remove("hidden");
+          subDialog.classList.add("flex");
+          subDialog.showModal();
         }
       }
     }

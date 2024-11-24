@@ -35,14 +35,19 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+	fail_route := fmt.Sprintf("/courses/%s/exam/%s", courseId, examId)
 	exam, err := app.getExam(ctx, courseId, examId)
 	if err != nil {
-		app.serverError(w, err)
+		app.serverErrorLog(err)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
 	userId := app.getUserId(r)
 	if userId == "" {
-		app.serverError(w, errors.New("user id is empty string while submitting answer"))
+		app.serverErrorLog(errors.New("user id is empty string while submitting answer"))
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
 
@@ -67,7 +72,10 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	buf := make([]byte, 512)
 	_, err = file.Read(buf)
 	if err != nil && err != io.EOF {
-		app.serverError(w, err)
+		app.serverErrorLog(err)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
+		return
 	}
 	file.Seek(0, io.SeekStart)
 	allowedTypes := map[string]bool{
@@ -78,19 +86,25 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	v.Check(validator.FileTypeAllowed(buf, allowedTypes), "file_type", "file type is not allowed")
 	v.Check(validator.FileSize(handler, 10*1024*1024), "file_size", "file size must be 10MB or less")
 	if v.Errors != nil {
-		w.WriteHeader(http.StatusBadRequest)
 		err = json.NewEncoder(w).Encode(v.Errors)
 		if err != nil {
-			app.serverError(w, err)
+			app.serverErrorLog(err)
+			data.HxRoute = fail_route
+			app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 			return
 		}
+		app.errorLog.Println(v.Errors)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
 
 	path := fmt.Sprintf("courses/%s/exams/%s/answers/%s", courseId, examId, userId)
 	url, object, err := app.storage.UploadFile(ctx, file, *handler, path)
 	if err != nil {
-		app.serverError(w, err)
+		app.serverErrorLog(err)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
 
@@ -108,12 +122,16 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		deleterErr := object.Delete(ctx)
 		if deleterErr != nil {
-			app.serverError(w, err)
+			app.serverErrorLog(deleterErr)
 		}
-		app.serverError(w, err)
+		app.serverErrorLog(err)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+
+	data.HxRoute = fmt.Sprintf("/courses/%s", courseId)
+	app.render(w, http.StatusOK, "success_exam.tmpl.html", data)
 }
 
 func (app *application) progressPage(w http.ResponseWriter, r *http.Request) {

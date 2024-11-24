@@ -20,6 +20,7 @@ type templateData struct {
 	Answer            *models.Answer
 	Answers           *[]models.Answer
 	FreeMaterials     *[]models.Material
+	HxRoute           string
 	IsLoggedIn        bool
 	IsSubscribed      bool
 	TemplateTitle     string

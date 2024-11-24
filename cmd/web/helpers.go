@@ -24,6 +24,10 @@ func (app *application) serverError(w http.ResponseWriter, err error) {
 
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
+func (app *application) serverErrorLog(err error) {
+	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
+	app.errorLog.Output(2, trace)
+}
 
 // clientError helper sends a specific status code and corresponding description
 // to the user.

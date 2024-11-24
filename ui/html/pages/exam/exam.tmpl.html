@@ -20,7 +20,8 @@
   </div>
 
   <div
-    class="text-md mt-4 grid grid-cols-1 place-items-center gap-y-4 pb-20 md:pb-0"
+    id="exam_res"
+    class="text-md mt-4 grid grid-cols-1 justify-items-center place-self-center place-items-center gap-y-4 pb-20 md:pb-0 md:w-5/6"
   >
     <h1
       id="examInfo"
@@ -62,7 +63,8 @@
     <form
       class="w-full md:w-5/6"
       hx-post="/answers/{{.Exam.CourseId}}/{{.Exam.ID}}"
-      hx-swap="none"
+      hx-target="#exam_res"
+      hx-swap="innerHTML"
       hx-trigger="submit"
       enctype="multipart/form-data"
     >

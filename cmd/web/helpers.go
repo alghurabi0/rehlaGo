@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"crypto/rand"
 	"encoding/json"
@@ -37,36 +36,6 @@ func (app *application) clientError(w http.ResponseWriter, status int) {
 
 func (app *application) notFound(w http.ResponseWriter) {
 	app.clientError(w, http.StatusNotFound)
-}
-
-func (app *application) renderFull(w http.ResponseWriter, status int, page string, data *templateData) {
-	ts, ok := app.templateCache[page]
-	if !ok {
-		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
-		return
-	}
-	buf := new(bytes.Buffer)
-	w.WriteHeader(status)
-	err := ts.ExecuteTemplate(buf, "base", data)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	buf.WriteTo(w)
-}
-
-func (app *application) render(w http.ResponseWriter, status int, page string, data *templateData) {
-	ts, ok := app.templateCache[page]
-	if !ok {
-		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
-		return
-	}
-	buf := new(bytes.Buffer)
-	w.WriteHeader(status)
-	err := ts.ExecuteTemplate(buf, "main", data)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	buf.WriteTo(w)
 }
 
 func (app *application) newTemplateData(r *http.Request) *templateData {

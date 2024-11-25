@@ -82,7 +82,7 @@ func (app *application) signUpPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "user is signed in", http.StatusConflict)
 		return
 	}
-	app.render(w, http.StatusOK, "signup.tmpl.html", nil)
+	app.renderAuth(w, http.StatusOK, "signupp.tmpl.html", nil)
 }
 
 func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"html/template"
+	"net/http"
 	"path/filepath"
 	"time"
 
@@ -54,7 +57,62 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		}
 		cache[name] = ts
 	}
+	ts, err := template.New("signupp.tmpl.html").ParseFiles("./ui/html/auth.tmpl.html")
+	if err != nil {
+		return nil, err
+	}
+	ts, err = ts.ParseFiles("./ui/html/signupp.tmpl.html")
+	if err != nil {
+		return nil, err
+	}
+	cache["signupp.tmpl.html"] = ts
+
 	return cache, nil
+}
+
+func (app *application) renderFull(w http.ResponseWriter, status int, page string, data *templateData) {
+	ts, ok := app.templateCache[page]
+	if !ok {
+		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
+		return
+	}
+	buf := new(bytes.Buffer)
+	w.WriteHeader(status)
+	err := ts.ExecuteTemplate(buf, "base", data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	buf.WriteTo(w)
+}
+
+func (app *application) render(w http.ResponseWriter, status int, page string, data *templateData) {
+	ts, ok := app.templateCache[page]
+	if !ok {
+		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
+		return
+	}
+	buf := new(bytes.Buffer)
+	w.WriteHeader(status)
+	err := ts.ExecuteTemplate(buf, "main", data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	buf.WriteTo(w)
+}
+
+func (app *application) renderAuth(w http.ResponseWriter, status int, page string, data *templateData) {
+	ts, ok := app.templateCache[page]
+	if !ok {
+		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
+		return
+	}
+	buf := new(bytes.Buffer)
+	w.WriteHeader(status)
+	err := ts.ExecuteTemplate(buf, "auth", data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	buf.WriteTo(w)
 }
 
 func subtract(a, b int) int {

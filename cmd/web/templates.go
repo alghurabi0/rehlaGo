@@ -65,7 +65,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	if err != nil {
 		return nil, err
 	}
-	ts, err = ts.ParseFiles("./ui/html/verifyForm.tmpl.html")
+	ts, err = ts.ParseFiles("./ui/html/partials/auth/verifyForm.tmpl.html")
 	if err != nil {
 		return nil, err
 	}

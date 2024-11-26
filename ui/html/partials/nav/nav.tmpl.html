@@ -330,8 +330,7 @@
       <div
         class="flex flex-col items-center my-1.5"
         hx-get="/login"
-        hx-select=".view"
-        hx-target=".view"
+        hx-target="body"
         hx-swap="outerHTML"
         hx-push-url="true"
       >
@@ -364,7 +363,6 @@
     <button
       class="bg-[#612C8C] rounded-2xl p-2 text-white font-semibold"
       hx-get="/signup"
-      hx-select="body"
       hx-target="body"
       hx-swap="outerHTML"
       hx-push-url="true"
@@ -374,8 +372,7 @@
     <button
       class="bg-[#612C8C] rounded-2xl p-2 ml-2 text-white font-semibold"
       hx-get="/login"
-      hx-select=".view"
-      hx-target="main"
+      hx-target="body"
       hx-swap="outerHTML"
       hx-push-url="true"
     >

@@ -4,7 +4,11 @@
   style="background-image: url(/static/icons/bg_img.jpg)"
 >
   <div class="mx-auto max-w-md">
-    <div id="share_app" class="ml-2 flex flex-row justify-start items-center" onclick="shareWebApp()">
+    <div
+      id="share_app"
+      class="ml-2 flex flex-row justify-start items-center"
+      onclick="shareWebApp()"
+    >
       <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
       <svg
         width="18"
@@ -27,7 +31,10 @@
       <img src="/static/icons/icon_x512.png" class="w-2/5" />
       {{ template "signupForm" }} {{ template "verifyForm" }}
       <div class="flex w-full flex-row justify-between text-white">
-        <button class="ml-2 flex flex-row items-center" onclick="window.location.href='mailto:zaid.alghurabi01@gmail.com';">
+        <button
+          class="ml-2 flex flex-row items-center"
+          onclick="window.location.href='mailto:zaid.alghurabi01@gmail.com';"
+        >
           <h2 class="mr-2">البريد الالكتروني</h2>
           <svg
             width="20"
@@ -44,7 +51,10 @@
             />
           </svg>
         </button>
-        <button class="mr-2 flex flex-row items-center" onclick="window.location.href='tel:+9647802089950';">
+        <button
+          class="mr-2 flex flex-row items-center"
+          onclick="window.location.href='tel:+9647802089950';"
+        >
           <h2 class="mr-2">اتصل بنا</h2>
           <svg
             width="20"
@@ -80,18 +90,20 @@
       </div>
       <script>
         function shareWebApp() {
-            if (navigator.share) {  // Check if Web Share API is supported
-                navigator.share({
-                    title: 'Rehla',  // Title of the shared content
-                    text: 'Download Rehla App',  // Optional text to share
-                    url: window.location.href,  // URL of the current page
-            })
-            .then(() => console.log('Shared successfully!'))
-            .catch((error) => console.log('Error sharing: ', error));
-    } else {
-      alert('Your browser does not support the Web Share API.');  // Fallback for unsupported browsers
-    }
-  }
+          if (navigator.share) {
+            // Check if Web Share API is supported
+            navigator
+              .share({
+                title: "Rehla", // Title of the shared content
+                text: "Download Rehla App", // Optional text to share
+                url: window.location.href, // URL of the current page
+              })
+              .then(() => console.log("Shared successfully!"))
+              .catch((error) => console.log("Error sharing: ", error));
+          } else {
+            alert("Your browser does not support the Web Share API."); // Fallback for unsupported browsers
+          }
+        }
       </script>
       <script type="module" defer src="/static/js/auth.js"></script>
     </div>

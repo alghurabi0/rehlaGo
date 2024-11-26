@@ -1,10 +1,14 @@
-{{ define "title" }}انشاء حساب{{ end }} {{ define "main" }}
+{{ define "title" }}تسجيل الدخول{{ end }} {{ define "main" }}
 <div
   class="view w-full h-full bg-cover bg-center bg-no-repeat"
   style="background-image: url(/static/icons/bg_img.jpg)"
 >
   <div class="mx-auto max-w-md">
-    <div id="share_app" class="ml-2 flex flex-row justify-start items-center" onclick="shareWebApp()">
+    <div
+      id="share_app"
+      class="ml-2 flex flex-row justify-start"
+      onclick="shareWebApp()"
+    >
       <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
       <svg
         width="18"
@@ -21,13 +25,47 @@
         />
       </svg>
     </div>
+
     <div
       class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-10"
     >
-      <img src="/static/icons/icon_x512.png" class="w-2/5" />
-      {{ template "signupForm" }} {{ template "verifyForm" }}
+      <img src="/static/icons/icon_x192.png" class="w-2/5" />
+      <form
+        id="login_form"
+        class="mt-10 grid w-full grid-cols-1 justify-items-center gap-y-4 p-2"
+        hx-post="/login"
+        hx-trigger="submit"
+        hx-push-url="true"
+      >
+        <input
+          id="phone_number"
+          name="phone_number"
+          type="tel"
+          class="h-12 w-full rounded-lg pr-4 text-end"
+          placeholder="رقم الهاتف"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+          class="h-12 w-full rounded-lg pr-4 text-end"
+          placeholder="الرمز السري"
+        />
+        <button
+          id="login_button"
+          type="submit"
+          class="h-12 w-full rounded-lg bg-slate-300 text-center text-lg font-bold text-purple-900"
+        >
+          تسجيل الدخول
+        </button>
+      </form>
+      <h1>ليس لديك حساب؟ انشاء حساب جديد</h1>
+
       <div class="flex w-full flex-row justify-between text-white">
-        <button class="ml-2 flex flex-row items-center" onclick="window.location.href='mailto:zaid.alghurabi01@gmail.com';">
+        <button
+          class="ml-2 flex flex-row"
+          onclick="window.location.href='mailto:zaid.alghurabi01@gmail.com';"
+        >
           <h2 class="mr-2">البريد الالكتروني</h2>
           <svg
             width="20"
@@ -44,7 +82,10 @@
             />
           </svg>
         </button>
-        <button class="mr-2 flex flex-row items-center" onclick="window.location.href='tel:+9647802089950';">
+        <button
+          class="mr-2 flex flex-row"
+          onclick="window.location.href='tel:+9647802089950';"
+        >
           <h2 class="mr-2">اتصل بنا</h2>
           <svg
             width="20"
@@ -63,7 +104,7 @@
           </svg>
         </button>
       </div>
-      <div class="flex flex-row items-center text-sm text-white">
+      <div class="flex flex-row text-sm text-white">
         <p class="mr-2">جميع الحقوق محفوظة لتطبيق رحلة 2023</p>
         <svg
           width="13"
@@ -80,20 +121,21 @@
       </div>
       <script>
         function shareWebApp() {
-            if (navigator.share) {  // Check if Web Share API is supported
-                navigator.share({
-                    title: 'Rehla',  // Title of the shared content
-                    text: 'Download Rehla App',  // Optional text to share
-                    url: window.location.href,  // URL of the current page
-            })
-            .then(() => console.log('Shared successfully!'))
-            .catch((error) => console.log('Error sharing: ', error));
-    } else {
-      alert('Your browser does not support the Web Share API.');  // Fallback for unsupported browsers
-    }
-  }
+          if (navigator.share) {
+            // Check if Web Share API is supported
+            navigator
+              .share({
+                title: "Rehla", // Title of the shared content
+                text: "Download Rehla App", // Optional text to share
+                url: window.location.href, // URL of the current page
+              })
+              .then(() => console.log("Shared successfully!"))
+              .catch((error) => console.log("Error sharing: ", error));
+          } else {
+            alert("Your browser does not support the Web Share API."); // Fallback for unsupported browsers
+          }
+        }
       </script>
-      <script type="module" defer src="/static/js/auth.js"></script>
     </div>
   </div>
 </div>

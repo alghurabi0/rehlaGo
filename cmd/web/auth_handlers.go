@@ -91,7 +91,7 @@ func (app *application) loginPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "user is signed in", http.StatusConflict)
 		return
 	}
-	app.render(w, http.StatusOK, "login.tmpl.html", nil)
+	app.renderAuth(w, http.StatusOK, "login.tmpl.html", nil)
 }
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {

@@ -6,11 +6,12 @@
   <div class="mx-auto max-w-md">
     <div
       id="share_app"
-      class="ml-2 mt-10 flex flex-row justify-start items-center"
+      class="ml-2 flex flex-row justify-start items-center"
       onclick="shareWebApp()"
     >
-      <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
+      <h1 class="my-2 mr-2 mt-10 text-xl text-white">مشاركة</h1>
       <svg
+        class="mt-10"
         width="18"
         height="20"
         viewBox="0 0 18 20"
@@ -61,7 +62,15 @@
       </form>
       <div class="flex flex-row-reverse">
         <h1 class="text-white font-semibold">ليس لديك حساب؟</h1>
-        <bdi class="mr-2 font-bold" hx-get="/signup" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true">انشاء حساب جديد</bdi>
+        <bdi
+          class="mr-2 font-bold"
+          hx-get="/signup"
+          hx-select=".view"
+          hx-target=".view"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          >انشاء حساب جديد</bdi
+        >
       </div>
 
       <div class="flex w-full flex-row justify-between text-white">

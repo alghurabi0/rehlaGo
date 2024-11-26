@@ -6,7 +6,7 @@
   <div class="mx-auto max-w-md">
     <div
       id="share_app"
-      class="ml-2 flex flex-row justify-start"
+      class="ml-2 mt-10 flex flex-row justify-start items-center"
       onclick="shareWebApp()"
     >
       <h1 class="my-2 mr-2 text-xl text-white">مشاركة</h1>
@@ -59,11 +59,14 @@
           تسجيل الدخول
         </button>
       </form>
-      <h1>ليس لديك حساب؟ انشاء حساب جديد</h1>
+      <div class="flex flex-row-reverse">
+        <h1 class="text-white font-semibold">ليس لديك حساب؟</h1>
+        <bdi class="mr-2 font-bold" hx-get="/signup" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true">انشاء حساب جديد</bdi>
+      </div>
 
       <div class="flex w-full flex-row justify-between text-white">
         <button
-          class="ml-2 flex flex-row"
+          class="ml-2 flex flex-row items-center"
           onclick="window.location.href='mailto:zaid.alghurabi01@gmail.com';"
         >
           <h2 class="mr-2">البريد الالكتروني</h2>
@@ -83,7 +86,7 @@
           </svg>
         </button>
         <button
-          class="mr-2 flex flex-row"
+          class="mr-2 flex flex-row items-center"
           onclick="window.location.href='tel:+9647802089950';"
         >
           <h2 class="mr-2">اتصل بنا</h2>
@@ -104,7 +107,7 @@
           </svg>
         </button>
       </div>
-      <div class="flex flex-row text-sm text-white">
+      <div class="flex flex-row text-sm text-white items-center">
         <p class="mr-2">جميع الحقوق محفوظة لتطبيق رحلة 2023</p>
         <svg
           width="13"

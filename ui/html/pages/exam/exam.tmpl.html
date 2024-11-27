@@ -112,7 +112,7 @@
           accept="application/pdf"
           class="mr-2 hidden w-2/3 text-end"
           _="on change 
-            set the innerText of #filename to my.files[0]?.name"
+            set the innerText of #filename to my.files[0].name"
         />
 
         <div class="mt-3 flex w-full flex-row justify-end text-gray-400">
@@ -143,7 +143,7 @@
           id="cancel_upload"
           class="mr-6 flex flex-grow flex-row justify-center items-center rounded-xl border-[3px] border-purple-700 py-3 cursor-pointer"
           _="on click 
-             set #file_upload's value to ''; 
+             set #file_upload's value to '' then 
              set the innerText of #filename to 'لم تقم باختيار ملف بعد'"
         >
           <h1 class="mr-2">الغاء</h1>

@@ -110,7 +110,6 @@
         _="on click
            if #examTab matches '.flex' and me matches '.activeTab'
            then
-            end
            else
             add .hidden to #lecTab
             then remove .flex from #lecTab
@@ -124,7 +123,7 @@
       <button
         id="lecTabLink"
         class="tablink font-bold activeTab"
-        _="on click if #lecTab matches '.flex' and me matches '.activeTab' then end
+        _="on click if #lecTab matches '.flex' and me matches '.activeTab' then
            else add .hidden to #examTab
            then remove .flex from #examTab
            then remove .hidden from #lecTab

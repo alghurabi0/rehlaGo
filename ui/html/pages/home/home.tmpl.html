@@ -81,7 +81,10 @@
       hx-swap="outerHTML"
       hx-push-url="true"
       class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 shadow-lg bg-[#E5E5E5E5]"
-      _="on htmx:responseError if target's detail.xhr.responseText is 'loginRequired' then log 'login requiredd' then call #loginDialog's showModal()"
+      _="on htmx:responseError 
+      if event.detail.xhr.responseText is 'loginRequired' 
+      then log 'login required' 
+      then call #loginDialog's showModal()"
     >
       <img
         src="/static/icons/homepage/Student_card.svg"

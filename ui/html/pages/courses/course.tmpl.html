@@ -120,17 +120,6 @@
     </div>
     <div
       class="w-full md:w-5/6"
-      _="on htmx:responseError 
-      if event.detail.xhr.responseText is 'loginRequired' 
-      then log 'login required' 
-      then call #loginDialog's showModal()
-      then add .flex to #loginDialog
-      then remove .hidden from #loginDialog
-      else if event.detail.xhr.responseText is 'subRequired'
-      then log 'subscription required'
-      then call #subDialog's showModal()
-      then add .flex to #subDialog
-      then remove .hidden from #subDialog"
     >
       <div
         id="lecTab"

@@ -119,16 +119,30 @@
       </button>
     </div>
     <div
-      id="lecTab"
-      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col md:w-5/6"
+      _="on htmx:responseError 
+      if event.detail.xhr.responseText is 'loginRequired' 
+      then log 'login required' 
+      then call #loginDialog's showModal()
+      then add .flex to #loginDialog
+      then remove .hidden from #loginDialog
+      else if event.detail.xhr.responseText is 'subRequired'
+      then log 'subscription required'
+      then call #subDialog's showModal()
+      then add .flex to #subDialog
+      then remove .hidden from #subDialog"
     >
-      {{ range .Course.Lecs }} {{ template "lecCard" . }} {{ end }}
-    </div>
-    <div
-      id="examTab"
-      class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden md:w-5/6"
-    >
-      {{ range .Course.Exams}} {{ template "examCard" . }} {{ end }}
+      <div
+        id="lecTab"
+        class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col md:w-5/6"
+      >
+        {{ range .Course.Lecs }} {{ template "lecCard" . }} {{ end }}
+      </div>
+      <div
+        id="examTab"
+        class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col hidden md:w-5/6"
+      >
+        {{ range .Course.Exams}} {{ template "examCard" . }} {{ end }}
+      </div>
     </div>
   </div>
   <script>

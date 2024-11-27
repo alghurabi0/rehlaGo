@@ -149,36 +149,6 @@
       </div>
     </div>
   </div>
-  <script>
-    function showTab(tabName) {
-      console.log(tabName);
-      let tabToClose = "";
-      if (tabName === "#examTab") {
-        tabToClose = "#lecTab";
-      } else {
-        tabToClose = "#examTab";
-      }
-      console.log(tabToClose);
-      tabToCloseEl = document.querySelector(tabToClose);
-      console.log("tab to close", tabToCloseEl);
-      tabToCloseEl.classList.add("hidden");
-
-      tablinks = document.querySelectorAll(".tablink");
-      for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("activeTab");
-      }
-
-      tabToShowEl = document.querySelector(tabName);
-      console.log("tab to show", tabToShowEl);
-      tabToShowEl.classList.remove("hidden");
-
-      if (tabName === "#lecTab") {
-        document.querySelector("#lecTabLink").classList.add("activeTab");
-      } else {
-        document.querySelector("#examTabLink").classList.add("activeTab");
-      }
-    }
-  </script>
 </div>
 {{ end }} {{ define "lecCard" }}
 <div class="flex flex-row justify-between py-4 px-4">

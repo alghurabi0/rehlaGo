@@ -107,20 +107,24 @@
       <button
         id="examTabLink"
         class="tablink mr-3 font-bold"
-        _="on click if #examTab has .flex and me has .activeTab then
-           else add .hidden to #lecTab
-           then remove .flex from #lecTab
-           then remove .hidden from #examTab
-           then add .flex to #examTab
-           then remove .activeTab from #lecTabLink
-           then add .activeTab to me"
+        _="on click
+           if #examTab has .flex and me has .activeTab
+           then
+            end
+           else
+            add .hidden to #lecTab
+            then remove .flex from #lecTab
+            then remove .hidden from #examTab
+            then add .flex to #examTab
+            then remove .activeTab from #lecTabLink
+            then add .activeTab to me"
       >
         الامتحانات
       </button>
       <button
         id="lecTabLink"
         class="tablink font-bold activeTab"
-        _="on click if #lecTab has .flex and me has .activeTab then
+        _="on click if #lecTab has .flex and me has .activeTab then end
            else add .hidden to #examTab
            then remove .flex from #examTab
            then remove .hidden from #lecTab

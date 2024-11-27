@@ -147,15 +147,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   if (navDrawer && username && tabUsername) {
     const navDrawerUsername = navDrawer.querySelector("#nav_drawer_username");
-    username.addEventListener("click", () => {
-      if (navDrawer.classList.contains("hidden")) {
-        navDrawer.classList.remove("hidden");
-        navDrawer.classList.add("flex");
-      } else if (navDrawer.classList.contains("flex")) {
-        navDrawer.classList.remove("flex");
-        navDrawer.classList.add("hidden");
-      }
-    });
+    //username.addEventListener("click", () => {
+    //if (navDrawer.classList.contains("hidden")) {
+    //navDrawer.classList.remove("hidden");
+    //navDrawer.classList.add("flex");
+    //} else if (navDrawer.classList.contains("flex")) {
+    //navDrawer.classList.remove("flex");
+    //navDrawer.classList.add("hidden");
+    //}
+    //});
     tabUsername.addEventListener("click", () => {
       if (navDrawer.classList.contains("hidden")) {
         navDrawer.classList.remove("hidden");

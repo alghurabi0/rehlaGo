@@ -82,7 +82,8 @@
         {{ if not .IsSubscribed }}
         <button
           class="subButton mt-3 flex h-[48px] w-5/6 flex-row items-center justify-center self-center rounded-xl bg-[#A490BB]"
-          onclick="showWindow()"
+          _="on click add .flex to #subWindow
+             then call #subWindow's showModal()"
         >
           <p class="mr-2 text-lg text-white font-semibold">اشترك في الدورة</p>
           <svg
@@ -106,21 +107,31 @@
       <button
         id="examTabLink"
         class="tablink mr-3 font-bold"
-        onclick="showTab('#examTab')"
+        _="on click if #examTab has .flex and me has .activeTab then
+           else add .hidden to #lecTab
+           then remove .flex from #lecTab
+           then remove .hidden from #examTab
+           then add .flex to #examTab
+           then remove .activeTab from #lecTabLink
+           then add .activeTab to me"
       >
         الامتحانات
       </button>
       <button
         id="lecTabLink"
         class="tablink font-bold activeTab"
-        onclick="showTab('#lecTab')"
+        _="on click if #lecTab has .flex and me has .activeTab then
+           else add .hidden to #examTab
+           then remove .flex from #examTab
+           then remove .hidden from #lecTab
+           then add .flex to #lecTab
+           then remove .activeTab from #examTabLink
+           then add .activeTab to me"
       >
         المحاضرات
       </button>
     </div>
-    <div
-      class="w-full md:w-5/6"
-    >
+    <div class="w-full md:w-5/6">
       <div
         id="lecTab"
         class="tabcontent bg-[#E5E5E5E5] w-full rounded-xl flex flex-col"
@@ -164,10 +175,6 @@
         document.querySelector("#examTabLink").classList.add("activeTab");
       }
     }
-    //let lecTab = document.querySelector("#lecTab");
-    //if (lecTab) {
-    //showTab("#lecTab");
-    //}
   </script>
 </div>
 {{ end }} {{ define "lecCard" }}

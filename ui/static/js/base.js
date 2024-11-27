@@ -97,10 +97,10 @@ initializeNotifications();
 
 // ----------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  const loginDialog = document.querySelector("#loginDialog");
-  const subDialog = document.querySelector("#subDialog");
-  const loginClose = document.querySelector("#loginClose");
-  const subClose = document.querySelector("#subClose");
+  //const loginDialog = document.querySelector("#loginDialog");
+  //const subDialog = document.querySelector("#subDialog");
+  //const loginClose = document.querySelector("#loginClose");
+  //const subClose = document.querySelector("#subClose");
   //const username = document.querySelector("#username");
   //const tabUsername = document.querySelector("#tabUsername");
   //const navDrawer = document.querySelector("#nav_drawer");
@@ -113,38 +113,38 @@ document.addEventListener("DOMContentLoaded", () => {
     //});
   //}
 
-  if (subDialog && subClose) {
-    subClose.addEventListener("click", () => {
-      subDialog.classList.add("hidden");
-      subDialog.classList.remove("flex");
-      subDialog.close();
-    });
-  }
+  //if (subDialog && subClose) {
+    //subClose.addEventListener("click", () => {
+      //subDialog.classList.add("hidden");
+      //subDialog.classList.remove("flex");
+      //subDialog.close();
+    //});
+  //}
 
-  document.addEventListener("htmx:responseError", (event) => {
-    if (!event) {
-      console.log("empty event");
-      return;
-    }
-
-    if (event.detail.xhr.status == 401) {
-      if (event.detail.xhr.responseText == "loginRequired") {
-        console.log("login required");
-        if (loginDialog) {
-          loginDialog.classList.remove("hidden");
-          loginDialog.classList.add("flex");
-          loginDialog.showModal();
-        }
-      } else if (event.detail.xhr.responseText == "subRequired") {
-        console.log("subscription required");
-        if (subDialog) {
-          subDialog.classList.remove("hidden");
-          subDialog.classList.add("flex");
-          subDialog.showModal();
-        }
-      }
-    }
-  });
+  //document.addEventListener("htmx:responseError", (event) => {
+    //if (!event) {
+      //console.log("empty event");
+      //return;
+    //}
+//
+    //if (event.detail.xhr.status == 401) {
+      //if (event.detail.xhr.responseText == "loginRequired") {
+        //console.log("login required");
+        //if (loginDialog) {
+          //loginDialog.classList.remove("hidden");
+          //loginDialog.classList.add("flex");
+          //loginDialog.showModal();
+        //}
+      //} else if (event.detail.xhr.responseText == "subRequired") {
+        //console.log("subscription required");
+        //if (subDialog) {
+          //subDialog.classList.remove("hidden");
+          //subDialog.classList.add("flex");
+          //subDialog.showModal();
+        //}
+      //}
+    //}
+  //});
   //if (navDrawer && username && tabUsername) {
   //const navDrawerUsername = navDrawer.querySelector("#nav_drawer_username");
   //username.addEventListener("click", () => {

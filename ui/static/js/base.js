@@ -101,17 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const subDialog = document.querySelector("#subDialog");
   const loginClose = document.querySelector("#loginClose");
   const subClose = document.querySelector("#subClose");
-  const username = document.querySelector("#username");
-  const tabUsername = document.querySelector("#tabUsername");
-  const navDrawer = document.querySelector("#nav_drawer");
+  //const username = document.querySelector("#username");
+  //const tabUsername = document.querySelector("#tabUsername");
+  //const navDrawer = document.querySelector("#nav_drawer");
 
-  if (loginDialog && loginClose) {
-    loginClose.addEventListener("click", () => {
-      loginDialog.classList.add("hidden");
-      loginDialog.classList.remove("flex");
-      loginDialog.close();
-    });
-  }
+  //if (loginDialog && loginClose) {
+    //loginClose.addEventListener("click", () => {
+      //loginDialog.classList.add("hidden");
+      //loginDialog.classList.remove("flex");
+      //loginDialog.close();
+    //});
+  //}
 
   if (subDialog && subClose) {
     subClose.addEventListener("click", () => {

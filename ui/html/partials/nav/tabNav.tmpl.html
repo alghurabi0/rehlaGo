@@ -3,7 +3,8 @@
   class="flex justify-around fixed bottom-0 left-0 h-16 w-full bg-zinc-100 md:hidden"
 >
   <div
-    class="flex-grow flex items-center justify-center"
+    id="home_nav"
+    class="nav_item flex-grow flex items-center justify-center"
     hx-get="/"
     hx-select=".view"
     hx-target=".view"
@@ -26,8 +27,9 @@
     </svg>
   </div>
   <div
-    class="flex-grow flex items-center justify-center"
-    hx-get="/"
+    id="courses_nav"
+    class="nav_item flex-grow flex items-center justify-center"
+    hx-get="/courses"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"
@@ -49,8 +51,9 @@
     </svg>
   </div>
   <div
-    class="flex-grow flex items-center justify-center"
-    hx-get="/"
+    id="materials_nav"
+    class="nav_item flex-grow flex items-center justify-center"
+    hx-get="/materials"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"
@@ -78,8 +81,9 @@
     </svg>
   </div>
   <div
-    class="flex-grow flex items-center justify-center"
-    hx-get="/"
+    id="progress_nav"
+    class="nav_item flex-grow flex items-center justify-center"
+    hx-get="/progress"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"
@@ -113,8 +117,9 @@
     </svg>
   </div>
   <div
-    class="flex-grow flex items-center justify-center"
-    hx-get="/"
+    id="profile_nav"
+    class="nav_item flex-grow flex items-center justify-center"
+    hx-get="/myprofile"
     hx-select=".view"
     hx-target=".view"
     hx-swap="outerHTML"

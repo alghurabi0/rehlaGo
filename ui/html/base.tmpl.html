@@ -47,20 +47,20 @@
       on load or popstate or htmx:afterRequest
       set myRoute to window.location.pathname
       if myRoute is "/"
-          set '#ADADAD' to (<path/> in #nav_tab).fill
-          set '#612C8C' into (<path/> in #home_nav_tab).fill
+          set (<path/> in #nav_tab).fill to '#ADADAD'
+          set (<path/> in #home_nav_tab).fill to '#612C8C'
       else if myRoute matches "^/courses"
-          set '#202020' to (<path/> in #nav_drawer).fill
-          set '#612C8C' into (<path/> in #courses_nav_tab).fill
+          set (<path/> in #nav_drawer).fill to '#202020'
+          set (<path/> in #courses_nav_tab).fill to '#612C8C'
       else if myRoute matches "^/materials"
-          set '#202020' to (<path/> in #nav_drawer).fill
-          set '#612C8C' into (<path/> in #materials_nav_tab).fill
+          set (<path/> in #nav_drawer).fill to '#202020'
+          set (<path/> in #materials_nav_tab).fill to '#612C8C'
       else if myRoute matches "^/progress"
-          set '#202020' to (<path/> in #nav_drawer).fill
-          set '#612C8C' into (<path/> in #progress_nav_tab).fill
+          set (<path/> in #nav_drawer).fill to '#202020'
+          set (<path/> in #progress_nav_tab).fill to '#612C8C'
       else if myRoute matches "^/myprofile"
-          set '#202020' to (<path/> in #nav_drawer).fill
-          set '#612C8C' into (<path/> in #profile_nav_tab).fill
+          set (<path/> in #nav_drawer).fill to '#202020'
+          set (<path/> in #profile_nav_tab).fill to '#612C8C'
       end
     </script>
   </body>

@@ -48,7 +48,7 @@
       set myRoute to window.location.pathname
       if myRoute is "/"
           add .mew to #home_nav_tab
-      else if myRoute starts with "/courses"
+      else if myRoute matches "^/courses"
           add .meww to #courses_nav_tab
       end
     </script>

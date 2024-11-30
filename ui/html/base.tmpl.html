@@ -18,16 +18,6 @@
     <script type="module" src="/static/js/base.js"></script>
     <script src="sw-register.js"></script>
     <title>{{template "title" .}} - Rehla</title>
-    <script type="text/hyperscript">
-      when page is ready
-      on load or popstate or htmx:afterRequest
-      set myRoute to window.location.pathname
-      if myRoute is "/"
-          add .mew to #home_nav_tab
-      else if myRouse starts with "/courses"
-          add .meww to #courses_nav_tab
-      end
-    </script>
   </head>
 
   <body
@@ -53,6 +43,15 @@
       {{ template "loginRequired" }} {{ template "subRequired" }} {{ template
       "tabNav" . }} {{ template "nav_drawer" . }}
     </main>
+    <script type="text/hyperscript">
+      on load or popstate or htmx:afterRequest
+      set myRoute to window.location.pathname
+      if myRoute is "/"
+          add .mew to #home_nav_tab
+      else if myRouse starts with "/courses"
+          add .meww to #courses_nav_tab
+      end
+    </script>
   </body>
 </html>
 {{ end }}

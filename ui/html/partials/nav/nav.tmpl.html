@@ -6,10 +6,8 @@
         set (<path/> in me).fill to '#ADADAD'
         set (<path/> in #home_nav_tab).fill to '#612C8C'
       else if myRoute matches '^/courses'
-        for path in me
-            set [@fill='#ADADAD'] to path
-        end
-        set (<path/> in #courses_nav_tab).setAttribute.fill '#612C8C'
+        put [@fill='#ADADAD'] into <path/> in me
+        put [@fill='#612C8C'] into <path/> in #courses_nav_tab
       else if myRoute matches '^/materials'
         set (<path/> in me).fill to '#202020'
         set (<path/> in #materials_nav_tab).fill to '#612C8C'

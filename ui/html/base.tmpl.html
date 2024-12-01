@@ -43,7 +43,7 @@
       {{ template "loginRequired" }} {{ template "subRequired" }} {{ template
       "tabNav" . }} {{ template "nav_drawer" . }}
     </main>
-    <script type="text/hypertext">
+    <script type="text/hyperscript">
       on load or popstate or htmx:afterRequest
       set myRoute to window.location.pathname
       if myRoute is '/'

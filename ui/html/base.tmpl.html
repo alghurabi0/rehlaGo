@@ -46,12 +46,27 @@
     <script type="text/hyperscript">
       on load or popstate or htmx:afterRequest
       set myRoute to window.location.pathname
+      set pur to 'bg-[#A490BB]'
       if myRoute is '/'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #home_nav_tab).style.fill to '#612C8C'
+
+        set (<path/> in #nav_drawer).style.fill to '#202020'
+        remove .text-white from <bdi/> in .nav_drawer_item
+        remove .{pur} from .nav_drawer_item
+        set (<path/> in #home_nav_drawer).style.fill to 'white'
+        add .text-white to <bdi/> in #home_nav_drawer
+        add .{pur} to #home_nav_drawer
       else if myRoute matches '^/courses'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #courses_nav_tab).style.fill to '#612C8C'
+
+        set (<path/> in #nav_drawer).style.fill to '#202020'
+        remove .text-white from <bdi/> in .nav_drawer_item
+        remove .{pur} from .nav_drawer_item
+        set (<path/> in #courses_nav_drawer).style.fill to 'white'
+        add .text-white to <bdi/> in #courses_nav_drawer
+        add .{pur} to #courses_nav_drawer
       else if myRoute matches '^/materials'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #materials_nav_tab).style.fill to '#612C8C'

@@ -1,36 +1,6 @@
 {{ define "nav_drawer" }}
 <div id="nav_drawer"
-    class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden"
-    _="
-      on load or popstate or htmx:afterRequest
-      set myRoute to window.location.pathname
-      if myRoute is '/'
-        set (<path/> in me).style.fill to '#202020'
-        set (<path/> in #home_nav_drawer).style.fill to 'white'
-        set cl to 'bg-[#A490BB]'
-        add .{cl} to #home_nav_drawer
-      else if myRoute matches '^/courses'
-        set (<path/> in me).style.fill to '#202020'
-        set (<path/> in #courses_nav_drawer).style.fill to 'white'
-        set cl to 'bg-[#A490BB]'
-        add .{cl} to #courses_nav_drawer
-      else if myRoute matches '^/materials'
-        set (<path/> in me).style.fill to '#202020'
-        set (<path/> in #materials_nav_drawer).style.fill to 'white'
-        set cl to 'bg-[#A490BB]'
-        add .{cl} to #materials_nav_drawer
-      else if myRoute matches '^/progress'
-        set (<path/> in me).style.fill to '#202020'
-        set (<path/> in #progress_nav_drawer).style.fill to 'white'
-        set cl to 'bg-[#A490BB]'
-        add .{cl} to #progress_nav_drawer
-      else if myRoute matches '^/myprofile'
-        set (<path/> in me).fill to '#202020'
-        set (<path/> in #profile_nav_drawer).style.fill to 'white'
-        set cl to 'bg-[#A490BB]'
-        add .{cl} to #profile_nav_drawer
-      end
-      ">
+    class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden">
     <div _="on click toggle between .hidden and .flex on #nav_drawer" id="nav_drawer_username"
         class="flex items-center justify-end">
         <h2 class="mr-5 text-xl font-semibold text-zinc-800">

@@ -1,6 +1,31 @@
 {{ define "nav_drawer" }}
 <div id="nav_drawer"
-    class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden">
+    class="fixed right-0 top-0 h-full w-60 flex-col items-end gap-y-4 bg-white p-2 shadow-md font-medium overflow-auto hidden"
+    _="
+      on load or popstate or htmx:afterRequest
+      set myRoute to window.location.pathname
+      if myRoute is '/'
+        set (<path/> in me).style.fill to '#202020'
+        set (<path/> in #home_nav_drawer).style.fill to 'white'
+        add .bg-[#A490BB] to #home_nav_drawer
+      else if myRoute matches '^/courses'
+        set (<path/> in me).style.fill to '#202020'
+        set (<path/> in #courses_nav_drawer).style.fill to 'white'
+        add .bg-[#A490BB] to #courses_nav_drawer
+      else if myRoute matches '^/materials'
+        set (<path/> in me).style.fill to '#202020'
+        set (<path/> in #materials_nav_drawer).style.fill to 'white'
+        add .bg-[#A490BB] to #materials_nav_drawer
+      else if myRoute matches '^/progress'
+        set (<path/> in me).style.fill to '#202020'
+        set (<path/> in #progress_nav_drawer).style.fill to 'white'
+        add .bg-[#A490BB] to #progress_nav_drawer
+      else if myRoute matches '^/myprofile'
+        set (<path/> in me).fill to '#202020'
+        set (<path/> in #profile_nav_drawer).style.fill to 'white'
+        add .bg-[#A490BB] to #profile_nav_drawer
+      end
+      ">
     <div _="on click toggle between .hidden and .flex on #nav_drawer" id="nav_drawer_username"
         class="flex items-center justify-end">
         <h2 class="mr-5 text-xl font-semibold text-zinc-800">
@@ -37,8 +62,8 @@
         </svg>
         <bdi class="mr-3">ملفي الشخصي</bdi>
     </button>
-    <button id="courses_nav_drawer" hx-get="/courses" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="courses_nav_drawer" hx-get="/courses" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M0.800781 1.39961C0.800781 0.957782 1.15895 0.599609 1.60078 0.599609H6.40078C7.46165 0.599609 8.47906 1.02104 9.22921 1.77118C9.36383 1.90581 9.48787 2.04904 9.60078 2.19958C9.71369 2.04904 9.83773 1.90581 9.97235 1.77118C10.7225 1.02104 11.7399 0.599609 12.8008 0.599609H17.6008C18.0426 0.599609 18.4008 0.957782 18.4008 1.39961V13.3996C18.4008 13.8414 18.0426 14.1996 17.6008 14.1996H12.0008C11.5764 14.1996 11.1695 14.3682 10.8694 14.6682C10.5694 14.9683 10.4008 15.3753 10.4008 15.7996C10.4008 16.2414 10.0426 16.5996 9.60078 16.5996C9.15895 16.5996 8.80078 16.2414 8.80078 15.7996C8.80078 15.3753 8.63221 14.9683 8.33215 14.6682C8.03209 14.3682 7.62513 14.1996 7.20078 14.1996H1.60078C1.15895 14.1996 0.800781 13.8414 0.800781 13.3996V1.39961ZM8.80078 13.0283C8.31846 12.7499 7.76736 12.5996 7.20078 12.5996H2.40078V2.19961H6.40078C7.0373 2.19961 7.64775 2.45247 8.09784 2.90255C8.54792 3.35264 8.80078 3.96309 8.80078 4.59961V13.0283ZM10.4008 13.0283C10.8831 12.7499 11.4342 12.5996 12.0008 12.5996H16.8008V2.19961H12.8008C12.1643 2.19961 11.5538 2.45247 11.1037 2.90255C10.6536 3.35264 10.4008 3.96309 10.4008 4.59961V13.0283Z"
@@ -47,8 +72,8 @@
         <bdi class="mr-3">الدورات</bdi>
 
     </button>
-    <button id="materials_nav_drawer" hx-get="/materials" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="materials_nav_drawer" hx-get="/materials" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M0.796694 1.10236C1.24678 0.65227 1.85723 0.399414 2.49375 0.399414H8.09375C8.30592 0.399414 8.50941 0.4837 8.65944 0.633729L14.2594 6.23373C14.4095 6.38376 14.4938 6.58724 14.4938 6.79941V15.5994C14.4938 16.2359 14.2409 16.8464 13.7908 17.2965C13.3407 17.7466 12.7303 17.9994 12.0938 17.9994H2.49375C1.85723 17.9994 1.24678 17.7466 0.796694 17.2965C0.346606 16.8464 0.09375 16.2359 0.09375 15.5994V2.79941C0.09375 2.16289 0.346606 1.55245 0.796694 1.10236ZM2.49375 1.99941C2.28158 1.99941 2.07809 2.0837 1.92806 2.23373C1.77804 2.38376 1.69375 2.58724 1.69375 2.79941V15.5994C1.69375 15.8116 1.77804 16.0151 1.92806 16.1651C2.07809 16.3151 2.28158 16.3994 2.49375 16.3994H12.0938C12.3059 16.3994 12.5094 16.3151 12.6594 16.1651C12.8095 16.0151 12.8938 15.8116 12.8938 15.5994V7.13078L7.76238 1.99941H2.49375Z"
@@ -59,8 +84,8 @@
         </svg>
         <bdi class="mr-3">المواد</bdi>
     </button>
-    <button id="progress_nav_drawer" hx-get="/progress" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="progress_nav_drawer" hx-get="/progress" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M14.1156 1.8002C13.6738 1.8002 13.3156 1.44202 13.3156 1.0002C13.3156 0.558367 13.6738 0.200195 14.1156 0.200195H18.9156C19.3575 0.200195 19.7156 0.558367 19.7156 1.0002V5.8002C19.7156 6.24202 19.3575 6.6002 18.9156 6.6002C18.4738 6.6002 18.1156 6.24202 18.1156 5.8002V2.93157L11.8813 9.16588C11.5689 9.4783 11.0624 9.4783 10.7499 9.16588L7.31563 5.73157L1.88131 11.1659C1.56889 11.4783 1.06236 11.4783 0.74994 11.1659C0.43752 10.8535 0.43752 10.3469 0.74994 10.0345L6.74994 4.03451C7.06236 3.72209 7.56889 3.72209 7.88131 4.03451L11.3156 7.46882L16.9843 1.8002H14.1156Z"
@@ -69,8 +94,8 @@
         <bdi class="mr-3">مستوى التقدم</bdi>
     </button>
     <span class="block h-1 bg-slate-300 w-5/6"></span>
-    <button id="mycourses_nav_drawer" hx-get="/mycourses" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="mycourses_nav_drawer" hx-get="/mycourses" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M0.800781 1.39961C0.800781 0.957782 1.15895 0.599609 1.60078 0.599609H6.40078C7.46165 0.599609 8.47906 1.02104 9.22921 1.77118C9.36383 1.90581 9.48787 2.04904 9.60078 2.19958C9.71369 2.04904 9.83773 1.90581 9.97235 1.77118C10.7225 1.02104 11.7399 0.599609 12.8008 0.599609H17.6008C18.0426 0.599609 18.4008 0.957782 18.4008 1.39961V13.3996C18.4008 13.8414 18.0426 14.1996 17.6008 14.1996H12.0008C11.5764 14.1996 11.1695 14.3682 10.8694 14.6682C10.5694 14.9683 10.4008 15.3753 10.4008 15.7996C10.4008 16.2414 10.0426 16.5996 9.60078 16.5996C9.15895 16.5996 8.80078 16.2414 8.80078 15.7996C8.80078 15.3753 8.63221 14.9683 8.33215 14.6682C8.03209 14.3682 7.62513 14.1996 7.20078 14.1996H1.60078C1.15895 14.1996 0.800781 13.8414 0.800781 13.3996V1.39961ZM8.80078 13.0283C8.31846 12.7499 7.76736 12.5996 7.20078 12.5996H2.40078V2.19961H6.40078C7.0373 2.19961 7.64775 2.45247 8.09784 2.90255C8.54792 3.35264 8.80078 3.96309 8.80078 4.59961V13.0283ZM10.4008 13.0283C10.8831 12.7499 11.4342 12.5996 12.0008 12.5996H16.8008V2.19961H12.8008C12.1643 2.19961 11.5538 2.45247 11.1037 2.90255C10.6536 3.35264 10.4008 3.96309 10.4008 4.59961V13.0283Z"
@@ -78,8 +103,8 @@
         </svg>
         <bdi class="mr-3">دوراتي</bdi>
     </button>
-    <button id="payments_nav_drawer" hx-get="/payments" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="payments_nav_drawer" hx-get="/payments" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M6.40078 0.200195C6.84261 0.200195 7.20078 0.558367 7.20078 1.0002V3.4002H10.4008C10.8426 3.4002 11.2008 3.75837 11.2008 4.2002C11.2008 4.64202 10.8426 5.0002 10.4008 5.0002H7.20078V9.0002H8.40078C9.35556 9.0002 10.2712 9.37948 10.9464 10.0546C11.6215 10.7297 12.0008 11.6454 12.0008 12.6002C12.0008 13.555 11.6215 14.4706 10.9464 15.1458C10.2712 15.8209 9.35556 16.2002 8.40078 16.2002H7.20078V18.6002C7.20078 19.042 6.84261 19.4002 6.40078 19.4002C5.95895 19.4002 5.60078 19.042 5.60078 18.6002V16.2002H1.60078C1.15895 16.2002 0.800781 15.842 0.800781 15.4002C0.800781 14.9584 1.15895 14.6002 1.60078 14.6002H5.60078V10.6002H4.40078C3.446 10.6002 2.53033 10.2209 1.8552 9.54578C1.18007 8.87065 0.800781 7.95498 0.800781 7.0002C0.800781 6.04542 1.18007 5.12974 1.8552 4.45461C2.53033 3.77948 3.446 3.4002 4.40078 3.4002H5.60078V1.0002C5.60078 0.558367 5.95895 0.200195 6.40078 0.200195ZM5.60078 5.0002H4.40078C3.87035 5.0002 3.36164 5.21091 2.98657 5.58598C2.6115 5.96105 2.40078 6.46976 2.40078 7.0002C2.40078 7.53063 2.6115 8.03934 2.98657 8.41441C3.36164 8.78948 3.87035 9.0002 4.40078 9.0002H5.60078V5.0002ZM7.20078 10.6002V14.6002H8.40078C8.93122 14.6002 9.43992 14.3895 9.815 14.0144C10.1901 13.6393 10.4008 13.1306 10.4008 12.6002C10.4008 12.0698 10.1901 11.5611 9.815 11.186C9.43992 10.8109 8.93121 10.6002 8.40078 10.6002H7.20078Z"
@@ -87,8 +112,8 @@
         </svg>
         <bdi class="mr-3">تاريخ الدفع</bdi>
     </button>
-    <button id="privacy_nav_drawer" hx-get="/privacy_policy" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="privacy_nav_drawer" hx-get="/privacy_policy" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M7.11832 0.450351C7.29943 0.382435 7.49901 0.382435 7.68012 0.450351L14.0801 2.85035C14.3924 2.96744 14.5992 3.26594 14.5992 3.59941V9.19941C14.5992 11.9566 12.7738 14.1597 11.126 15.6015C10.2853 16.3371 9.44838 16.9121 8.82322 17.3028C8.5098 17.4987 8.24748 17.6496 8.06167 17.7525C7.96872 17.8039 7.89476 17.8434 7.84296 17.8706C7.81706 17.8842 7.79668 17.8947 7.78222 17.9022L7.76502 17.9109L7.75984 17.9135L7.75812 17.9144C7.75786 17.9145 7.75699 17.915 7.39922 17.1994C7.04145 17.915 7.04121 17.9148 7.04095 17.9147L7.03859 17.9135L7.03341 17.9109L7.01621 17.9022C7.00176 17.8947 6.98138 17.8842 6.95548 17.8706C6.90368 17.8434 6.82972 17.8039 6.73677 17.7525C6.55096 17.6496 6.28864 17.4987 5.97522 17.3028C5.35005 16.9121 4.51312 16.3371 3.67242 15.6015C2.02462 14.1597 0.199219 11.9566 0.199219 9.19941V3.59941C0.199219 3.26594 0.406077 2.96744 0.71832 2.85035L7.11832 0.450351ZM7.39922 17.1994L7.04095 17.9147C7.26618 18.0273 7.53177 18.0276 7.75699 17.915L7.39922 17.1994ZM7.39922 16.2896C7.55253 16.2027 7.74858 16.0877 7.97522 15.946C8.55005 15.5867 9.31312 15.0617 10.0724 14.3974C11.6246 13.0392 12.9992 11.2423 12.9992 9.19941V4.15381L7.39922 2.05381L1.79922 4.15381V9.19941C1.79922 11.2423 3.17382 13.0392 4.72602 14.3974C5.48532 15.0617 6.24838 15.5867 6.82322 15.946C7.04986 16.0877 7.24591 16.2027 7.39922 16.2896Z"
@@ -96,8 +121,8 @@
         </svg>
         <bdi class="mr-3">سياسة الخصوصية</bdi>
     </button>
-    <button id="contact_nav_drawer" hx-get="/contact" hx-select=".view" hx-target=".view" hx-swap="outerHTML" hx-push-url="true"
-        class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
+    <button id="contact_nav_drawer" hx-get="/contact" hx-select=".view" hx-target=".view" hx-swap="outerHTML"
+        hx-push-url="true" class="nav_drawer_item flex h-8 w-5/6 flex-row-reverse items-center justify-start pr-2">
         <svg width="25" height="25" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
                 d="M10.3409 3.39873L11.547 1.75404C11.629 1.64219 11.784 1.61369 11.9005 1.68904C13.4784 2.71006 13.9122 4.26973 13.2791 5.41949C12.5868 6.67691 11.519 8.21899 9.88106 9.85688C8.24317 11.4948 6.70109 12.5626 5.44367 13.2549C4.29391 13.888 2.73424 13.4542 1.71322 11.8763C1.63787 11.7598 1.66638 11.6048 1.77822 11.5228L3.42291 10.3167C3.66477 10.1394 3.98551 10.1122 4.25377 10.2463L4.90933 10.5741C5.46692 10.8529 6.23126 10.9508 6.9548 10.5786C7.43853 10.3297 8.18409 9.85679 9.03253 9.00835C9.88097 8.15991 10.3539 7.41435 10.6028 6.93062C10.975 6.20708 10.8771 5.44274 10.5983 4.88515L10.2705 4.22959C10.1364 3.96133 10.1635 3.64059 10.3409 3.39873ZM12.7697 0.345724C14.8021 1.66081 15.8483 4.07064 14.6807 6.19121C13.9187 7.57519 12.7612 9.23948 11.0124 10.9883C9.26367 12.737 7.59937 13.8945 6.21539 14.6565C4.09481 15.8241 1.68499 14.7779 0.369905 12.7455C-0.165769 11.9176 0.0368793 10.8157 0.832036 10.2326L2.47673 9.02647C3.2023 8.49439 4.16454 8.41283 4.96931 8.81522L5.62488 9.143C5.81465 9.23789 6.03418 9.25289 6.22284 9.15583C6.56658 8.97899 7.17573 8.60242 7.90116 7.87698C8.6266 7.15155 9.00317 6.5424 9.18001 6.19867C9.27707 6.01 9.26207 5.79047 9.16718 5.6007L8.8394 4.94513C8.43702 4.14036 8.51857 3.17812 9.05065 2.45255L10.2568 0.807857C10.8399 0.0127 11.9418 -0.18995 12.7697 0.345724Z"

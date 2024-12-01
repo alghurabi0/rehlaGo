@@ -43,6 +43,26 @@
       {{ template "loginRequired" }} {{ template "subRequired" }} {{ template
       "tabNav" . }} {{ template "nav_drawer" . }}
     </main>
+    <script type="text/hypertext">
+      on load or popstate or htmx:afterRequest
+      set myRoute to window.location.pathname
+      if myRoute is '/'
+        set (<path/> in #nav_tab).style.fill to '#ADADAD'
+        set (<path/> in #home_nav_tab).style.fill to '#612C8C'
+      else if myRoute matches '^/courses'
+        set (<path/> in #nav_tab).style.fill to '#ADADAD'
+        set (<path/> in #courses_nav_tab).style.fill to '#612C8C'
+      else if myRoute matches '^/materials'
+        set (<path/> in #nav_tab).style.fill to '#ADADAD'
+        set (<path/> in #materials_nav_tab).style.fill to '#612C8C'
+      else if myRoute matches '^/progress'
+        set (<path/> in #nav_tab).style.fill to '#ADADAD'
+        set (<path/> in #progress_nav_tab).style.fill to '#612C8C'
+      else if myRoute matches '^/myprofile'
+        set (<path/> in #nav_tab).fill to '#ADADAD'
+        set (<path/> in #profile_nav_tab).style.fill to '#612C8C'
+      end
+    </script>
   </body>
 </html>
 {{ end }}

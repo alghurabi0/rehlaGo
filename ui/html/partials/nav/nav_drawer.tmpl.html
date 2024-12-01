@@ -8,22 +8,27 @@
         set (<path/> in me).style.fill to '#202020' then
         set (<path/> in #home_nav_drawer).style.fill to 'white' then
         add .bg-[#A490BB] to #home_nav_drawer
+        end
       else if myRoute matches '^/courses'
         set (<path/> in me).style.fill to '#202020' then
         set (<path/> in #courses_nav_drawer).style.fill to 'white' then
         add .bg-[#A490BB] to #courses_nav_drawer
+        end
       else if myRoute matches '^/materials'
         set (<path/> in me).style.fill to '#202020' then
         set (<path/> in #materials_nav_drawer).style.fill to 'white' then
         add .bg-[#A490BB] to #materials_nav_drawer
+        end
       else if myRoute matches '^/progress'
         set (<path/> in me).style.fill to '#202020' then
         set (<path/> in #progress_nav_drawer).style.fill to 'white' then
         add .bg-[#A490BB] to #progress_nav_drawer
+        end
       else if myRoute matches '^/myprofile'
         set (<path/> in me).fill to '#202020' then
         set (<path/> in #profile_nav_drawer).style.fill to 'white' then
         add .bg-[#A490BB] to #profile_nav_drawer
+        end
       end
       ">
     <div _="on click toggle between .hidden and .flex on #nav_drawer" id="nav_drawer_username"

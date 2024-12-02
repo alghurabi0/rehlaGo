@@ -560,8 +560,7 @@ video {
   padding-bottom: 5px;
 }
 
-,
-    .activeNav {
+.activeNav {
   border-color: #8a4baf;
   border-top-width: 4px;
   padding-top: 7px;

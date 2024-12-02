@@ -560,6 +560,13 @@ video {
   padding-bottom: 5px;
 }
 
+,
+    .activeNav {
+  border-color: #8a4baf;
+  border-top-width: 4px;
+  padding-top: 7px;
+}
+
 .pointer-events-none {
   pointer-events: none;
 }

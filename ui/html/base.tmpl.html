@@ -70,6 +70,9 @@
         set (<path/> in #courses_nav_drawer).style.fill to 'white'
         add .text-white to <bdi/> in #courses_nav_drawer
         add .{pur} to #courses_nav_drawer
+
+        remove .activeNav from <div/> in #mobile_nav
+        add .activeNav to #courses_nav
       else if myRoute matches '^/materials'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #materials_nav_tab).style.fill to '#612C8C'
@@ -80,6 +83,9 @@
         set (<path/> in #materials_nav_drawer).style.fill to 'white'
         add .text-white to <bdi/> in #materials_nav_drawer
         add .{pur} to #materials_nav_drawer
+
+        remove .activeNav from <div/> in #mobile_nav
+        add .activeNav to #materials_nav
       else if myRoute matches '^/progress'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #progress_nav_tab).style.fill to '#612C8C'
@@ -90,6 +96,9 @@
         set (<path/> in #progress_nav_drawer).style.fill to 'white'
         add .text-white to <bdi/> in #progress_nav_drawer
         add .{pur} to #progress_nav_drawer
+
+        remove .activeNav from <div/> in #mobile_nav
+        add .activeNav to #progress_nav
       else if myRoute matches '^/myprofile'
         set (<path/> in #nav_tab).fill to '#ADADAD'
         set (<path/> in #profile_nav_tab).style.fill to '#612C8C'
@@ -100,6 +109,9 @@
         set (<path/> in #profile_nav_drawer).style.fill to 'white'
         add .text-white to <bdi/> in #profile_nav_drawer
         add .{pur} to #profile_nav_drawer
+
+        remove .activeNav from <div/> in #mobile_nav
+        add .activeNav to #profile_nav
       end
     </script>
   </body>

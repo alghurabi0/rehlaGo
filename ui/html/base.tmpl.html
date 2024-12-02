@@ -57,6 +57,9 @@
         set (<path/> in #home_nav_drawer).style.fill to 'white'
         add .text-white to <bdi/> in #home_nav_drawer
         add .{pur} to #home_nav_drawer
+
+        remove .activeNav from <div/> in footer
+        add .activeNav to #home_nav
       else if myRoute matches '^/courses'
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #courses_nav_tab).style.fill to '#612C8C'

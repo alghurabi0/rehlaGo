@@ -22,7 +22,10 @@
   <div
     class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
   >
-    <img src="{{if .User.ImgURL }}{{.User.ImgURL}}{{else}}https://placehold.co/100x100{{end}}" class="w-36"/>
+    <img
+      src="{{if .User.ImgURL }}{{.User.ImgURL}}{{else}}https://placehold.co/100x100{{end}}"
+      class="w-40 h-40 rounded-full object-cover"
+    />
     <h1 class="font-bold text-lg">{{ .User.Firstname}} {{ .User.Lastname }}</h1>
 
     <div class="grid grid-cols-1 gap-5 w-full justify-items-end mt-8 md:w-5/6">
@@ -75,6 +78,12 @@
         </svg>
 
         <h1 class="mr-3">عرض تاريخ الدفع</h1>
+      </div>
+      <div
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
+      >
+        <label for="userPic" class="mr-3">change picture</label>
+        <input id="userPic" type="file" accept="image/*" class="hidden" />
       </div>
       <div
         hx-get="/privacy_policy"

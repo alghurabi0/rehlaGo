@@ -33,7 +33,7 @@
 <div
   class="flex w-full flex-row items-center justify-between rounded-lg bg-[#E5E5E5E5] p-2 shadow-lg md:w-3/4"
 >
-  <img src="/static/icons/Video.png" alt="icon" class="h-[150px]" />
+  <img src="{{if .TeacherImg}}{{.TeacherImg}}{{end}}" alt="icon" class="h-[150px]" />
 
   <div class="flex w-1/2 flex-col gap-3 items-end">
     <h1 class="text-xl font-bold">{{ .Title }}</h1>

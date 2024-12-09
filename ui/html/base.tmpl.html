@@ -9,6 +9,12 @@
     />
     <link rel="stylesheet" href="/static/css/tailwind.css" />
     <link rel="manifest" href="/static/web.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@160..700&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://unpkg.com/htmx.org@1.9.12"
       integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
@@ -21,7 +27,7 @@
   </head>
 
   <body
-    class="h-screen min-h-screen select-none bg-white font-sans leading-normal tracking-normal"
+    class="h-screen min-h-screen select-none bg-white font-readex leading-normal tracking-normal"
   >
     <main
       class="mx-auto overflow-y-scroll h-screen rounded-lg shadow-lg md:max-w-5xl"
@@ -60,7 +66,9 @@
 
         remove .activeNav from <div/> in #mobile_nav
         add .activeNav to #home_nav
+
       else if myRoute matches '^/courses'
+
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #courses_nav_tab).style.fill to '#612C8C'
 
@@ -73,7 +81,9 @@
 
         remove .activeNav from <div/> in #mobile_nav
         add .activeNav to #courses_nav
+
       else if myRoute matches '^/materials'
+
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #materials_nav_tab).style.fill to '#612C8C'
 
@@ -86,7 +96,9 @@
 
         remove .activeNav from <div/> in #mobile_nav
         add .activeNav to #materials_nav
+
       else if myRoute matches '^/progress'
+
         set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #progress_nav_tab).style.fill to '#612C8C'
 
@@ -99,8 +111,10 @@
 
         remove .activeNav from <div/> in #mobile_nav
         add .activeNav to #progress_nav
+
       else if myRoute matches '^/myprofile'
-        set (<path/> in #nav_tab).fill to '#ADADAD'
+
+        set (<path/> in #nav_tab).style.fill to '#ADADAD'
         set (<path/> in #profile_nav_tab).style.fill to '#612C8C'
 
         set (<path/> in #nav_drawer).style.fill to '#202020'

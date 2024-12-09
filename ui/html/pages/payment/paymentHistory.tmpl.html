@@ -9,7 +9,7 @@
     <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
         <div class="flex w-full flex-col items-center justify-center rounded-lg bg-[#E5E5E5E5] p-2 shadow-lg md:w-3/4">
             <div class="flex w-full flex-row-reverse">
-                <img src="/static/icons/Video.png" alt="icon"
+                <img src="{{if .Course.TeacherImg}}{{.Course.TeacherImg}}{{end}}" alt="icon"
                     class="h-[80px]" />
                 <div class="mr-3 mt-3 flex flex-col items-end">
                     <h1 class="text-xl font-bold">{{ .Course.Title }}</h1>

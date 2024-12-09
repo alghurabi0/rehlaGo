@@ -933,6 +933,10 @@ video {
   height: 1rem;
 }
 
+.h-40 {
+  height: 10rem;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -1053,16 +1057,16 @@ video {
   width: 75%;
 }
 
-.w-36 {
-  width: 9rem;
-}
-
 .w-4 {
   width: 1rem;
 }
 
 .w-4\/6 {
   width: 66.666667%;
+}
+
+.w-40 {
+  width: 10rem;
 }
 
 .w-5 {
@@ -1754,6 +1758,11 @@ video {
   background-repeat: no-repeat;
 }
 
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .p-0 {
   padding: 0px;
 }
@@ -1931,6 +1940,10 @@ video {
 
 .align-middle {
   vertical-align: middle;
+}
+
+.font-readex {
+  font-family: "Readex Pro", sans-serif;
 }
 
 .font-sans {

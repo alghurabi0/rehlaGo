@@ -20,6 +20,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /firebase-messaging-sw.js", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "firebase-messaging-sw.js")
 	})
+	mux.HandleFunc("GET /.well-known/assetlinks.json", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, ".well-known/assetlinks.json")
+	})
 	mux.HandleFunc("GET /ping", app.ping)
 
 	// is logged in middleware

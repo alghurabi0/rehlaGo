@@ -1,0 +1,9 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "live.rehla.www.twa",
+        "sha256_cert_fingerprints": ["A8:C4:96:AC:B2:2F:A3:D3:0F:6D:73:EE:F1:3F:67:F9:16:82:D9:35:5E:9B:C9:2A:C0:A4:59:5C:33:AD:1C:CD"]
+      }
+}]
+

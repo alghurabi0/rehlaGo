@@ -210,12 +210,12 @@ func (app *application) createUser(w http.ResponseWriter, r *http.Request) {
 	app.infoLog.Println(user)
 	// validation
 	v := validator.Validator{}
-	v.Check(validator.NotBlank(user.Firstname), "firstname", "firstname shouldn't be empty")
-	v.Check(validator.NotBlank(user.Lastname), "lastname", "lastname shouldn't be empty")
-	v.Check(validator.ValidPhoneNumber(user.PhoneNumber), "phone_number", "phone_number should be a valid iraqi number of 11 digits")
-	v.Check(validator.ValidPhoneNumber(user.ParentPhoneNumber), "parent_phone_number", "parent_phone_number should be a valid iraqi number of 11 digits")
+	v.Check(validator.NotBlank(user.Firstname), "الاسم الأول", "لا يجب ان يكون الاسم الاول فارغ")
+	v.Check(validator.NotBlank(user.Lastname), "الاسم الاخير", "لا يجب ان يكون الاسم الاخير فارغ")
+	v.Check(validator.ValidPhoneNumber(user.PhoneNumber), "رقم الهاتف", "phone number must be valid iraqi number consist of 11 digits")
+	v.Check(validator.ValidPhoneNumber(user.ParentPhoneNumber), "رقم هاتف ولي الأمر", "should be a valid iraqi number of 11 digits")
 	v.Check(validator.ValidGender(user.Gender), "gender", "gender should be male or female")
-	v.Check(validator.Password(user.Pwd), "password", "password should be at least 8 chars, numbers, or symbols")
+	v.Check(validator.Password(user.Pwd), "الرمز", "يجب ان يتكون الرمز من 8 حروف, ارقام, او رموز")
 
 	if v.Errors != nil {
 		w.WriteHeader(http.StatusBadRequest)

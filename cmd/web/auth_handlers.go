@@ -268,7 +268,8 @@ func (app *application) verifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	userId := string(body)
+	userIdStr := string(body)
+	userId := strings.Trim(userIdStr, `"`)
 
 	// TODO - if empty
 	app.infoLog.Println(userId)

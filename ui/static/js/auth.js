@@ -38,7 +38,7 @@ function checkFields(event) {
     alert("يرجى ملئ جميع الحقول");
     return;
   }
-  createUser();
+  return createUser();
 }
 
 async function createUser() {
@@ -73,7 +73,7 @@ async function createUser() {
   }
 }
 
-async function sendOTP(user_id, formData) {
+async function sendOTP(user_id) {
   userId = user_id;
   const phone = "+964" + formData["phone_number"].slice(1);
   try {

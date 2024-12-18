@@ -30,13 +30,13 @@ function sendOTP(event) {
   // validation
   for (let i = 0; i < inputs.length; i++) {
     if (!inputs[i].value) {
-      alert("Please fill all the fields");
+      alert("يرجى ملئ جميع الحقول");
       return;
     }
   }
   if (!select.value) {
-      alert("Please fill all the fields");
-      return;
+    alert("يرجى ملئ جميع الحقول");
+    return;
   }
 
   // send data to backend
@@ -56,12 +56,11 @@ function sendOTP(event) {
         return res.text();
       } else if (res.status == 409) {
         // TODO
-        alert("User already exists");
+        alert("يوجد حساب بهذا الرقم, يرجى استعمال رقم اخر او تسجيل الدخول");
         return Promise.reject("User exists");
       } else {
-        alert(res);
         console.log("Error", res);
-        alert("error");
+        alert("حدث خطأ, يرجى التواصل مع الدعم");
         return Promise.reject("invalid");
       }
     })
@@ -85,29 +84,9 @@ function sendOTP(event) {
 function verifyOTP() {
   const otp = document.getElementById("otp").value;
   if (!otp) {
-    alert("Please enter OTP");
+    alert("يرجى ادخال رمز التأكيد");
     return;
   }
-  fetch("/verify_signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: userId,
-  })
-    .then((res) => {
-      console.log(res);
-      if (res.status == 200) {
-        alert("User created successfully");
-        window.location.href = "/";
-      } else {
-        // TODO
-        console.log("Error", res);
-      }
-    })
-    .catch((error) => {
-      console.log("fetch error", error);
-    });
   window.confirmationResult
     .confirm(otp)
     .then(() => {
@@ -122,11 +101,12 @@ function verifyOTP() {
         .then((res) => {
           console.log(res);
           if (res.status == 200) {
-            alert("User created successfully");
+            alert("تم أنشاء الحساب بنجاح");
             window.location.href = "/";
           } else {
             // TODO
             console.log("Error", res);
+            alert("حدث خطأ, يرجى التواصل مع الدعم")
           }
         })
         .catch((error) => {

@@ -20,8 +20,8 @@ vendor:
 	go mod tidy
 	@echo "verifying..."
 	go mod verify
-	@echo "vedoring..."
-	go mod vendor
+	#@echo "vedoring..."
+	#go mod vendor
 
 #####
 # BUILD

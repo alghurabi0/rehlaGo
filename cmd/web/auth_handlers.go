@@ -137,14 +137,18 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		user.ID = doc.Ref.ID
 	}
 	if count == 0 {
-		http.Error(w, "no_match", http.StatusBadRequest)
+		w.Header().Set("HX-Retarget", ".errors")
+		w.Header().Set("HX-Reswap", "innerHTML")
+		w.Write([]byte("لا يوجد حساب بهذا الرقم, يرجى أنشاء حساب"))
 		return
 	} else if count > 1 {
 		app.serverError(w, fmt.Errorf("more than one user with this phone number: %s", phone))
 		return
 	}
 	if user.Pwd != pass {
-		http.Error(w, "wrong-pass", http.StatusBadRequest)
+		w.Header().Set("HX-Retarget", ".errors")
+		w.Header().Set("HX-Reswap", "innerHTML")
+		w.Write([]byte("يوجد خطأ في المعلومات المدخلة"))
 		return
 	}
 	if user.SessionId != "" {
@@ -166,6 +170,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	re, err := json.Marshal(user)
 	if err != nil {
 		app.errorLog.Printf("failed to marshal user to json: %v\n", err)
+		app.serverError(w, err)
 		return
 	}
 

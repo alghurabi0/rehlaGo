@@ -20,11 +20,11 @@ function render() {
 let formData = {};
 var userId = "";
 const signup_form = document.getElementById("signup_form");
+const inputs = signup_form.getElementsByTagName("input");
+const select = signup_form.querySelector("select");
 
 function checkFields(event) {
   if (event) event.preventDefault();
-  const inputs = signup_form.getElementsByTagName("input");
-  const select = signup_form.querySelector("select");
 
   // TODO
   // validation

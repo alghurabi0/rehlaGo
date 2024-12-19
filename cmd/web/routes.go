@@ -54,6 +54,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /privacy_policy", isLoggedIn.ThenFunc(app.policyPage))
 	mux.Handle("GET /contact", isLoggedIn.ThenFunc(app.contactPage))
 	mux.Handle("POST /contact", isLoggedIn.ThenFunc(app.contactMessage))
+	mux.Handle("POST /change_profile_img", isLoggedIn.ThenFunc(app.changeProfileImg))
 
 	mux.Handle("GET /reset", isLoggedIn.ThenFunc(app.resetPasswordPage))
 	mux.Handle("POST /reset", isLoggedIn.ThenFunc(app.resetPassword))

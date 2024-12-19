@@ -79,12 +79,16 @@
 
         <h1 class="mr-3">عرض تاريخ الدفع</h1>
       </div>
-      <div
+      <form
         class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
+        hx-post="/change_profile_img"
+        hx-trigger="change"
+        hx-swap="none"
+        enctype="multipart/form-data"
       >
         <label for="userPic" class="mr-3">change picture</label>
-        <input id="userPic" type="file" accept="image/*" class="hidden" />
-      </div>
+        <input id="userPic" name="userPic" type="file" accept="image/*" class="hidden" />
+      </form>
       <div
         hx-get="/privacy_policy"
         hx-target=".view"

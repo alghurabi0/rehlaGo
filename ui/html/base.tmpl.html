@@ -28,9 +28,14 @@
 
   <body
     class="h-screen min-h-screen select-none bg-white font-readex leading-normal tracking-normal"
-    _="fetch:after with (response) if (response.status == 500)
-         then
-           set #error-banner.style.display to 'block' wait 4s set #error-banner.style.display to 'none'"
+    _="on htmx:afterRequest
+       if event.detail.xhr.status is 500
+         set #error-banner.style.display to 'block'
+         wait 4s
+         set #error-banner.style.display to 'none'
+       end
+       end
+      "
   >
     <main
       class="mx-auto overflow-y-scroll h-screen rounded-lg shadow-lg md:max-w-5xl"

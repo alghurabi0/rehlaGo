@@ -22,13 +22,13 @@ func (app *application) changeProfileImg(w http.ResponseWriter, r *http.Request)
 
 	err = r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
+		//http.Error(w, "Error parsing form data (max 10 mb)", http.StatusBadRequest)
+		app.serverError(w, err)
 		return
 	}
 	photo, handler, err := r.FormFile("userPic")
 	if err != nil {
-		http.Error(w, "Error Retrieving the File", http.StatusInternalServerError)
-		app.errorLog.Println(err)
+		app.serverError(w, err)
 		return
 	}
 	defer photo.Close()

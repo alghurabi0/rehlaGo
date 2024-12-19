@@ -28,6 +28,9 @@
 
   <body
     class="h-screen min-h-screen select-none bg-white font-readex leading-normal tracking-normal"
+    _="fetch:after with (response) if (response.status == 500)
+         then
+           set #error-banner.style.display to 'block' wait 4s set #error-banner.style.display to 'none'"
   >
     <main
       class="mx-auto overflow-y-scroll h-screen rounded-lg shadow-lg md:max-w-5xl"
@@ -43,6 +46,23 @@
       then add .flex to #subDialog
       then remove .hidden from #subDialog"
     >
+      <div
+        id="error-banner"
+        style="
+          display: none;
+          background: red;
+          color: white;
+          padding: 10px;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          text-align: center;
+          z-index: 1000;
+        "
+      >
+        Something went wrong
+      </div>
       <div class="w-full p-4">
         {{ template "nav" . }} {{ template "main" . }}
       </div>

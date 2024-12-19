@@ -53,16 +53,21 @@ func (app *application) createAnswer(w http.ResponseWriter, r *http.Request) {
 
 	err = r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
 		return
 	}
 	file, handler, err := r.FormFile("answer_file")
 	if err != nil {
 		if err == http.ErrMissingFile {
-			http.Error(w, "missing answer file", http.StatusBadRequest)
+			data.HxRoute = fail_route
+			app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
+			app.infoLog.Println("missing answer file")
 			return
 		}
-		app.clientError(w, http.StatusBadRequest)
+		data.HxRoute = fail_route
+		app.render(w, http.StatusOK, "fail_exam.tmpl.html", data)
+		app.errorLog.Println(err)
 		return
 	}
 	defer file.Close()

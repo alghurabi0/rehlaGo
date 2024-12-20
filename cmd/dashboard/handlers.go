@@ -207,46 +207,48 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx := context.Background()
 	teacherImg, handler, err := r.FormFile("teacher_img")
-	if err != nil {
+	if err == nil {
+		defer teacherImg.Close()
+		imgPath := fmt.Sprintf("courses/%s/%s", course.ID, handler.Filename)
+		url, _, err := app.storage.UploadFile(ctx, teacherImg, *handler, imgPath)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		err = app.storage.DeleteFile(ctx, course.FilePath)
+		if err != nil {
+			app.errorLog.Println(err)
+		}
+		course.TeacherImg = url
+		course.FilePath = imgPath
+	} else if err == http.ErrMissingFile {
+	} else {
 		app.errorLog.Printf("%v\n", err)
 		http.Error(w, "Error processing file upload", http.StatusBadRequest)
 		return
 	}
-
-	defer teacherImg.Close()
-	imgPath := fmt.Sprintf("courses/%s/%s", course.ID, handler.Filename)
-	url, object, err := app.storage.UploadFile(ctx, teacherImg, *handler, imgPath)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = app.storage.DeleteFile(ctx, course.FilePath)
-	if err != nil {
-		app.errorLog.Println(err)
-	}
-	course.TeacherImg = url
-	course.FilePath = imgPath
 
 	cover, handler2, err := r.FormFile("cover")
-	if err != nil {
+	if err == nil {
+		defer cover.Close()
+		coverPath := fmt.Sprintf("courses/%s/%s", course.ID, handler2.Filename)
+		url2, _, err := app.storage.UploadFile(ctx, cover, *handler2, coverPath)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		err = app.storage.DeleteFile(ctx, course.CoverPath)
+		if err != nil {
+			app.errorLog.Println(err)
+		}
+		course.Cover = url2
+		course.FilePath = coverPath
+	} else if err == http.ErrMissingFile {
+	} else {
 		app.errorLog.Printf("%v\n", err)
 		http.Error(w, "Error processing file upload", http.StatusBadRequest)
 		return
 	}
-
-	defer cover.Close()
-	coverPath := fmt.Sprintf("courses/%s/%s", course.ID, handler2.Filename)
-	url2, object2, err := app.storage.UploadFile(ctx, cover, *handler2, coverPath)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = app.storage.DeleteFile(ctx, course.CoverPath)
-	if err != nil {
-		app.errorLog.Println(err)
-	}
-	course.Cover = url2
-	course.FilePath = coverPath
 
 	priceStr := r.FormValue("price")
 	if priceStr != "" {
@@ -266,8 +268,6 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	err = app.course.Update(ctx, courseId, updates)
 	if err != nil {
 		app.serverError(w, err)
-		object.Delete(ctx)
-		object2.Delete(ctx)
 		return
 	}
 

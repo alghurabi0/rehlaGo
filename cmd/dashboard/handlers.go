@@ -205,16 +205,49 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	if teacher != "" {
 		course.Teacher = teacher
 	}
-	teacherImg, _, err := r.FormFile("teacher_img")
+	ctx := context.Background()
+	teacherImg, handler, err := r.FormFile("teacher_img")
 	if err != nil {
-		if err != http.ErrMissingFile {
-			app.errorLog.Printf("%v\n", err)
-			http.Error(w, "Error processing file upload", http.StatusBadRequest)
-			return
-		}
-	} else {
-		defer teacherImg.Close()
+		app.errorLog.Printf("%v\n", err)
+		http.Error(w, "Error processing file upload", http.StatusBadRequest)
+		return
 	}
+
+	defer teacherImg.Close()
+	imgPath := fmt.Sprintf("courses/%s/%s", course.ID, handler.Filename)
+	url, object, err := app.storage.UploadFile(ctx, teacherImg, *handler, imgPath)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.storage.DeleteFile(ctx, course.FilePath)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+	course.TeacherImg = url
+	course.FilePath = imgPath
+
+	cover, handler2, err := r.FormFile("cover")
+	if err != nil {
+		app.errorLog.Printf("%v\n", err)
+		http.Error(w, "Error processing file upload", http.StatusBadRequest)
+		return
+	}
+
+	defer cover.Close()
+	coverPath := fmt.Sprintf("courses/%s/%s", course.ID, handler2.Filename)
+	url2, object2, err := app.storage.UploadFile(ctx, cover, *handler2, coverPath)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.storage.DeleteFile(ctx, course.CoverPath)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+	course.Cover = url2
+	course.FilePath = coverPath
+
 	priceStr := r.FormValue("price")
 	if priceStr != "" {
 		price, err := strconv.Atoi(priceStr)
@@ -230,10 +263,11 @@ func (app *application) editCourse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	updates := app.createFirestoreUpdateArr(course, true)
-	ctx := context.Background()
 	err = app.course.Update(ctx, courseId, updates)
 	if err != nil {
 		app.serverError(w, err)
+		object.Delete(ctx)
+		object2.Delete(ctx)
 		return
 	}
 

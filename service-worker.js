@@ -47,7 +47,16 @@ async function clearCacheIfNoClients() {
 
 // Listen for activate event (cleanup when necessary)
 self.addEventListener("activate", (event) => {
-  event.waitUntil(clearCacheIfNoClients());
+  console.log("service worker activated");
+});
+
+// Listen for messages from the main thread
+self.addEventListener("message", (event) => {
+  console.log("message event");
+  if (event.data && event.data.action === "clear-cache") {
+    clearCacheIfNoClients();
+    console.log("deleted cache");
+  }
 });
 
 // Cache First Strategy

@@ -1,39 +1,53 @@
-const CACHE_NAME = 'Rehla-vtest';
-const urlsToCache = [
-  '/',
-];
+const SESSION_CACHE_NAME = 'SESSION_CACHE';
 
 // Install event: Cache initial resources
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-      // prefetch
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-  );
+    console.log("installed service worker");
 });
 
-self.addEventListener('activate', (event) => {
-  // Clean up old caches if necessary
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
+// Handle fetch requests
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+
+  // Only cache GET requests
+  if (request.method !== 'GET') return;
+
+  event.respondWith(
+    caches.open(SESSION_CACHE_NAME).then((cache) => {
+      return cache.match(request).then((cachedResponse) => {
+        if (cachedResponse) {
+          // Serve from cache
+          console.log('[Service Worker] Serving from cache:', request.url);
+          return cachedResponse;
+        }
+
+        // Otherwise, fetch from network and cache the response
+        return fetch(request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            cache.put(request, networkResponse.clone());
+            console.log('[Service Worker] Cached:', request.url);
           }
-        })
-      );
+          return networkResponse;
+        });
+      });
     })
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-    event.respondWith(networkFirst(event.request));
+// Clear cache when no tabs (clients) are active
+async function clearCacheIfNoClients() {
+  const clientsList = await self.clients.matchAll({ type: 'window' });
+  if (clientsList.length === 0) {
+    console.log('[Service Worker] No active clients, clearing session cache.');
+    await caches.delete(SESSION_CACHE_NAME);
   }
-);
+}
+
+// Listen for activate event (cleanup when necessary)
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clearCacheIfNoClients());
+});
+
 
 // Cache First Strategy
 async function cacheFirst(request) {

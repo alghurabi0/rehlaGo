@@ -35,8 +35,33 @@ const homepageRoute = new Route(( { request }) => {
   cacheName: 'homepage'
 }));
 
+// Handle deleting cache on login
+const loginRoute = new Route(({ request, url }) => {
+  return request.method === 'POST' && url.pathname.endsWith('/login');
+}, async ({ event, request }) => {
+  try {
+    const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
+
+    // Check for successful login (using cookie in this example)
+    if (response.headers.get('Set-Cookie')?.includes('Login-Success=true')) {
+      console.log('[Service Worker] Login successful, clearing homepage cache');
+      const cache = await caches.open('homepage');
+      await cache.keys().then(keys => {
+          keys.forEach(key => cache.delete(key))
+      });
+    }
+
+    return response;
+  } catch (error) {
+    console.error('[Service Worker] Error handling login request:', error);
+    // Handle fetch errors if needed, e.g., return a fallback response
+    return new Response('Login request failed', { status: 500 }); // Example fallback
+  }
+});
+
 // Register routes
 registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
+registerRoute(loginRoute);

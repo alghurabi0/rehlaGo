@@ -182,6 +182,17 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 	app.session.Put(r.Context(), "session_id", session_id)
 	//http.Redirect(w, r, "/", http.StatusFound)
+	// Create a new cookie
+	cookie := &http.Cookie{
+		Name:     "Login-Success",
+		Value:    "true",
+		MaxAge:   5,     // Expires after 5 seconds
+		Path:     "/",    // Cookie available for all paths (optional, but good practice)
+		Secure:   true,  // Set to true if using HTTPS (recommended)
+		// HttpOnly: true,  // Recommended for security
+	}
+	// Set the cookie in the response
+	http.SetCookie(w, cookie)
 	w.Header().Set("HX-Redirect", "/")
 }
 

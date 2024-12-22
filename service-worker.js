@@ -27,6 +27,14 @@ const stylesRoute = new Route(({ request }) => {
   cacheName: 'styles'
 }));
 
+// Handle homepage
+const homepageRoute = new Route(( { request }) => {
+  const url = URL(request.url);
+  return url.pathname === '/';
+}, new CacheFirst({
+  cacheName: 'homepage'
+}));
+
 // Register routes
 registerRoute(imageRoute);
 registerRoute(scriptsRoute);

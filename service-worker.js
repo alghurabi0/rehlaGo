@@ -39,4 +39,4 @@ const homepageRoute = new Route(( { request }) => {
 registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
-
+registerRoute(homepageRoute);

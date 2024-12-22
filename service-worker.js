@@ -36,11 +36,12 @@ const homepageRoute = new Route(( { request }) => {
 }));
 
 // Handle deleting cache on login
-const loginRoute = new Route(({ request, url }) => {
+const loginRoute = new Route(({ request }) => {
+  const url = new URL(request);
   return request.method === 'POST' && url.pathname.endsWith('/login');
 }, async ({ event, request }) => {
+  console.log("request to login");
   try {
-    console.log("request to login");
     const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
     console.log("sent request");
 

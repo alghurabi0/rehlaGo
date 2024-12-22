@@ -2,8 +2,8 @@ importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js'
 );
 
-const {registerRoute, Route} = workbox.routing;
-const {CacheFirst, StaleWhileRevalidate} = workbox.strategies;
+const { registerRoute, Route } = workbox.routing;
+const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
 //const {CacheableResponse} = workbox.cacheableResponse;
 
 // Handle images:
@@ -28,7 +28,7 @@ const stylesRoute = new Route(({ request }) => {
 }));
 
 // Handle homepage
-const homepageRoute = new Route(( { request }) => {
+const homepageRoute = new Route(({ request }) => {
   const url = new URL(request.url);
   return url.pathname === '/';
 }, new CacheFirst({
@@ -36,7 +36,7 @@ const homepageRoute = new Route(( { request }) => {
 }));
 
 // Handle deleting cache on login
-const loginRoute = new Route(({ request }) => {
+registerRoute(({ request }) => {
   console.log('[Service Worker] loginRoute - request.url:', request.url);
   const url = new URL(request.url);
   console.log('[Service Worker] loginRoute - url.pathname:', url.pathname);
@@ -52,7 +52,7 @@ const loginRoute = new Route(({ request }) => {
       console.log('[Service Worker] Login successful, clearing homepage cache');
       const cache = await caches.open('homepage');
       await cache.keys().then(keys => {
-          keys.forEach(key => cache.delete(key))
+        keys.forEach(key => cache.delete(key))
       });
     } else {
       console.log("no cookie");
@@ -71,4 +71,3 @@ registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
-registerRoute(loginRoute);

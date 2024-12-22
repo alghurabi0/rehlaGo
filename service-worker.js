@@ -37,8 +37,8 @@ const homepageRoute = new Route(( { request }) => {
 
 // Handle deleting cache on login
 const loginRoute = new Route(({ request }) => {
-  const url = new URL(request);
-  return request.method === 'POST' && url.pathname.endsWith('/login');
+  const url = new URL(request.url);
+  return request.method === 'POST' && url.pathname === '/login';
 }, async ({ event, request }) => {
   console.log("request to login");
   try {

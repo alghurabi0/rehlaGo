@@ -36,33 +36,43 @@ const homepageRoute = new Route(({ request }) => {
 }));
 
 // Handle deleting cache on login
-registerRoute(({ request }) => {
-  console.log('[Service Worker] loginRoute - request.url:', request.url);
-  const url = new URL(request.url);
-  console.log('[Service Worker] loginRoute - url.pathname:', url.pathname);
-  return request.method === 'POST' && url.pathname === '/login';
-}, async ({ event, request }) => {
-  console.log("request to login");
-  try {
-    const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
-    console.log("sent request");
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const requestUrl = new URL(request.url);
+  console.log(requestUrl);
 
-    // Check for successful login (using cookie in this example)
-    if (response.headers.get('Set-Cookie')?.includes('Login-Success=true')) {
-      console.log('[Service Worker] Login successful, clearing homepage cache');
-      const cache = await caches.open('homepage');
-      await cache.keys().then(keys => {
-        keys.forEach(key => cache.delete(key))
-      });
-    } else {
-      console.log("no cookie");
-    }
+  // Handle POST requests to /login
+  if (request.method === 'POST' && requestUrl.pathname === '/login') {
+    console.log('[Service Worker] Handling login POST request');
 
-    return response;
-  } catch (error) {
-    console.error('[Service Worker] Error handling login request:', error);
-    // Handle fetch errors if needed, e.g., return a fallback response
-    return new Response('Login request failed', { status: 500 }); // Example fallback
+    event.respondWith(
+      (async () => {
+        try {
+          const response = await fetch(request.clone()); // Clone to avoid consuming the body
+
+          // Check for successful login (using cookie)
+          if (response.headers.get('Set-Cookie')?.includes('Login-Success=true')) {
+            console.log('[Service Worker] Login successful, clearing cache:', 'homepage');
+
+            const cache = await caches.open('homepage');
+            const keys = await cache.keys();
+            for (const key of keys) {
+              await cache.delete(key);
+            }
+            // or you can use: await caches.delete(CACHE_TO_CLEAR);
+            console.log('[Service Worker] Cache cleared');
+          } else {
+            console.log('[Service Worker] No login success cookie found');
+          }
+
+          return response;
+        } catch (error) {
+          console.error('[Service Worker] Error handling login request:', error);
+          return new Response('Login request failed', { status: 500 });
+        }
+      })()
+    );
+    return; // Important: Exit early for /login POST requests
   }
 });
 

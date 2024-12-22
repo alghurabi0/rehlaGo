@@ -29,7 +29,7 @@ const stylesRoute = new Route(({ request }) => {
 
 // Handle homepage
 const homepageRoute = new Route(( { request }) => {
-  const url = URL(request.url);
+  const url = new URL(request.url);
   return url.pathname === '/';
 }, new CacheFirst({
   cacheName: 'homepage'

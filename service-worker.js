@@ -40,7 +40,9 @@ const loginRoute = new Route(({ request, url }) => {
   return request.method === 'POST' && url.pathname.endsWith('/login');
 }, async ({ event, request }) => {
   try {
+    console.log("request to login");
     const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
+    console.log("sent request");
 
     // Check for successful login (using cookie in this example)
     if (response.headers.get('Set-Cookie')?.includes('Login-Success=true')) {
@@ -49,6 +51,8 @@ const loginRoute = new Route(({ request, url }) => {
       await cache.keys().then(keys => {
           keys.forEach(key => cache.delete(key))
       });
+    } else {
+      console.log("no cookie");
     }
 
     return response;

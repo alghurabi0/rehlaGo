@@ -2,14 +2,14 @@ importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js'
 );
 
-const { registerRoute, Route } = workbox.routing;
+const { registerRoute, Route, setCatchHandler } = workbox.routing;
 const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
 const { offlineFallback } = workbox.recipes;
 //const {CacheableResponse} = workbox.cacheableResponse;
 
-offlineFallback({
-  pageFallback: "/static/offline.html"
-});
+const pageFallback = '/static/offline.html';
+const imageFallback = false;
+const fontFallback = false;
 
 // Handle images:
 const imageRoute = new Route(({ request }) => {
@@ -114,3 +114,40 @@ registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
 registerRoute(freeMaterials);
+
+self.addEventListener('install', event => {
+  const files = [pageFallback];
+  if (imageFallback) {
+    files.push(imageFallback);
+  }
+  if (fontFallback) {
+    files.push(fontFallback);
+  }
+
+  event.waitUntil(
+    self.caches
+      .open('workbox-offline-fallbacks')
+      .then(cache => cache.addAll(files))
+  );
+});
+
+const handler = async options => {
+  const dest = options.request.destination;
+  const cache = await self.caches.open('workbox-offline-fallbacks');
+
+  if (dest === 'document' || options.request.headers.get('HX-Request') === 'true') {
+    return (await cache.match(pageFallback)) || Response.error();
+  }
+
+  if (dest === 'image' && imageFallback !== false) {
+    return (await cache.match(imageFallback)) || Response.error();
+  }
+
+  if (dest === 'font' && fontFallback !== false) {
+    return (await cache.match(fontFallback)) || Response.error();
+  }
+
+  return Response.error();
+};
+
+setCatchHandler(handler);

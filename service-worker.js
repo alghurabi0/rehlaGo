@@ -48,13 +48,13 @@ registerRoute(/\/courses\/([^\/]+)$/,
   }));
 
 // Handle lec pages
-registerRoute(new RegExp('/\/courses\/([^\/]+)\/lec\/([^\/]+)$/'),
+registerRoute(/\/courses\/([^\/]+)\/lec\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'courses-cache'
   }));
 
 // Handle exam pages
-registerRoute(new RegExp('/\/courses\/([^\/]+)\/exam\/([^\/]+)$/'),
+registerRoute(/\/courses\/([^\/]+)\/exam\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'courses-cache'
   }));
@@ -67,19 +67,19 @@ const freeMaterials = new Route(({ request, url }) => {
 }));
 
 // Handle materials page
-registerRoute(new RegExp('/\/materials\/([^\/]+)$/'),
+registerRoute(/\/materials\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'materials-cache'
   }));
 
 // Handle progress page
-registerRoute(new RegExp('/\/progress\/([^\/]+)$/'),
+registerRoute(/\/progress\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'progress-cache'
   }));
 
 // Handle grade progress page
-registerRoute(new RegExp('/^\/progress\/([^\/]+)\/([^\/]+)$/'),
+registerRoute(/^\/progress\/([^\/]+)\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'progress-cache'
   }));

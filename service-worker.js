@@ -47,6 +47,7 @@ registerRoute(({ request }) => {
   });
   console.log("cleared homepage cache");
   const response = await fetch(request.clone());
+  console.log(response);
   return response;
 }, 'POST');
 

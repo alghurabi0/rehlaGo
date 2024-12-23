@@ -39,7 +39,6 @@ const homepageRoute = new Route(({ request }) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const requestUrl = new URL(request.url);
-  console.log(requestUrl);
 
   // Handle POST requests to /login
   if (request.method === 'POST' && requestUrl.pathname === '/login') {

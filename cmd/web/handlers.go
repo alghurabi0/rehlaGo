@@ -196,14 +196,16 @@ func (app *application) contactPage(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
 	data := app.newTemplateData(r)
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		data.User = user
+	}
 	data.ContactInfo = contactInfo
-	data.User = user
 	app.renderFull(w, http.StatusOK, "contact.tmpl.html", data)
 }
 

@@ -27,7 +27,7 @@ const stylesRoute = new Route(({ request }) => {
   cacheName: 'styles'
 }));
 
-// Handle everything else
+// Handle main pages
 const homepageRoute = new Route(({ request }) => {
   const url = new URL(request.url)
   return request.method === 'GET' &&
@@ -39,6 +39,55 @@ const homepageRoute = new Route(({ request }) => {
       request.headers.get('HX-Request') !== 'true');
 }, new StaleWhileRevalidate({
   cacheName: 'homepage'
+}));
+
+// Handle course pages
+const coursesRoute = new Route(({ request }) => {
+  new RegExp('/\/courses\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'courses-cache'
+}));
+
+// Handle lec pages
+const lecRoute = new Route(({ request }) => {
+  new RegExp('/\/courses\/([^\/]+)\/lec\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'courses-cache'
+}));
+
+// Handle exam pages
+const examRoute = new Route(({ request }) => {
+  new RegExp('/\/courses\/([^\/]+)\/exam\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'courses-cache'
+}));
+
+// Handle free materials
+const freeMaterials = new Route(({ request, url }) => {
+  return url.pathname === '/free';
+}, new StaleWhileRevalidate({
+  cacheName: 'materials-cache'
+}));
+
+// Handle materials page
+const materialsRoute = new Route(({ request }) => {
+  new RegExp('/\/materials\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'materials-cache'
+}));
+
+// Handle progress page
+const progressRoute = new Route(({ request }) => {
+  new RegExp('/\/progress\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'progress-cache'
+}));
+
+// Handle grade progress page
+const gradeRoute = new Route(({ request }) => {
+  new RegExp('/^\/progress\/([^\/]+)\/([^\/]+)$/')
+}, new StaleWhileRevalidate({
+  cacheName: 'progress-cache'
 }));
 
 // Handle deleting cache on login
@@ -83,3 +132,10 @@ registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
+registerRoute(coursesRoute);
+registerRoute(lecRoute);
+registerRoute(examRoute);
+registerRoute(freeMaterials);
+registerRoute(materialsRoute);
+registerRoute(progressRoute);
+registerRoute(gradeRoute);

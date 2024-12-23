@@ -42,25 +42,22 @@ const homepageRoute = new Route(({ request }) => {
 }));
 
 // Handle course pages
-const coursesRoute = new Route(({ request }) => {
-  new RegExp('/\/courses\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'courses-cache'
-}));
+registerRoute(new RegExp('/\/courses\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'courses-cache'
+  }));
 
 // Handle lec pages
-const lecRoute = new Route(({ request }) => {
-  new RegExp('/\/courses\/([^\/]+)\/lec\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'courses-cache'
-}));
+registerRoute(new RegExp('/\/courses\/([^\/]+)\/lec\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'courses-cache'
+  }));
 
 // Handle exam pages
-const examRoute = new Route(({ request }) => {
-  new RegExp('/\/courses\/([^\/]+)\/exam\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'courses-cache'
-}));
+registerRoute(new RegExp('/\/courses\/([^\/]+)\/exam\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'courses-cache'
+  }));
 
 // Handle free materials
 const freeMaterials = new Route(({ request, url }) => {
@@ -70,25 +67,22 @@ const freeMaterials = new Route(({ request, url }) => {
 }));
 
 // Handle materials page
-const materialsRoute = new Route(({ request }) => {
-  new RegExp('/\/materials\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'materials-cache'
-}));
+registerRoute(new RegExp('/\/materials\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'materials-cache'
+  }));
 
 // Handle progress page
-const progressRoute = new Route(({ request }) => {
-  new RegExp('/\/progress\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'progress-cache'
-}));
+registerRoute(new RegExp('/\/progress\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'progress-cache'
+  }));
 
 // Handle grade progress page
-const gradeRoute = new Route(({ request }) => {
-  new RegExp('/^\/progress\/([^\/]+)\/([^\/]+)$/')
-}, new StaleWhileRevalidate({
-  cacheName: 'progress-cache'
-}));
+registerRoute(new RegExp('/^\/progress\/([^\/]+)\/([^\/]+)$/'),
+  new StaleWhileRevalidate({
+    cacheName: 'progress-cache'
+  }));
 
 // Handle deleting cache on login
 registerRoute(({ request }) => {
@@ -132,10 +126,4 @@ registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
-registerRoute(coursesRoute);
-registerRoute(lecRoute);
-registerRoute(examRoute);
 registerRoute(freeMaterials);
-registerRoute(materialsRoute);
-registerRoute(progressRoute);
-registerRoute(gradeRoute);

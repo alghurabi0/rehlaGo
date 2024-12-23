@@ -29,7 +29,8 @@ const stylesRoute = new Route(({ request }) => {
 
 // Handle everything else
 const homepageRoute = new Route(({ request }) => {
-  return request.destination === 'document';
+  const url = new URL(request.url)
+  return url.pathname === '/' || url.pathname === '/courses' || url.pathname === '/materials' || url.pathname === '/progress';
 }, new StaleWhileRevalidate({
   cacheName: 'homepage'
 }));

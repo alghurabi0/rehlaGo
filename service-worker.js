@@ -5,7 +5,7 @@ importScripts(
 const { registerRoute, Route, setCatchHandler } = workbox.routing;
 const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
 const { offlineFallback } = workbox.recipes;
-//const {CacheableResponse} = workbox.cacheableResponse;
+//const {CacheableResponse} = workbox.cacheableResponse
 
 const pageFallback = '/static/offline.html';
 const imageFallback = false;

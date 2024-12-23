@@ -47,18 +47,6 @@ registerRoute(/\/courses\/([^\/]+)$/,
     cacheName: 'courses-cache'
   }));
 
-// Handle lec pages
-registerRoute(/\/courses\/([^\/]+)\/lec\/([^\/]+)$/,
-  new StaleWhileRevalidate({
-    cacheName: 'courses-cache'
-  }));
-
-// Handle exam pages
-registerRoute(/\/courses\/([^\/]+)\/exam\/([^\/]+)$/,
-  new StaleWhileRevalidate({
-    cacheName: 'courses-cache'
-  }));
-
 // Handle free materials
 const freeMaterials = new Route(({ request, url }) => {
   return url.pathname === '/free';
@@ -74,12 +62,6 @@ registerRoute(/\/materials\/([^\/]+)$/,
 
 // Handle progress page
 registerRoute(/\/progress\/([^\/]+)$/,
-  new StaleWhileRevalidate({
-    cacheName: 'progress-cache'
-  }));
-
-// Handle grade progress page
-registerRoute(/^\/progress\/([^\/]+)\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'progress-cache'
   }));

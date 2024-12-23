@@ -12,11 +12,11 @@ const imageFallback = false;
 const fontFallback = false;
 
 // Handle images:
-// const imageRoute = new Route(({ request }) => {
-//   return request.destination === 'image'
-// }, new StaleWhileRevalidate({
-//   cacheName: 'images'
-// }));
+const imageRoute = new Route(({ request }) => {
+  return request.destination === 'image'
+}, new StaleWhileRevalidate({
+  cacheName: 'images'
+}));
 
 // Handle scripts:
 const scriptsRoute = new Route(({ request }) => {
@@ -109,6 +109,7 @@ registerRoute(({ request }) => {
 }, 'POST');
 
 // Register routes
+registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);

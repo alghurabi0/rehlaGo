@@ -12,11 +12,11 @@ const imageFallback = false;
 const fontFallback = false;
 
 // Handle images:
-const imageRoute = new Route(({ request }) => {
-  return request.destination === 'image'
-}, new StaleWhileRevalidate({
-  cacheName: 'images'
-}));
+// const imageRoute = new Route(({ request }) => {
+//   return request.destination === 'image'
+// }, new StaleWhileRevalidate({
+//   cacheName: 'images'
+// }));
 
 // Handle scripts:
 const scriptsRoute = new Route(({ request }) => {
@@ -127,7 +127,8 @@ self.addEventListener('install', event => {
   event.waitUntil(
     self.caches
       .open('workbox-offline-fallbacks')
-      .then(cache => cache.addAll(files))
+      .then(cache => cache.addAll(files)),
+    self.skipWaiting()
   );
 });
 

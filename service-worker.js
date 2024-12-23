@@ -111,4 +111,6 @@ registerRoute(stylesRoute);
 registerRoute(homepageRoute);
 registerRoute(freeMaterials);
 
-offlineFallback();
+offlineFallback({
+  pageFallback: "/static/offline.html"
+});

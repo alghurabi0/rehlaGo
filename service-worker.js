@@ -109,7 +109,6 @@ registerRoute(({ request }) => {
 }, 'POST');
 
 // Register routes
-registerRoute(imageRoute);
 registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);

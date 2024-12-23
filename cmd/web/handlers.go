@@ -163,12 +163,14 @@ func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) policyPage(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
-	user, err := app.getUser(r)
-	if err != nil {
-		app.serverError(w, err)
-		return
+	if data.IsLoggedIn {
+		user, err := app.getUser(r)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		data.User = user
 	}
-	data.User = user
 	app.renderFull(w, http.StatusOK, "policy.tmpl.html", data)
 }
 

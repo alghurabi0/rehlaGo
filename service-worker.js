@@ -38,7 +38,7 @@ const homepageRoute = new Route(({ request }) => {
 // Handle deleting cache on login
 registerRoute(({ request }) => {
   const url = new URL(request.url);
-  return url.pathname === '/login';
+  return url.pathname === '/login' || url.pathname === '/logout';
 }, async ({ request }) => {
   try {
     // Clear the 'homepage' cache

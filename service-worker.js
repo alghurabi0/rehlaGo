@@ -7,6 +7,10 @@ const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
 const { offlineFallback } = workbox.recipes;
 //const {CacheableResponse} = workbox.cacheableResponse;
 
+offlineFallback({
+  pageFallback: "/static/offline.html"
+});
+
 // Handle images:
 const imageRoute = new Route(({ request }) => {
   return request.destination === 'image'
@@ -110,7 +114,3 @@ registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
 registerRoute(freeMaterials);
-
-offlineFallback({
-  pageFallback: "/static/offline.html"
-});

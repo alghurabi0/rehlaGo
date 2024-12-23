@@ -30,7 +30,12 @@ const stylesRoute = new Route(({ request }) => {
 // Handle everything else
 const homepageRoute = new Route(({ request }) => {
   const url = new URL(request.url)
-  return url.pathname === '/' || url.pathname === '/courses' || url.pathname === '/materials' || url.pathname === '/progress';
+  return request.method === 'GET' &&
+    (url.pathname === '/' ||
+      url.pathname === '/courses' ||
+      url.pathname === '/materials' ||
+      url.pathname === '/progress') &&
+    request.headers.get('HX-Request') === 'true';
 }, new StaleWhileRevalidate({
   cacheName: 'homepage'
 }));

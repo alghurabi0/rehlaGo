@@ -51,16 +51,19 @@ self.addEventListener('fetch', (event) => {
           const response = await fetch(request.clone()); // Clone to avoid consuming the body
 
           // Check for successful login (using cookie)
-          if (response.headers.get('Set-Cookie')?.includes('Login-Success=true')) {
-            console.log('[Service Worker] Login successful, clearing cache:', 'homepage');
+          if (response.headers.get('X-Login-Success') === 'true') {
+            console.log('[Service Worker] Login successful, clearing cache and sending redirect message');
 
+            // Clear the cache
             const cache = await caches.open('homepage');
-            const keys = await cache.keys();
-            for (const key of keys) {
-              await cache.delete(key);
-            }
-            // or you can use: await caches.delete(CACHE_TO_CLEAR);
+            await cache.keys().then(keys => {
+              keys.forEach(key => cache.delete(key))
+            });
+
             console.log('[Service Worker] Cache cleared');
+
+            const isHtmxRedirect = request.headers.get('Referer')?.includes('HX-Request'); // Adjust the logic as needed
+            console.log(request.headers.get('Referer', isHtmxRedirect));
           } else {
             console.log('[Service Worker] No login success cookie found');
           }

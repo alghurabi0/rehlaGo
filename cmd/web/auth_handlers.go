@@ -192,8 +192,14 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 	// Set the cookie in the response
 	http.SetCookie(w, cookie)
-	http.Redirect(w, r, "/", http.StatusFound)
-	//w.Header().Set("HX-Redirect", "/")
+	w.Header().Set("X-Login-Success", "true")
+
+	// 3. Now, perform the redirect
+	if r.Header.Get("HX-Request") == "true" { // htmx request
+		w.Header().Set("HX-Redirect", "/")
+	} else { // normal request
+		http.Redirect(w, r, "/", http.StatusFound)
+	}
 }
 
 func (app *application) createUser(w http.ResponseWriter, r *http.Request) {

@@ -25,6 +25,8 @@ vendor:
 
 #####
 # BUILD
+# 	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/app ./cmd/web
+
 ####
 git_description = $(shell git describe --always --dirty --tags --long)
 linker_flags = '-s -X main.version=${git_description}'
@@ -33,5 +35,4 @@ linker_flags = '-s -X main.version=${git_description}'
 build:
 	echo "building ..."
 	go build -ldflags=${linker_flags} -o=./bin/app ./cmd/web
-	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o=./bin/linux_amd64/app ./cmd/web
 	go build -o=./bin/dashboard ./cmd/dashboard

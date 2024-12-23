@@ -1,0 +1,42 @@
+version: '3'
+
+vars:
+  git_description:
+    sh: git describe --always --dirty --tags --long
+  linker_flags: '-s -X main.version={{.git_description}}'
+
+tasks:
+  run:
+    desc: Run the web application
+    cmds:
+      - go run ./cmd/web
+
+  audit:
+    desc: Perform code quality checks (formatting, vetting, staticcheck)
+    cmds:
+      - echo "formatting code"
+      - go fmt ./...
+      - echo "vetting code..."
+      - go vet ./...
+      - staticcheck ./...
+    #   - echo "running tests..." # You had tests commented out in Makefile
+    #   - go test -race -vet=off ./...
+    deps: [vendor]
+
+  vendor:
+    desc: Tidy, verify, and vendor dependencies
+    cmds:
+      - echo "tidying..."
+      - go mod tidy
+      - echo "verifying..."
+      - go mod verify
+    #   - echo "vendoring..." # You had vendoring commented out in Makefile
+    #   - go mod vendor
+
+  build:
+    desc: Build the application for Linux (amd64) and current OS/ARCH
+    cmds:
+      - echo "building ..."
+      - GOOS=linux GOARCH=amd64 go build -ldflags="{{.linker_flags}}" -o=./bin/linux_amd64/app ./cmd/web
+      - go build -ldflags="{{.linker_flags}}" -o=./bin/app ./cmd/web
+      - go build -o=./bin/dashboard ./cmd/dashboard

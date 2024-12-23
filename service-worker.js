@@ -42,9 +42,12 @@ registerRoute(({ request }) => {
 }, async () => {
   const cache = await caches.open('homepage');
   await cache.keys().then(keys => {
+    console.log('cache keys: ', keys)
     keys.forEach(key => cache.delete(key))
   });
   console.log("cleared homepage cache");
+  const response = await fetch(request.clone());
+  return response;
 }, 'POST');
 
 // Register routes

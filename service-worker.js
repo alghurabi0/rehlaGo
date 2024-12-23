@@ -42,7 +42,7 @@ const homepageRoute = new Route(({ request }) => {
 }));
 
 // Handle course pages
-registerRoute(new RegExp('/\/courses\/([^\/]+)$/'),
+registerRoute(/\/courses\/([^\/]+)$/,
   new StaleWhileRevalidate({
     cacheName: 'courses-cache'
   }));

@@ -40,15 +40,36 @@ registerRoute(({ request }) => {
   const url = new URL(request.url);
   return url.pathname === '/login';
 }, async ({ request }) => {
-  const cache = await caches.open('homepage');
-  await cache.keys().then(keys => {
-    console.log('cache keys: ', keys)
-    keys.forEach(key => cache.delete(key))
-  });
-  console.log("cleared homepage cache");
-  const response = await fetch(request.clone());
-  console.log(response);
-  return response;
+  try {
+    // Clear the 'homepage' cache
+    const cache = await caches.open('homepage');
+    await cache.keys().then((keys) => {
+      console.log('cache keys: ', keys);
+      keys.forEach((key) => cache.delete(key));
+    });
+    console.log('cleared homepage cache');
+
+    // Fetch the original response
+    const originalResponse = await fetch(request.clone());
+
+    // Create a new Headers object
+    const newHeaders = new Headers(originalResponse.headers);
+
+    // Add your custom header
+    newHeaders.set('HX-Redirect', '/'); // Example header
+
+    // Create a new Response object with the modified headers
+    const newResponse = new Response(originalResponse.body, {
+      status: originalResponse.status,
+      statusText: originalResponse.statusText,
+      headers: newHeaders,
+    });
+
+    return newResponse;
+  } catch (error) {
+    console.error('[Service Worker] Error handling login request:', error);
+    return new Response('Login request failed', { status: 500 });
+  }
 }, 'POST');
 
 // Register routes

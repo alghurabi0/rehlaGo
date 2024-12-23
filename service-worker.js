@@ -2,8 +2,8 @@ importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js'
 );
 
-const { registerRoute, Route, setCatchHandler } = workbox.routing;
-const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
+const { registerRoute, Route, setCatchHandler, setDefaultHandler } = workbox.routing;
+const { CacheFirst, StaleWhileRevalidate, NetworkOnly } = workbox.strategies;
 const { offlineFallback } = workbox.recipes;
 //const {CacheableResponse} = workbox.cacheableResponse;
 
@@ -130,6 +130,8 @@ self.addEventListener('install', event => {
       .then(cache => cache.addAll(files))
   );
 });
+
+setDefaultHandler(new NetworkOnly());
 
 const handler = async options => {
   const dest = options.request.destination;

@@ -4,6 +4,7 @@ importScripts(
 
 const { registerRoute, Route } = workbox.routing;
 const { CacheFirst, StaleWhileRevalidate } = workbox.strategies;
+const { offlineFallback } = workbox.recipes;
 //const {CacheableResponse} = workbox.cacheableResponse;
 
 // Handle images:
@@ -109,3 +110,5 @@ registerRoute(scriptsRoute);
 registerRoute(stylesRoute);
 registerRoute(homepageRoute);
 registerRoute(freeMaterials);
+
+offlineFallback();

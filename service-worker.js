@@ -27,11 +27,10 @@ const stylesRoute = new Route(({ request }) => {
   cacheName: 'styles'
 }));
 
-// Handle homepage
+// Handle everything else
 const homepageRoute = new Route(({ request }) => {
-  const url = new URL(request.url);
-  return url.pathname === '/';
-}, new CacheFirst({
+  return request.destination === 'document';
+}, new StaleWhileRevalidate({
   cacheName: 'homepage'
 }));
 

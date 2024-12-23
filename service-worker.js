@@ -39,30 +39,12 @@ const homepageRoute = new Route(({ request }) => {
 registerRoute(({ request }) => {
   const url = new URL(request.url);
   return url.pathname === '/login';
-}, async ({ request }) => {
-  console.log("request to login");
-  try {
-    const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
-    console.log("sent request");
-    console.log(response);
-
-    // Check for successful login (using cookie in this example)
-    if (response.status === 302) {
-      console.log('[Service Worker] Login successful, clearing homepage cache');
-      const cache = await caches.open('homepage');
-      await cache.keys().then(keys => {
-        keys.forEach(key => cache.delete(key))
-      });
-      console.log("cleared homepage cache");
-    } else {
-      console.log("not a 302 code");
-    }
-
-    return response;
-  } catch (error) {
-    console.error('[Service Worker] Error handling login request:', error);
-    return new Response('Login request failed', { status: 500 });
-  }
+}, async () => {
+  const cache = await caches.open('homepage');
+  await cache.keys().then(keys => {
+    keys.forEach(key => cache.delete(key))
+  });
+  console.log("cleared homepage cache");
 }, 'POST');
 
 // Register routes

@@ -36,47 +36,34 @@ const homepageRoute = new Route(({ request }) => {
 }));
 
 // Handle deleting cache on login
-self.addEventListener('fetch', (event) => {
-  const request = event.request;
-  const requestUrl = new URL(request.url);
+registerRoute(({ request }) => {
+  const url = new URL(request.url);
+  return url.pathname === '/login';
+}, async ({ request }) => {
+  console.log("request to login");
+  try {
+    const response = await fetch(request.clone()); // Use clone() to avoid consuming the request body
+    console.log("sent request");
+    console.log(response);
 
-  // Handle POST requests to /login
-  if (request.method === 'POST' && requestUrl.pathname === '/login') {
-    console.log('[Service Worker] Handling login POST request');
+    // Check for successful login (using cookie in this example)
+    if (response.status === 302) {
+      console.log('[Service Worker] Login successful, clearing homepage cache');
+      const cache = await caches.open('homepage');
+      await cache.keys().then(keys => {
+        keys.forEach(key => cache.delete(key))
+      });
+      console.log("cleared homepage cache");
+    } else {
+      console.log("not a 302 code");
+    }
 
-    event.respondWith(
-      (async () => {
-        try {
-          const response = await fetch(request.clone()); // Clone to avoid consuming the body
-
-          // Check for successful login (using cookie)
-          if (response.headers.get('X-Login-Success') === 'true') {
-            console.log('[Service Worker] Login successful, clearing cache and sending redirect message');
-
-            // Clear the cache
-            const cache = await caches.open('homepage');
-            await cache.keys().then(keys => {
-              keys.forEach(key => cache.delete(key))
-            });
-
-            console.log('[Service Worker] Cache cleared');
-
-            const isHtmxRedirect = request.headers.get('Referer')?.includes('HX-Request'); // Adjust the logic as needed
-            console.log(request.headers.get('Referer', isHtmxRedirect));
-          } else {
-            console.log('[Service Worker] No login success cookie found');
-          }
-
-          return response;
-        } catch (error) {
-          console.error('[Service Worker] Error handling login request:', error);
-          return new Response('Login request failed', { status: 500 });
-        }
-      })()
-    );
-    return; // Important: Exit early for /login POST requests
+    return response;
+  } catch (error) {
+    console.error('[Service Worker] Error handling login request:', error);
+    return new Response('Login request failed', { status: 500 });
   }
-});
+}, 'POST');
 
 // Register routes
 registerRoute(imageRoute);

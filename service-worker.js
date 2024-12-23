@@ -35,7 +35,8 @@ const homepageRoute = new Route(({ request }) => {
       url.pathname === '/courses' ||
       url.pathname === '/materials' ||
       url.pathname === '/progress') &&
-    request.headers.get('HX-Request') === 'true';
+    (request.headers.get('HX-Request') === 'true' ||
+      request.headers.get('HX-Request') !== 'true');
 }, new StaleWhileRevalidate({
   cacheName: 'homepage'
 }));

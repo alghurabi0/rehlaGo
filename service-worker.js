@@ -39,7 +39,7 @@ const homepageRoute = new Route(({ request }) => {
 registerRoute(({ request }) => {
   const url = new URL(request.url);
   return url.pathname === '/login';
-}, async () => {
+}, async ({ request }) => {
   const cache = await caches.open('homepage');
   await cache.keys().then(keys => {
     console.log('cache keys: ', keys)

@@ -70,6 +70,8 @@ func (app *application) routes() http.Handler {
 	mux.Handle("POST /login", isLoggedIn.ThenFunc(app.login))
 	mux.Handle("POST /logout", isLoggedIn.ThenFunc(app.logout))
 
+	mux.Handle("POST /deleteAccount", isLoggedIn.ThenFunc(app.deleteAccount))
+
 	mux.Handle("GET /debug/vars", expvar.Handler())
 
 	standard := alice.New(app.metrics, app.recoverPanic, app.logRequest, app.secureHeaders)

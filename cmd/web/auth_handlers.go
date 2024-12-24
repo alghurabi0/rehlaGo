@@ -331,3 +331,35 @@ func (app *application) logout(w http.ResponseWriter, r *http.Request) {
 	app.session.PopString(r.Context(), "session_id")
 	w.Header().Set("HX-Redirect", "/")
 }
+
+func (app *application) deleteAccount(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	if !data.IsLoggedIn {
+		w.Header().Set("HX-Redirect", "/")
+		return
+	}
+	user, err := app.getUser(r)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	app.session.PopString(r.Context(), "session_id")
+	ctx := context.Background()
+	userDocRef := app.user.DB.Collection("users").Doc(user.ID)
+	err = models.DeleteAll(ctx, userDocRef)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.storage.DeleteFile(ctx, user.ImgPath)
+	if err != nil {
+		app.errorLog.Print(err)
+	}
+	if user.SessionId != "" {
+		err = app.redis.Del(ctx, user.SessionId).Err()
+		if err != nil {
+			app.errorLog.Println(err)
+		}
+	}
+	w.Header().Set("HX-Redirect", "/")
+}

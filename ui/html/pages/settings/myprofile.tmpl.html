@@ -2,163 +2,75 @@
 <div class="view">
   <div class="flex flex-row justify-end items-center md:mr-20">
     <h1 class="mr-2 my-2 text-end text-xl font-bold text-black">ملفي الشخصي</h1>
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      onclick="history.back()"
-    >
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()">
+      <path fill-rule="evenodd" clip-rule="evenodd"
         d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
-        fill="#202020"
-      />
+        fill="#202020" />
     </svg>
   </div>
 
-  <div
-    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
-  >
-    <img
-      src="{{if .User.ImgURL }}{{.User.ImgURL}}{{else}}https://placehold.co/100x100{{end}}"
-      class="w-40 h-40 rounded-full object-cover"
-    />
+  <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
+    <img src="{{if .User.ImgURL }}{{.User.ImgURL}}{{else}}https://placehold.co/100x100{{end}}"
+      class="w-40 h-40 rounded-full object-cover" />
     <h1 class="font-bold text-lg">{{ .User.Firstname}} {{ .User.Lastname }}</h1>
 
     <div class="grid grid-cols-1 gap-5 w-full justify-items-end mt-8 md:w-5/6">
-      <div
-        hx-get="/reset"
-        hx-target=".view"
-        hx-select=".view"
-        hx-swap="outerHTML"
-        hx-push-url="true"
-        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
-      >
-        <svg
-          width="20"
-          height="22"
-          viewBox="0 0 20 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+      <div hx-get="/reset" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center">
+        <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
             d="M10 2C8.93913 2 7.92172 2.42143 7.17157 3.17157C6.42143 3.92172 6 4.93913 6 6V9H14V6C14 4.93913 13.5786 3.92172 12.8284 3.17157C12.0783 2.42143 11.0609 2 10 2ZM16 9V6C16 4.4087 15.3679 2.88258 14.2426 1.75736C13.1174 0.632141 11.5913 0 10 0C8.4087 0 6.88258 0.632141 5.75736 1.75736C4.63214 2.88258 4 4.4087 4 6V9H3C1.34315 9 0 10.3431 0 12V19C0 20.6569 1.34315 22 3 22H17C18.6569 22 20 20.6569 20 19V12C20 10.3431 18.6569 9 17 9H16ZM3 11C2.44772 11 2 11.4477 2 12V19C2 19.5523 2.44772 20 3 20H17C17.5523 20 18 19.5523 18 19V12C18 11.4477 17.5523 11 17 11H3Z"
-            fill="#202020"
-          />
+            fill="#202020" />
         </svg>
 
         <h1 class="mr-3">تغيير كلمة المرور</h1>
       </div>
-      <div
-        hx-get="/payments"
-        hx-target=".view"
-        hx-select=".view"
-        hx-swap="outerHTML"
-        hx-push-url="true"
-        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
-      >
-        <svg
-          width="14"
-          height="24"
-          viewBox="0 0 14 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+      <div hx-get="/payments" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center">
+        <svg width="14" height="24" viewBox="0 0 14 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
             d="M7 0C7.55228 0 8 0.447715 8 1V4H12C12.5523 4 13 4.44772 13 5C13 5.55228 12.5523 6 12 6H8V11H9.5C10.6935 11 11.8381 11.4741 12.682 12.318C13.5259 13.1619 14 14.3065 14 15.5C14 16.6935 13.5259 17.8381 12.682 18.682C11.8381 19.5259 10.6935 20 9.5 20H8V23C8 23.5523 7.55228 24 7 24C6.44772 24 6 23.5523 6 23V20H1C0.447715 20 0 19.5523 0 19C0 18.4477 0.447715 18 1 18H6V13H4.5C3.30653 13 2.16193 12.5259 1.31802 11.682C0.474106 10.8381 0 9.69347 0 8.5C0 7.30653 0.474106 6.16193 1.31802 5.31802C2.16193 4.47411 3.30653 4 4.5 4H6V1C6 0.447715 6.44772 0 7 0ZM6 6H4.5C3.83696 6 3.20107 6.26339 2.73223 6.73223C2.26339 7.20107 2 7.83696 2 8.5C2 9.16304 2.26339 9.79893 2.73223 10.2678C3.20107 10.7366 3.83696 11 4.5 11H6V6ZM8 13V18H9.5C10.163 18 10.7989 17.7366 11.2678 17.2678C11.7366 16.7989 12 16.163 12 15.5C12 14.837 11.7366 14.2011 11.2678 13.7322C10.7989 13.2634 10.163 13 9.5 13H8Z"
-            fill="#202020"
-          />
+            fill="#202020" />
         </svg>
 
         <h1 class="mr-3">عرض تاريخ الدفع</h1>
       </div>
-      <form
-        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
-        hx-post="/change_profile_img"
-        hx-trigger="change"
-        hx-swap="none"
-        enctype="multipart/form-data"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          id="Outline"
-          width="20"
-          height="24"
-          viewBox="0 0 24 24"
-        >
+      <form class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center" hx-post="/change_profile_img"
+        hx-trigger="change" hx-swap="none" enctype="multipart/form-data">
+        <svg xmlns="http://www.w3.org/2000/svg" id="Outline" width="20" height="24" viewBox="0 0 24 24">
           <path
-            d="M19,0H5A5.006,5.006,0,0,0,0,5V19a5.006,5.006,0,0,0,5,5H19a5.006,5.006,0,0,0,5-5V5A5.006,5.006,0,0,0,19,0ZM5,2H19a3,3,0,0,1,3,3V19a2.951,2.951,0,0,1-.3,1.285l-9.163-9.163a5,5,0,0,0-7.072,0L2,14.586V5A3,3,0,0,1,5,2ZM5,22a3,3,0,0,1-3-3V17.414l4.878-4.878a3,3,0,0,1,4.244,0L20.285,21.7A2.951,2.951,0,0,1,19,22Z"
-          />
+            d="M19,0H5A5.006,5.006,0,0,0,0,5V19a5.006,5.006,0,0,0,5,5H19a5.006,5.006,0,0,0,5-5V5A5.006,5.006,0,0,0,19,0ZM5,2H19a3,3,0,0,1,3,3V19a2.951,2.951,0,0,1-.3,1.285l-9.163-9.163a5,5,0,0,0-7.072,0L2,14.586V5A3,3,0,0,1,5,2ZM5,22a3,3,0,0,1-3-3V17.414l4.878-4.878a3,3,0,0,1,4.244,0L20.285,21.7A2.951,2.951,0,0,1,19,22Z" />
           <path
-            d="M16,10.5A3.5,3.5,0,1,0,12.5,7,3.5,3.5,0,0,0,16,10.5Zm0-5A1.5,1.5,0,1,1,14.5,7,1.5,1.5,0,0,1,16,5.5Z"
-          />
+            d="M16,10.5A3.5,3.5,0,1,0,12.5,7,3.5,3.5,0,0,0,16,10.5Zm0-5A1.5,1.5,0,1,1,14.5,7,1.5,1.5,0,0,1,16,5.5Z" />
         </svg>
 
         <label for="userPic" class="mr-3">تغيير الصورة الشخصية</label>
-        <input
-          id="userPic"
-          name="userPic"
-          type="file"
-          accept="image/*"
-          class="hidden"
-        />
+        <input id="userPic" name="userPic" type="file" accept="image/*" class="hidden" />
       </form>
-      <div
-        hx-get="/privacy_policy"
-        hx-target=".view"
-        hx-select=".view"
-        hx-swap="outerHTML"
-        hx-push-url="true"
-        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
-      >
-        <svg
-          width="18"
-          height="22"
-          viewBox="0 0 18 22"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+      <div hx-get="/privacy_policy" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center">
+        <svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
             d="M8.64888 0.0636709C8.87526 -0.0212236 9.12474 -0.0212236 9.35112 0.0636709L17.3511 3.06367C17.7414 3.21003 18 3.58316 18 4V11C18 14.4464 15.7183 17.2003 13.6585 19.0026C12.6076 19.9221 11.5615 20.6408 10.78 21.1292C10.3882 21.3741 10.0603 21.5627 9.82807 21.6913C9.71187 21.7556 9.61943 21.805 9.55468 21.839C9.5223 21.856 9.49683 21.8692 9.47876 21.8784L9.45726 21.8894L9.45078 21.8926L9.44863 21.8937C9.44831 21.8939 9.44721 21.8944 9 21C8.55279 21.8944 8.55249 21.8943 8.55217 21.8941L8.54922 21.8926L8.54274 21.8894L8.52124 21.8784C8.50317 21.8692 8.4777 21.856 8.44532 21.839C8.38057 21.805 8.28813 21.7556 8.17193 21.6913C7.93968 21.5627 7.61177 21.3741 7.22 21.1292C6.43854 20.6408 5.39238 19.9221 4.3415 19.0026C2.28175 17.2003 0 14.4464 0 11V4C0 3.58316 0.258573 3.21003 0.648877 3.06367L8.64888 0.0636709ZM9 21L8.55217 21.8941C8.8337 22.0349 9.16569 22.0352 9.44721 21.8944L9 21ZM9 19.8628C9.19164 19.7541 9.4367 19.6103 9.72 19.4333C10.4385 18.9842 11.3924 18.3279 12.3415 17.4974C14.2817 15.7997 16 13.5536 16 11V4.693L9 2.068L2 4.693V11C2 13.5536 3.71825 15.7997 5.6585 17.4974C6.60762 18.3279 7.56146 18.9842 8.28 19.4333C8.5633 19.6103 8.80836 19.7541 9 19.8628Z"
-            fill="#202020"
-          />
+            fill="#202020" />
         </svg>
 
         <h1 class="mr-3">سياسة الخصوصية</h1>
       </div>
-      <div
-        hx-get="/contact"
-        hx-target=".view"
-        hx-select=".view"
-        hx-swap="outerHTML"
-        hx-push-url="true"
-        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+      <div hx-get="/contact" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd"
             d="M13.6752 4.99841L15.1828 2.94255C15.2853 2.80274 15.4791 2.76711 15.6246 2.86129C17.597 4.13757 18.1392 6.08717 17.3479 7.52437C16.4825 9.09614 15.1477 11.0237 13.1004 13.0711C11.053 15.1185 9.12539 16.4532 7.55362 17.3187C6.11642 18.11 4.16682 17.5678 2.89054 15.5954C2.79636 15.4498 2.83199 15.2561 2.9718 15.1535L5.02766 13.6459C5.32998 13.4242 5.73092 13.3902 6.06624 13.5579L6.88569 13.9676C7.58267 14.3161 8.5381 14.4385 9.44252 13.9732C10.0472 13.6622 10.9791 13.071 12.0397 12.0104C13.1002 10.9499 13.6914 10.0179 14.0025 9.41328C14.4678 8.50885 14.3453 7.55342 13.9969 6.85644L13.5871 6.03699C13.4195 5.70167 13.4534 5.30073 13.6752 4.99841ZM16.7111 1.18215C19.2516 2.82601 20.5594 5.83829 19.0999 8.48902C18.1474 10.219 16.7005 12.2994 14.5146 14.4853C12.3286 16.6713 10.2482 18.1181 8.51827 19.0706C5.86754 20.5301 2.85526 19.2224 1.2114 16.6819C0.541813 15.647 0.795122 14.2696 1.78907 13.5407L3.84493 12.0331C4.7519 11.368 5.9547 11.266 6.96067 11.769L7.78012 12.1788C8.01734 12.2974 8.29174 12.3161 8.52758 12.1948C8.95725 11.9737 9.71868 11.503 10.6255 10.5962C11.5323 9.68943 12.003 8.928 12.224 8.49833C12.3454 8.26249 12.3266 7.98809 12.208 7.75087L11.7983 6.93142C11.2953 5.92545 11.3972 4.72265 12.0623 3.81569L13.57 1.75982C14.2989 0.765875 15.6763 0.512562 16.7111 1.18215Z"
-            fill="#202020"
-          />
+            fill="#202020" />
         </svg>
 
         <h1 class="mr-3">تواصل معنا</h1>
+      </div>
+      <div hx-post="/deleteAccount" hx-target=".view" hx-select=".view" hx-swap="outerHTML" hx-push-url="true"
+        class="flex flex-row-reverse font-bold w-5/6 shadow-md h-10 items-center">
+        <h1 class="mr-3 text-red-600">احذف الحساب</h1>
       </div>
     </div>
   </div>

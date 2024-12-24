@@ -5,7 +5,10 @@
       "namespace": "android_app",
       "package_name": "live.rehla.www.twa",
       "sha256_cert_fingerprints":
-        ["3D:62:41:C7:13:A3:D2:0E:02:18:9E:23:D3:72:5B:D7:77:BE:1A:58:30:39:DC:74:29:EA:8C:32:7E:D3:39:64"]
+        [
+          "89:E0:DA:6F:75:BD:9B:C9:B7:8B:D3:BB:30:E3:3E:9D:B6:14:A6:0F:DD:CC:C5:7C:2B:DD:B0:9D:07:0C:25:CE",
+          "3D:62:41:C7:13:A3:D2:0E:02:18:9E:23:D3:72:5B:D7:77:BE:1A:58:30:39:DC:74:29:EA:8C:32:7E:D3:39:64"
+        ]
     }
   }
 ]

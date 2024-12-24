@@ -92,7 +92,14 @@ registerRoute(({ request }) => {
     const newHeaders = new Headers(originalResponse.headers);
 
     // Add your custom header
-    newHeaders.set('HX-Redirect', '/'); // Example header
+    const swap = originalResponse.headers.get('HX-Reswap');
+    const target = originalResponse.headers.get('HX-Retarget');
+    if (swap && target) {
+      newHeaders.set('HX-Reswap', swap);
+      newHeaders.set('HX-Retarget', target);
+    } else {
+      newHeaders.set('HX-Redirect', '/'); // Example header
+    }
 
     // Create a new Response object with the modified headers
     const newResponse = new Response(originalResponse.body, {

@@ -11,25 +11,33 @@ const pageFallback = '/static/offline.html';
 const imageFallback = false;
 const fontFallback = false;
 
+const imageCache = 'images';
+const scriptCache = 'scripts';
+const styleCache = 'styles';
+const homepageCache = 'homepage';
+const courseCache = 'courses';
+const materialCache = 'materials';
+const progressCache = 'progress';
+
 // Handle images:
 const imageRoute = new Route(({ request }) => {
   return request.destination === 'image'
 }, new StaleWhileRevalidate({
-  cacheName: 'images'
+  cacheName: imageCache
 }));
 
 // Handle scripts:
 const scriptsRoute = new Route(({ request }) => {
   return request.destination === 'script';
 }, new CacheFirst({
-  cacheName: 'scripts'
+  cacheName: scriptCache
 }));
 
 // Handle styles:
 const stylesRoute = new Route(({ request }) => {
   return request.destination === 'style';
 }, new CacheFirst({
-  cacheName: 'styles'
+  cacheName: styleCache
 }));
 
 // Handle main pages
@@ -43,32 +51,32 @@ const homepageRoute = new Route(({ request }) => {
     (request.headers.get('HX-Request') === 'true' ||
       request.headers.get('HX-Request') !== 'true');
 }, new StaleWhileRevalidate({
-  cacheName: 'homepage'
+  cacheName: homepageCache
 }));
 
 // Handle course pages
 registerRoute(/\/courses\/([^\/]+)$/,
   new StaleWhileRevalidate({
-    cacheName: 'courses-cache'
+    cacheName: courseCache
   }));
 
 // Handle free materials
 const freeMaterials = new Route(({ request, url }) => {
   return url.pathname === '/free';
 }, new StaleWhileRevalidate({
-  cacheName: 'materials-cache'
+  cacheName: materialCache
 }));
 
 // Handle materials page
 registerRoute(/\/materials\/([^\/]+)$/,
   new StaleWhileRevalidate({
-    cacheName: 'materials-cache'
+    cacheName: materialCache
   }));
 
 // Handle progress page
 registerRoute(/\/progress\/([^\/]+)$/,
   new StaleWhileRevalidate({
-    cacheName: 'progress-cache'
+    cacheName: progressCache
   }));
 
 // Handle deleting cache on login
@@ -136,6 +144,30 @@ self.addEventListener('install', event => {
       .open('workbox-offline-fallbacks')
       .then(cache => cache.addAll(files)),
     self.skipWaiting()
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('[Service Worker] Activating');
+
+  event.waitUntil(
+    (async () => {
+      // Claim all clients immediately
+      await self.clients.claim();
+
+      // Get a list of all cache names
+      const cacheNames = await caches.keys();
+
+      // Delete all caches
+      await Promise.all(
+        cacheNames.map((cacheName) => {
+          console.log('[Service Worker] Deleting cache:', cacheName);
+          return caches.delete(cacheName);
+        })
+      );
+
+      console.log('[Service Worker] All caches deleted');
+    })()
   );
 });
 

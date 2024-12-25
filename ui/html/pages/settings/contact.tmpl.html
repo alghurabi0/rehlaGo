@@ -2,86 +2,50 @@
 <div class="view">
   <div class="mt-2 flex flex-row justify-end items-center md:mr-20">
     <h1 class="my-2 mr-2 text-end text-lg font-bold text-black">تواصل معنا</h1>
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      onclick="history.back()"
-    >
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+      onclick="history.back()">
+      <path fill-rule="evenodd" clip-rule="evenodd"
         d="M6.91042 15.5894C6.58498 15.264 6.58498 14.7363 6.91042 14.4109L11.3212 10.0002L6.91042 5.58942C6.58498 5.26398 6.58498 4.73634 6.91042 4.41091C7.23586 4.08547 7.76349 4.08547 8.08893 4.41091L13.0889 9.41091C13.4144 9.73634 13.4144 10.264 13.0889 10.5894L8.08893 15.5894C7.76349 15.9149 7.23586 15.9149 6.91042 15.5894Z"
-        fill="#202020"
-      />
+        fill="#202020" />
     </svg>
   </div>
 
-  <div
-    class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0"
-  >
+  <div class="text-md mt-4 grid grid-cols-1 justify-items-center gap-y-4 pb-20 md:pb-0">
     <h1 class="mb-8 text-xl font-bold">تواصل مع دعم تطبيق رحلة</h1>
     <form id="contact_form" class="grid w-full grid-cols-1 gap-y-4 text-end md:w-5/6">
-      <input
-        class="h-12 w-full rounded-lg border-4 p-4 text-end"
-        name="fullname"
-        type="text"
-        placeholder="الاسم الكامل"
-      />
-      <input
-        class="h-12 w-full rounded-lg border-4 p-4 text-end"
-        name="phone_number"
-        type="tel"
-        placeholder="رقم الهاتف"
-      />
-      <textarea
-        class="h-56 w-full rounded-lg border-4 p-4 text-end"
-        name="message"
-        type="text"
-        placeholder="الرسالة او الشكوى"
-      ></textarea>
+      <input class="h-12 w-full rounded-lg border-4 p-4 text-end" name="fullname" type="text"
+        placeholder="الاسم الكامل" />
+      <input class="h-12 w-full rounded-lg border-4 p-4 text-end" name="phone_number" type="tel"
+        placeholder="رقم الهاتف" />
+      <textarea class="h-56 w-full rounded-lg border-4 p-4 text-end" name="message" type="text"
+        placeholder="الرسالة او الشكوى"></textarea>
     </form>
     <div class="mt-8 flex w-full flex-row text-lg font-bold md:w-5/6">
-      <button
-        hx-post="contact"
-        hx-swap="none"
-        hx-include="#contact_form"
-        class="flex flex-grow flex-row justify-center items-center rounded-xl bg-[#A490BB] py-3"
-      >
+      <button hx-post="contact" hx-swap="none" hx-include="#contact_form"
+        class="flex flex-grow flex-row justify-center items-center rounded-xl bg-[#A490BB] py-3">
         <h1 class="mr-2 text-white">ارسال</h1>
-        <img class="w-6" src="https://placehold.co/25x25" />
+        <img class="w-6" src="/static/icons/white_email.png" />
       </button>
     </div>
     <div id="contact_info" class="mt-8 place-self-start font-semibold">
       <div class="flex flex-row">
-        <img src="https://placehold.co/20x20" />
+        <img src="/static/icons/email.svg" />
         <h3 class="ml-2">
           {{ if .ContactInfo.Email }} {{ .ContactInfo.Email }} {{ end }}
         </h3>
       </div>
       <div class="mt-2 flex flex-row">
-        <img src="https://placehold.co/20x20" />
+        <img src="/static/icons/phone.svg" />
         <h3 class="ml-2">
           {{ if .ContactInfo.Phone }} {{ .ContactInfo.Phone }} {{ end }}
         </h3>
       </div>
       <div class="mt-2 flex flex-row">
-        <img src="https://placehold.co/20x20" />
+        <img src="/static/icons/location.svg" />
         <h3 class="ml-2">
           {{ if .ContactInfo.Location }} {{ .ContactInfo.Location }} {{ end }}
         </h3>
       </div>
-    </div>
-    <div id="social_media" class="mt-2 flex flex-row gap-x-5">
-      <a href="{{ .ContactInfo.Instagram }}"
-        ><img src="https://placehold.co/25x25"
-      /></a>
-      <a href="{{ .ContactInfo.Facebook }}"
-        ><img src="https://placehold.co/25x25"
-      /></a>
-      <a><img src="https://placehold.co/25x25" /></a>
     </div>
   </div>
 </div>

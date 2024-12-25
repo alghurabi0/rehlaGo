@@ -111,6 +111,7 @@ func (app *application) myCoursesPage(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	data.User = user
 	data.SubscribedCourses = subedCourses
 	app.renderFull(w, http.StatusOK, "mycourses.tmpl.html", data)
 }
@@ -157,6 +158,7 @@ func (app *application) myCourse(w http.ResponseWriter, r *http.Request) {
 		}
 		course.UserAmountPaid = totalPaid // check in template
 	}
+	data.User = user
 	data.Course = course
 	app.renderFull(w, http.StatusOK, "mycourse.tmpl.html", data)
 }
